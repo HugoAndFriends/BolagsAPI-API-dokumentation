@@ -1,0 +1,28 @@
+meta {
+  name: Get Company
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~include: financials,fi,prv
+}
+
+headers {
+  Accept-Language: sv
+}
+
+docs {
+  Retrieve detailed information about a company by organization number.
+
+  Optional includes (Starter+ plans):
+  - financials: Latest financial data
+  - fi: Finansinspektionen regulatory data
+  - prv: PRV trademarks and patents
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Batch Validate
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/validate/batch
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "orgnrs": ["5560125790", "5565475489", "1234567890"]
+  }
+}
+
+docs {
+  Validate up to 100 organization numbers in a single request.
+
+  Returns validation results for each org number in the array.
+}

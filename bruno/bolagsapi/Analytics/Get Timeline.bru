@@ -1,0 +1,23 @@
+meta {
+  name: Get Timeline
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/timeline
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept-Language: sv
+}
+
+docs {
+  Get a chronological list of company events including:
+  - Registration date
+  - Report filings
+  - Status changes
+  - Address changes
+}

@@ -1,0 +1,25 @@
+meta {
+  name: Get Industry Stats
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/industry/{{sniCode}}
+  body: none
+  auth: inherit
+}
+
+headers {
+  Accept-Language: sv
+}
+
+docs {
+  Get statistics about companies in a specific SNI code industry.
+
+  Returns:
+  - Total companies in industry
+  - Geographic distribution
+  - Company size distribution
+  - Average financial metrics
+}

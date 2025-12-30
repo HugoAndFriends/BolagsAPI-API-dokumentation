@@ -1,0 +1,19 @@
+meta {
+  name: Get Health Score
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/health
+  body: none
+  auth: inherit
+}
+
+docs {
+  Calculate a 0-100 health score based on:
+  - Company status (active/deregistered)
+  - Tax registration (F-skatt, moms)
+  - Company age
+  - Risk factors (liquidation, etc.)
+}

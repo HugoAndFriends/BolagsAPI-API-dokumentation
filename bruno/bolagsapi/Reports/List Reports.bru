@@ -1,0 +1,20 @@
+meta {
+  name: List Reports
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/reports
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get a list of available annual reports for a company.
+
+  Returns array of reports with:
+  - id: Report ID for downloading
+  - period_end: Fiscal year end date
+  - has_auditor: Whether auditor's report is available
+}

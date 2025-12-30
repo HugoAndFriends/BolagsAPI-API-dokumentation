@@ -1,0 +1,34 @@
+meta {
+  name: Search Companies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/search
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: tech
+  ~city: Stockholm
+  ~sni: 62010
+  ~org_form: AB
+  ~active_only: true
+  ~limit: 10
+  ~offset: 0
+}
+
+docs {
+  Full-text search across Swedish companies with filters.
+
+  Query Parameters:
+  - q: Search query (min 2 characters)
+  - city: Filter by city name
+  - sni: Filter by SNI code
+  - org_form: Filter by org form (AB, HB, KB, EK, EF)
+  - active_only: Only return active companies (default: true)
+  - limit: Results per page (1-100, default: 10)
+  - offset: Pagination offset (default: 0)
+}

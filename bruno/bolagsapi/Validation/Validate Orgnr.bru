@@ -1,0 +1,20 @@
+meta {
+  name: Validate Orgnr
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/validate/{{orgnr}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Quickly validate an organization number with checksum and existence check.
+
+  Returns:
+  - valid: boolean
+  - exists: boolean
+  - formatted: formatted org number (XXXXXX-XXXX)
+}

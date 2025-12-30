@@ -1,0 +1,25 @@
+meta {
+  name: Get Financials
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financials
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~include_comparative: false
+}
+
+docs {
+  Get multi-year financial data parsed from annual reports.
+  Requires Starter plan or higher.
+
+  Includes:
+  - Income statement data
+  - Balance sheet data
+  - Key financial ratios
+}

@@ -1,0 +1,53 @@
+meta {
+  name: Export Companies
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/export
+  body: json
+  auth: inherit
+}
+
+headers {
+  Accept-Language: sv
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "filters": {
+      "sni_codes": ["62010"],
+      "cities": ["Stockholm"],
+      "org_forms": ["AB"],
+      "status": "active",
+      "has_f_skatt": true
+    },
+    "fields": ["orgnr", "name", "city", "sni_codes"],
+    "format": "csv",
+    "preview": true
+  }
+}
+
+docs {
+  Export company data matching filters.
+
+  Set preview=true to get row count estimate and sample data without consuming quota.
+
+  Filters:
+  - sni_codes: Array of 5-digit SNI codes
+  - cities: Array of city names
+  - postal_codes: Array of postal code prefixes
+  - org_forms: AB, HB, KB, EK, EF, BRF, FL, OF, TSF
+  - status: active, inactive, or all
+  - has_f_skatt: true/false
+  - registered_after/before: Date filters
+
+  Fields (optional):
+  orgnr, name, org_form, status, registered_date, street_address, postal_code, city, sni_codes, sni_descriptions, f_skatt
+
+  Format: csv or json
+
+  Cost: 0.01 SEK per row (minimum 10 SEK)
+}

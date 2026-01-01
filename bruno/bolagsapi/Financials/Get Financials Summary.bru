@@ -1,0 +1,22 @@
+meta {
+  name: Get Financials Summary
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financials/summary
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get trend data and growth metrics from historical financial data.
+
+  Requires Starter plan or higher.
+
+  Returns:
+  - trends: Arrays of year-over-year data points for revenue, net_income, equity_ratio, employees
+  - growth.revenue_yoy: Year-over-year revenue growth percentage
+  - growth.revenue_3yr_cagr: 3-year compound annual growth rate
+}

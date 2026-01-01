@@ -1,0 +1,50 @@
+meta {
+  name: Create Webhook
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/webhooks
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "url": "https://your-app.com/webhooks/bolagsapi",
+    "secret": "your-webhook-secret",
+    "events": [
+      "company.created",
+      "company.deregistered",
+      "company.report_filed"
+    ],
+    "filters": {
+      "cities": ["Stockholm", "Goteborg"]
+    }
+  }
+}
+
+docs {
+  Create a new webhook subscription.
+
+  Requires Starter plan or higher.
+  Requires session authentication.
+
+  Available events:
+  - company.created
+  - company.deregistered
+  - company.name_changed
+  - company.address_changed
+  - company.status_changed
+  - company.liquidation_started
+  - company.report_filed
+  - company.financials_available
+
+  Filters:
+  - cities: Only trigger for companies in these cities
+}

@@ -1,0 +1,20 @@
+meta {
+  name: Get Ownership
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/ownership
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get ownership information for a company.
+
+  Returns list of owners including:
+  - name: Owner name
+  - orgnr: Organization number (if company owner)
+  - type: "company" or "person"
+}

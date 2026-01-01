@@ -1,0 +1,22 @@
+meta {
+  name: List Years
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get a list of available years for municipal tax rates data.
+
+  Data source: Skatteverket/SCB open data.
+
+  Returns:
+  - years: Available years in descending order
+  - total: Number of available years
+  - latest: Most recent year
+}

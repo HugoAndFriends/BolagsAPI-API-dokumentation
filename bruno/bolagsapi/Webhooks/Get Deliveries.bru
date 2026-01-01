@@ -1,0 +1,31 @@
+meta {
+  name: Get Deliveries
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/webhooks/{{webhookId}}/deliveries
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~limit: 50
+}
+
+docs {
+  Get delivery history for a webhook.
+
+  Requires session authentication.
+
+  Query parameters:
+  - limit: Maximum results (1-100, default: 50)
+
+  Returns array of deliveries with:
+  - id, event_type
+  - status: delivered, failed, pending
+  - attempts: Number of delivery attempts
+  - delivered_at: Successful delivery timestamp
+  - last_error: Error message if failed
+}

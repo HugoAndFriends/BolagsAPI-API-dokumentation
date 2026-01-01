@@ -1,0 +1,29 @@
+meta {
+  name: Get Valuation
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/valuation
+  body: none
+  auth: inherit
+}
+
+docs {
+  Calculate company valuation using multiple methods.
+
+  Requires Pro plan or higher.
+
+  Valuation methods:
+  - asset_based: Substansvarde (book value based)
+  - earnings_based: Avkastningsvarde (earnings based)
+  - ebitda_multiple: EBITDA x industry multiplier
+  - revenue_multiple: Revenue x industry multiplier
+
+  Returns:
+  - methods: Individual valuations for each method
+  - recommended_range: Low/mid/high estimates with confidence level
+  - factors: Profitability, trend, financial health metrics
+  - disclaimer: Important valuation caveats
+}

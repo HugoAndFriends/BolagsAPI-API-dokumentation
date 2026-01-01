@@ -1,0 +1,23 @@
+meta {
+  name: Get Rates By Kommun
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/kommun/0180
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get tax rates for a specific municipality across all available years.
+
+  Path parameter:
+  - kommunCode: 4-digit Swedish municipality code (e.g., 0180 for Stockholm)
+
+  Returns:
+  - kommun_code: Municipality code
+  - kommun_name: Municipality name (e.g., "Stockholm")
+  - rates: Array of tax rates for each available year
+}

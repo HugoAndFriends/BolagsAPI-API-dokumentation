@@ -1,0 +1,30 @@
+meta {
+  name: Search Municipalities
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/search
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: Stockholm
+  ~year: 2026
+}
+
+docs {
+  Search for municipalities by name and get their tax rates.
+
+  Query parameters:
+  - q: Search query (municipality name, min 2 chars)
+  - year: Filter by year (defaults to latest available)
+
+  Returns:
+  - query: Search query
+  - year: Year used for results
+  - results: Array of matching municipalities with tax rates
+  - total: Number of results
+}

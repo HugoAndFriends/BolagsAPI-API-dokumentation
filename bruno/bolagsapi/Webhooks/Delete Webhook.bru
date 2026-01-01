@@ -1,0 +1,19 @@
+meta {
+  name: Delete Webhook
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/v1/webhooks/{{webhookId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Delete a webhook subscription.
+
+  Requires session authentication.
+
+  Returns: { "message": "Webhook deleted successfully" }
+}

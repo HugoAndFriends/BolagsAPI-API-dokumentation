@@ -1,0 +1,24 @@
+meta {
+  name: Download Auditor Report
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/reports/{{reportId}}/auditor
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~format: pdf
+}
+
+docs {
+  Download the auditor's report (Revisionsberattelse) for a specific annual report.
+
+  Only available if has_auditor=true in the reports list.
+
+  Query parameters:
+  - format: "pdf" (default) or "raw" for original XHTML
+}

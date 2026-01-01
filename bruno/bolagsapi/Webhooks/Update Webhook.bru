@@ -1,0 +1,35 @@
+meta {
+  name: Update Webhook
+  type: http
+  seq: 3
+}
+
+patch {
+  url: {{baseUrl}}/v1/webhooks/{{webhookId}}
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "url": "https://your-app.com/webhooks/new-endpoint",
+    "events": ["company.report_filed"],
+    "active": true
+  }
+}
+
+docs {
+  Update an existing webhook subscription.
+
+  Requires session authentication.
+
+  All fields are optional:
+  - url: New endpoint URL
+  - events: Updated event list
+  - filters: Updated filters
+  - active: Enable/disable webhook
+}

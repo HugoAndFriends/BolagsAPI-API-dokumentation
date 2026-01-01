@@ -1,0 +1,24 @@
+meta {
+  name: List Webhooks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/webhooks
+  body: none
+  auth: inherit
+}
+
+docs {
+  List all webhook subscriptions for your account.
+
+  Requires Starter plan or higher.
+  Requires session authentication (X-Session-Token header).
+
+  Returns array of webhooks with:
+  - id, url, events, filters
+  - active: Whether webhook is enabled
+  - failureCount: Consecutive delivery failures
+  - lastTriggeredAt: Last trigger timestamp
+}

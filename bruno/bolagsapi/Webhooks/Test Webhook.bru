@@ -1,0 +1,20 @@
+meta {
+  name: Test Webhook
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/webhooks/{{webhookId}}/test
+  body: none
+  auth: inherit
+}
+
+docs {
+  Send a test webhook to verify your endpoint.
+
+  Requires session authentication.
+
+  Sends a test payload to your webhook URL.
+  Returns: { "message": "Test webhook sent successfully" }
+}

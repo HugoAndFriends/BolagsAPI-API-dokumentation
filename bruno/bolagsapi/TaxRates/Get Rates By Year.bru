@@ -1,0 +1,30 @@
+meta {
+  name: Get Rates By Year
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/year/2026
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get municipal tax rates for all Swedish municipalities for a specific year.
+
+  Returns:
+  - year: Tax year
+  - municipalities: Array of tax rates for each municipality
+  - total: Number of municipalities (290)
+  - average_total_rate: Average total tax rate
+
+  Each municipality includes:
+  - kommun_code: 4-digit municipality code
+  - kommun_name: Municipality name
+  - total_rate: Total tax rate (kommunal + regional)
+  - municipal_rate: Municipal tax rate
+  - regional_rate: Regional tax rate
+  - church_rate: Church fee rate (for members)
+  - burial_rate: Burial fee rate
+}

@@ -61,8 +61,9 @@ Bruno can also import directly from our OpenAPI spec:
 
 ### Company Data
 - `GET /v1/company/{orgnr}` - Get company information
-- `GET /v1/company/{orgnr}/reports` - List annual reports
-- `GET /v1/company/{orgnr}/reports/{id}` - Download report
+- `GET /v1/company/{orgnr}/signatory` - Get signatory rules (firmateckning)
+- `GET /v1/company/{orgnr}/persons` - Get board members, executives, auditors
+- `GET /v1/company/{orgnr}/ownership` - Get ownership information
 
 ### Validation
 - `GET /v1/validate/{orgnr}` - Validate single org number
@@ -70,6 +71,11 @@ Bruno can also import directly from our OpenAPI spec:
 
 ### Search
 - `GET /v1/search` - Full-text company search
+
+### Reports
+- `GET /v1/company/{orgnr}/reports` - List annual reports
+- `GET /v1/company/{orgnr}/reports/{id}` - Download report (PDF or iXBRL)
+- `GET /v1/company/{orgnr}/reports/{id}/auditor` - Download auditor's report
 
 ### Financials (Starter+)
 - `GET /v1/company/{orgnr}/financials` - Multi-year financial data
@@ -92,11 +98,20 @@ Bruno can also import directly from our OpenAPI spec:
 ### Export
 - `POST /v1/export` - Bulk data export
 
+### Tax Rates
+- `GET /v1/tax-rates` - List available years
+- `GET /v1/tax-rates/year/{year}` - All municipalities for a year
+- `GET /v1/tax-rates/kommun/{kommunCode}` - Municipality across years
+- `GET /v1/tax-rates/kommun/{kommunCode}/{year}` - Specific rate
+- `GET /v1/tax-rates/search` - Search municipalities
+
 ### Webhooks (Starter+)
 - `GET /v1/webhooks` - List webhooks
 - `POST /v1/webhooks` - Create webhook
 - `PATCH /v1/webhooks/{id}` - Update webhook
 - `DELETE /v1/webhooks/{id}` - Delete webhook
+- `GET /v1/webhooks/{id}/deliveries` - Get delivery history
+- `POST /v1/webhooks/{id}/test` - Test webhook
 
 ## Test Data
 
@@ -104,7 +119,7 @@ Use these Swedish companies for testing (all have multiple digital annual report
 
 | Company | Org Number | Description |
 |---------|------------|-------------|
-| Lindströms Bil | 5560553561 | Lindströms Bil Aktiebolag - Car dealership |
+| Lindstroms Bil | 5560553561 | Lindstroms Bil Aktiebolag - Car dealership |
 | Momentum Software | 5564742103 | Momentum Software AB - Software company |
 | Herrljunga Drycker | 5560124603 | Herrljunga Drycker AB - Beverage company |
 | Oddbird | 5568080351 | Oddbird International AB - Non-alcoholic wine |

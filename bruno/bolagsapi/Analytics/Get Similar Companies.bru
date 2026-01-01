@@ -1,0 +1,28 @@
+meta {
+  name: Get Similar Companies
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/similar
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~limit: 20
+  ~same_city: true
+}
+
+docs {
+  Find companies with matching SNI codes in the same geographic area.
+
+  Query parameters:
+  - limit: Maximum results (1-100, default: 20)
+  - same_city: Only return companies in the same city (default: true)
+
+  Returns list of similar companies with:
+  - orgnr, name, city
+  - sni_match: Array of matching SNI codes
+}

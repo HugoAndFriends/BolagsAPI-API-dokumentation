@@ -1,0 +1,24 @@
+meta {
+  name: Download Report
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/reports/{{reportId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~format: pdf
+}
+
+docs {
+  Download a specific annual report.
+
+  Query parameters:
+  - format: "pdf" (default) or "raw" for original iXBRL ZIP
+
+  Get reportId from the "List Reports" endpoint.
+}

@@ -1,0 +1,37 @@
+meta {
+  name: Get AI Valuation
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/valuation/ai
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~lang: sv
+  ~force: false
+}
+
+docs {
+  Get comprehensive AI-powered valuation analysis.
+
+  Requires Pro plan or higher.
+
+  Query parameters:
+  - lang: Language for summary (sv or en, default: sv)
+  - force: Force regeneration, bypass cache (default: false)
+
+  Returns:
+  - valuation: Low/mid/high estimates with confidence
+  - primary_method: Main valuation method used
+  - summary: AI-generated narrative
+  - key_drivers: Value drivers with impact assessment
+  - risk_adjustments: Risk-based valuation adjustments
+  - industry_context: SNI code and recommended multipliers
+  - algorithmic_comparison: Comparison with rule-based valuation
+
+  Results are cached per fiscal year.
+}

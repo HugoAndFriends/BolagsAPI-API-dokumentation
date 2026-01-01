@@ -1,0 +1,23 @@
+meta {
+  name: Get Persons
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/persons
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get board members, executives, and auditors for a company.
+
+  Returns:
+  - name: Person name
+  - positions: Array of roles (e.g., "Styrelseordförande", "VD")
+  - city: City of residence
+  - gender: male/female/unknown
+  - age: Person's age (if available)
+  - role: Primary role (board_member, executive, auditor, other)
+}

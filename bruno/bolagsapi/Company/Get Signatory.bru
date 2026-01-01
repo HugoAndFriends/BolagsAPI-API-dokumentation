@@ -1,0 +1,20 @@
+meta {
+  name: Get Signatory
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/signatory
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get signatory rules (firmateckning) for a company.
+
+  Describes who can sign on behalf of the company, e.g.:
+  - "Firman tecknas var för sig av"
+  - "ledamoten"
+  - "suppleanten"
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Get Financials Latest
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financials/latest
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get only the most recent fiscal year's financial data.
+
+  Requires Starter plan or higher.
+
+  Returns:
+  - fiscal_year_end: End date of fiscal year
+  - revenue: Nettoomsattning
+  - net_income: Arets resultat
+  - total_assets: Tillgangar totalt
+  - equity: Eget kapital
+  - equity_ratio: Soliditet (%)
+  - employees: Number of employees
+}

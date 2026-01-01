@@ -1,0 +1,28 @@
+meta {
+  name: Get Rate By Kommun And Year
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/kommun/0180/2026
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get tax rate for a specific municipality and year.
+
+  Path parameters:
+  - kommunCode: 4-digit municipality code (e.g., 0180)
+  - year: Tax year (4 digits)
+
+  Returns single MunicipalTaxRate object with:
+  - kommun_code, kommun_name, year
+  - total_rate: Total tax rate
+  - municipal_rate: Municipal tax rate
+  - regional_rate: Regional tax rate
+  - church_rate: Church fee rate
+  - burial_rate: Burial fee rate
+  - source: Data source (scb)
+}

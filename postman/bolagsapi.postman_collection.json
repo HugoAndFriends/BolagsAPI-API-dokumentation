@@ -4493,6 +4493,127 @@
                                     ]
                                 },
                                 {
+                                    "name": "financial-health",
+                                    "description": "Financial stability metrics - NOT credit information under KUL",
+                                    "item": [
+                                        {
+                                            "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+                                            "name": "Get financial health analysis",
+                                            "request": {
+                                                "name": "Get financial health analysis",
+                                                "description": {
+                                                    "content": "Get financial stability metrics derived from public annual reports. NOT credit information under Kreditupplysningslagen (SFS 1973:1173). Replaces the deprecated /credit endpoint. Requires Starter plan or higher.",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "financial-health"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "5566778899",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Organization number",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": [
+                                                {
+                                                    "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+                                                    "name": "Financial health data",
+                                                    "originalRequest": {
+                                                        "url": {
+                                                            "path": [
+                                                                "v1",
+                                                                "company",
+                                                                ":orgnr",
+                                                                "financial-health"
+                                                            ],
+                                                            "host": [
+                                                                "{{baseUrl}}"
+                                                            ],
+                                                            "query": [],
+                                                            "variable": [
+                                                                {
+                                                                    "disabled": false,
+                                                                    "description": {
+                                                                        "content": "(Required) Organization number",
+                                                                        "type": "text/plain"
+                                                                    },
+                                                                    "type": "any",
+                                                                    "value": "5566778899",
+                                                                    "key": "orgnr"
+                                                                }
+                                                            ]
+                                                        },
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json"
+                                                            },
+                                                            {
+                                                                "description": {
+                                                                    "content": "Added as a part of security scheme: bearer",
+                                                                    "type": "text/plain"
+                                                                },
+                                                                "key": "Authorization",
+                                                                "value": "Bearer <token>"
+                                                            }
+                                                        ],
+                                                        "method": "GET",
+                                                        "body": {}
+                                                    },
+                                                    "status": "OK",
+                                                    "code": 200,
+                                                    "header": [
+                                                        {
+                                                            "key": "Content-Type",
+                                                            "value": "application/json"
+                                                        }
+                                                    ],
+                                                    "body": "{\n  \"stability_grade\": \"A\",\n  \"volatility_index\": 25,\n  \"finance_score\": 75,\n  \"history_score\": 80,\n  \"ability_to_pay_score\": 70,\n  \"ownership_score\": 85,\n  \"composite_score\": 77,\n  \"financial_flags\": {\n    \"public_defaults_count\": 0,\n    \"public_defaults_amount\": 0,\n    \"petitions_count\": 0,\n    \"petitions_amount\": 0,\n    \"has_negative_equity\": false,\n    \"has_liquidation\": false,\n    \"has_fi_warning\": false,\n    \"has_qualified_audit\": false\n  },\n  \"_disclaimer\": {\n    \"sv\": \"Finansiella nyckeltal baserade på offentliga årsredovisningar...\",\n    \"en\": \"Financial health metrics derived from public annual reports...\",\n    \"applies\": \"Financial health metrics derived from public annual reports...\"\n  }\n}",
+                                                    "cookie": [],
+                                                    "_postman_previewlanguage": "json"
+                                                }
+                                            ],
+                                            "event": [],
+                                            "protocolProfileBehavior": {
+                                                "disableBodyPruning": true
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
                                     "name": "timeline",
                                     "description": "",
                                     "item": [
@@ -5440,7 +5561,7 @@
                                             "request": {
                                                 "name": "Get AI-powered financial analysis",
                                                 "description": {
-                                                    "content": "Get AI-generated credit rating and risk analysis based on company financials. Uses Swedish credit rating scale (AAA, AA, A, B, C) and provides risk factors with severity levels. Results are cached per fiscal year. Requires Pro plan or higher.",
+                                                    "content": "Get AI-generated financial stability assessment and risk analysis based on company financials. Uses stability grade scale (AAA, AA, A, B, C) and provides risk factors with severity levels. Results are cached per fiscal year. Requires Pro plan or higher.",
                                                     "type": "text/plain"
                                                 },
                                                 "url": {

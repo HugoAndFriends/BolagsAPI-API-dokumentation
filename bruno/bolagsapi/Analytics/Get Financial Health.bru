@@ -1,0 +1,31 @@
+meta {
+  name: Get Financial Health
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financial-health
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get financial stability metrics derived from public annual reports.
+
+  NOT credit information under Kreditupplysningslagen (SFS 1973:1173).
+  Replaces the deprecated /credit endpoint with KUL-compliant terminology.
+
+  Requires Starter plan or higher.
+
+  Returns:
+  - stability_grade: Stability grade (AAA, AA, A, B, C)
+  - volatility_index: 0-100 where lower is more stable
+  - finance_score: Financial metrics score 0-100
+  - history_score: Company history score 0-100
+  - ability_to_pay_score: Ability to pay score 0-100
+  - ownership_score: Ownership structure score 0-100
+  - composite_score: Combined weighted score 0-100
+  - financial_flags: Object with public defaults, petitions, etc.
+  - _disclaimer: Legal disclaimer in sv/en
+}

@@ -7296,7 +7296,7 @@
                                                                 },
                                                                 {
                                                                     "type": "any",
-                                                                    "value": "KNG-2026-12345",
+                                                                    "value": "{{announcementId}}",
                                                                     "key": "id",
                                                                     "disabled": false,
                                                                     "description": {
@@ -13063,7 +13063,7 @@
                                                     "variable": [
                                                         {
                                                             "type": "any",
-                                                            "value": "Anna Andersson",
+                                                            "value": "{{personName}}",
                                                             "key": "name",
                                                             "disabled": false,
                                                             "description": {

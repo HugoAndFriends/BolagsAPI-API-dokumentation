@@ -1,0 +1,22 @@
+meta {
+  name: Get Creditor Call
+  type: http
+  seq: 13
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/creditor-call
+  body: none
+  auth: inherit
+}
+
+docs {
+  Check if a company has any creditor call (kallelse på borgenärer) announcements and get the latest one if it exists.
+
+  Requires Starter plan or higher.
+
+  Returns:
+  - orgnr: The organization number
+  - has_creditor_call: Whether company has any creditor call
+  - creditor_call: Latest creditor call announcement (null if none)
+}

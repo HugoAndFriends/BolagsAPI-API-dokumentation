@@ -1,0 +1,26 @@
+meta {
+  name: Screen Company
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/screening
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~refresh: false
+}
+
+docs {
+  Screen a company name and all board members against PEP (Politically Exposed Persons) and international sanctions lists (EU, UN, OFAC).
+
+  Requires Starter plan or higher.
+
+  Returns individual screening results for each person plus an overall risk assessment.
+
+  Query Parameters:
+  - refresh: Force refresh cached results (default: false)
+}

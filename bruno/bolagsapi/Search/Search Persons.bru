@@ -1,0 +1,30 @@
+meta {
+  name: Search Persons
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/search/persons
+  body: none
+  auth: inherit
+}
+
+params:query {
+  q: andersson
+  ~city: Stockholm
+  ~gender: male
+  ~limit: 20
+}
+
+docs {
+  Search persons (board members, executives, accountants) by name across all companies. Returns grouped results using (name + city + age) as pseudo-identifier.
+
+  Requires Starter plan or higher.
+
+  Query Parameters:
+  - q: Name search query (min 2 characters, case-insensitive partial match)
+  - city: Filter by city
+  - gender: Filter by gender (male or female)
+  - limit: Maximum results to return (1-100, default: 20)
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Get Announcement
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/announcements/{{announcementId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get full details for a specific POIT announcement including the complete announcement text.
+
+  Path Parameters:
+  - orgnr: Organization number
+  - id: Announcement ID (kungörelse-id, e.g. KNG-2026-12345)
+}

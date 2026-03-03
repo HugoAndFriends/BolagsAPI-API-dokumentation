@@ -1,0 +1,29 @@
+meta {
+  name: Screen Person
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/screening/person/{{personName}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~min_score: 80
+  ~refresh: false
+}
+
+docs {
+  Screen a single person name against PEP (Politically Exposed Persons) and international sanctions lists (EU, UN, OFAC).
+
+  Requires Starter plan or higher.
+
+  Path Parameters:
+  - name: Person name (URL encoded, min 2 characters)
+
+  Query Parameters:
+  - min_score: Minimum match score 50-100 (default: 80)
+  - refresh: Force refresh cached results (default: false)
+}

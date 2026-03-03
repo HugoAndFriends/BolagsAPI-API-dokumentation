@@ -62,8 +62,17 @@ Bruno can also import directly from our OpenAPI spec:
 ### Company Data
 - `GET /v1/company/{orgnr}` - Get company information
 - `GET /v1/company/{orgnr}/signatory` - Get signatory rules (firmateckning)
+- `GET /v1/company/{orgnr}/signatories` - Get signatories with signing rights
 - `GET /v1/company/{orgnr}/persons` - Get board members, executives, auditors
 - `GET /v1/company/{orgnr}/ownership` - Get ownership information
+- `GET /v1/company/{orgnr}/contact` - Get contact info (website, phone, email, LinkedIn)
+- `GET /v1/company/{orgnr}/group` - Corporate group structure (Pro+)
+- `GET /v1/company/{orgnr}/group/members` - All group members (Pro+)
+- `GET /v1/company/{orgnr}/workplaces` - Workplace locations (CFAR, addresses, employee counts)
+- `GET /v1/company/{orgnr}/announcements` - POIT legal announcements
+- `GET /v1/company/{orgnr}/announcements/{id}` - Single announcement detail
+- `GET /v1/company/{orgnr}/bankruptcy` - Bankruptcy status check (Starter+)
+- `GET /v1/company/{orgnr}/creditor-call` - Creditor call check (Starter+)
 
 ### Validation
 - `GET /v1/validate/{orgnr}` - Validate single org number
@@ -71,6 +80,7 @@ Bruno can also import directly from our OpenAPI spec:
 
 ### Search
 - `GET /v1/search` - Full-text company search
+- `GET /v1/search/persons` - Person search (Starter+)
 
 ### Reports
 - `GET /v1/company/{orgnr}/reports` - List annual reports
@@ -104,6 +114,15 @@ Bruno can also import directly from our OpenAPI spec:
 - `GET /v1/tax-rates/kommun/{kommunCode}` - Municipality across years
 - `GET /v1/tax-rates/kommun/{kommunCode}/{year}` - Specific rate
 - `GET /v1/tax-rates/search` - Search municipalities
+
+### Screening (Starter+)
+- `GET /v1/screening/person/{name}` - PEP & sanctions person screening
+- `GET /v1/company/{orgnr}/screening` - Company + board screening
+- `POST /v1/screening/batch` - Batch screening (up to 50 names)
+- `GET /v1/screening/stats` - Screening database statistics
+
+### Reference Data
+- `GET /v1/sni-codes` - SNI code reference list
 
 ### Webhooks (Starter+)
 - `GET /v1/webhooks` - List webhooks

@@ -6885,6 +6885,568 @@
                                             ]
                                         }
                                     ]
+                                },
+                                {
+                                    "name": "contact",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "1eecfee3-4ed8-41e3-bf76-a5886c7ee548",
+                                            "name": "Get contact information",
+                                            "request": {
+                                                "name": "Get contact information",
+                                                "description": {
+                                                    "content": "Get contact information for a company including website, phone, email, and LinkedIn",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "contact"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "signatories",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "d02687c5-001b-442a-b373-21b4c637f4cd",
+                                            "name": "Get signatories",
+                                            "request": {
+                                                "name": "Get signatories",
+                                                "description": {
+                                                    "content": "Get a list of persons authorized to sign for the company (firmatecknare) with their signing rights",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "signatories"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "group",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "b31d71cc-2905-4ed4-9e27-91b0967ee2de",
+                                            "name": "Get corporate group structure",
+                                            "request": {
+                                                "name": "Get corporate group structure",
+                                                "description": {
+                                                    "content": "Get the corporate group structure for a company, including ultimate parent, parent chain, siblings, and direct subsidiaries",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "group"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "members",
+                                            "description": "",
+                                            "item": [
+                                                {
+                                                    "id": "f97b51c4-d1cd-499c-9d40-312c42c27039",
+                                                    "name": "Get all group members",
+                                                    "request": {
+                                                        "name": "Get all group members",
+                                                        "description": {
+                                                            "content": "Get all companies that belong to the same corporate group. Returns the full hierarchy from ultimate parent down.",
+                                                            "type": "text/plain"
+                                                        },
+                                                        "url": {
+                                                            "path": [
+                                                                "v1",
+                                                                "company",
+                                                                ":orgnr",
+                                                                "group",
+                                                                "members"
+                                                            ],
+                                                            "host": [
+                                                                "{{baseUrl}}"
+                                                            ],
+                                                            "query": [],
+                                                            "variable": [
+                                                                {
+                                                                    "type": "any",
+                                                                    "value": "<string>",
+                                                                    "key": "orgnr",
+                                                                    "disabled": false,
+                                                                    "description": {
+                                                                        "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                        "type": "text/plain"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json"
+                                                            }
+                                                        ],
+                                                        "method": "GET",
+                                                        "body": {},
+                                                        "auth": {
+                                                            "type": "bearer",
+                                                            "bearer": [
+                                                                {
+                                                                    "key": "token",
+                                                                    "value": "{{bearerToken}}"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "workplaces",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "aebafb27-8390-478f-9997-ce84f6545e9f",
+                                            "name": "Get workplace locations",
+                                            "request": {
+                                                "name": "Get workplace locations",
+                                                "description": {
+                                                    "content": "Get all workplace locations (arbetsställen) for a company, including CFAR numbers, addresses, employee counts, and SNI codes",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "workplaces"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "announcements",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "a018c50a-ff9e-45ff-a947-8dec605394ec",
+                                            "name": "List announcements",
+                                            "request": {
+                                                "name": "List announcements",
+                                                "description": {
+                                                    "content": "Get POIT (Post- och Inrikes Tidningar) legal announcements for a company including bankruptcies, creditor calls, company registrations, and debt restructuring",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "announcements"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Filter by category: 1=Kallelser, 2=Bolagsverkets registreringar, 3=Konkurser, 5=Skuldsaneringar",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "key": "category",
+                                                            "value": "<string>"
+                                                        },
+                                                        {
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Include full announcement text (larger response)",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "key": "include_text",
+                                                            "value": "false"
+                                                        }
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        },
+                                        {
+                                            "name": "{id}",
+                                            "description": "",
+                                            "item": [
+                                                {
+                                                    "id": "7728ac10-9622-4093-a721-a9424f1ae890",
+                                                    "name": "Get announcement details",
+                                                    "request": {
+                                                        "name": "Get announcement details",
+                                                        "description": {
+                                                            "content": "Get full details for a specific POIT announcement including the complete announcement text",
+                                                            "type": "text/plain"
+                                                        },
+                                                        "url": {
+                                                            "path": [
+                                                                "v1",
+                                                                "company",
+                                                                ":orgnr",
+                                                                "announcements",
+                                                                ":id"
+                                                            ],
+                                                            "host": [
+                                                                "{{baseUrl}}"
+                                                            ],
+                                                            "query": [],
+                                                            "variable": [
+                                                                {
+                                                                    "type": "any",
+                                                                    "value": "<string>",
+                                                                    "key": "orgnr",
+                                                                    "disabled": false,
+                                                                    "description": {
+                                                                        "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                        "type": "text/plain"
+                                                                    }
+                                                                },
+                                                                {
+                                                                    "type": "any",
+                                                                    "value": "KNG-2026-12345",
+                                                                    "key": "id",
+                                                                    "disabled": false,
+                                                                    "description": {
+                                                                        "content": "(Required) Announcement ID (kungörelse-id)",
+                                                                        "type": "text/plain"
+                                                                    }
+                                                                }
+                                                            ]
+                                                        },
+                                                        "header": [
+                                                            {
+                                                                "key": "Accept",
+                                                                "value": "application/json"
+                                                            }
+                                                        ],
+                                                        "method": "GET",
+                                                        "body": {},
+                                                        "auth": {
+                                                            "type": "bearer",
+                                                            "bearer": [
+                                                                {
+                                                                    "key": "token",
+                                                                    "value": "{{bearerToken}}"
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    "response": []
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "bankruptcy",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "160295f4-e052-4936-a529-bfc6bf210b9f",
+                                            "name": "Check bankruptcy status",
+                                            "request": {
+                                                "name": "Check bankruptcy status",
+                                                "description": {
+                                                    "content": "Check if a company has any bankruptcy announcements and get the latest one if it exists",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "bankruptcy"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "name": "creditor-call",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "5a18201e-2721-4c84-a49d-c1bc4168ba54",
+                                            "name": "Check creditor call status",
+                                            "request": {
+                                                "name": "Check creditor call status",
+                                                "description": {
+                                                    "content": "Check if a company has any creditor call (kallelse på borgenärer) announcements and get the latest one if it exists",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "creditor-call"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "orgnr",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -8132,6 +8694,90 @@
                             "protocolProfileBehavior": {
                                 "disableBodyPruning": true
                             }
+                        },
+                        {
+                            "name": "persons",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "3c3245f1-5f6d-4d76-9161-814134419979",
+                                    "name": "Search persons",
+                                    "request": {
+                                        "name": "Search persons",
+                                        "description": {
+                                            "content": "Search persons (board members, executives, accountants) by name across all companies. Returns grouped results using (name + city + age) as pseudo-identifier.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "v1",
+                                                "search",
+                                                "persons"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) Name search query (min 2 characters, case-insensitive partial match)",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "q",
+                                                    "value": "andersson"
+                                                },
+                                                {
+                                                    "disabled": true,
+                                                    "description": {
+                                                        "content": "Filter by city",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "city",
+                                                    "value": "<string>"
+                                                },
+                                                {
+                                                    "disabled": true,
+                                                    "description": {
+                                                        "content": "Filter by gender (male or female)",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "gender",
+                                                    "value": "<string>"
+                                                },
+                                                {
+                                                    "disabled": true,
+                                                    "description": {
+                                                        "content": "Maximum results to return (1-100, default: 20)",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "key": "limit",
+                                                    "value": "20"
+                                                }
+                                            ],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "GET",
+                                        "body": {},
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                }
+                            ]
                         }
                     ]
                 },
@@ -12360,6 +13006,339 @@
                                     ]
                                 }
                             ]
+                        }
+                    ]
+                },
+                {
+                    "name": "screening",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "person",
+                            "description": "",
+                            "item": [
+                                {
+                                    "name": "{name}",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "87295e50-f7d2-41ab-a4bc-84c0aea097c2",
+                                            "name": "Screen person",
+                                            "request": {
+                                                "name": "Screen person",
+                                                "description": {
+                                                    "content": "Screen a single person name against PEP (Politically Exposed Persons) and international sanctions lists (EU, UN, OFAC)",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "path": [
+                                                        "v1",
+                                                        "screening",
+                                                        "person",
+                                                        ":name"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Minimum match score 50-100 (default: 80)",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "key": "min_score",
+                                                            "value": "80"
+                                                        },
+                                                        {
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Force refresh cached results (default: false)",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "key": "refresh",
+                                                            "value": "false"
+                                                        }
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "type": "any",
+                                                            "value": "Anna Andersson",
+                                                            "key": "name",
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) Person name to screen (URL encoded, min 2 characters)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "6dd3bf74-5fbc-466d-ada5-cff119654777",
+                            "name": "Screen company and board",
+                            "request": {
+                                "name": "Screen company and board",
+                                "description": {
+                                    "content": "Screen a company name and all board members against PEP and international sanctions lists (EU, UN, OFAC). Returns individual screening results for each person plus an overall risk assessment.",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "path": [
+                                        "v1",
+                                        "company",
+                                        ":orgnr",
+                                        "screening"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [
+                                        {
+                                            "disabled": true,
+                                            "description": {
+                                                "content": "Force refresh cached results (default: false)",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "refresh",
+                                            "value": "false"
+                                        }
+                                    ],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "orgnr",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) Swedish organization number (10 digits, with or without hyphen)",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{bearerToken}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "batch",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "e25354e8-c7df-410e-87c2-4fceb8abdeca",
+                                    "name": "Batch screen persons",
+                                    "request": {
+                                        "name": "Batch screen persons",
+                                        "description": {
+                                            "content": "Screen up to 50 person names in a single request against PEP and sanctions lists",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "v1",
+                                                "screening",
+                                                "batch"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"names\": [\n    \"Anna Andersson\",\n    \"Erik Svensson\"\n  ],\n  \"min_score\": 80\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                }
+                            ]
+                        },
+                        {
+                            "name": "stats",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "22444f1e-8b1e-4754-9db0-369941b5a49a",
+                                    "name": "Get screening statistics",
+                                    "request": {
+                                        "name": "Get screening statistics",
+                                        "description": {
+                                            "content": "Get statistics about the screening database, including the number of PEP and sanctions entries",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "path": [
+                                                "v1",
+                                                "screening",
+                                                "stats"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "GET",
+                                        "body": {},
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "sni-codes",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "f7691c11-c177-4cbd-8dca-6d337a07a779",
+                            "name": "List SNI codes",
+                            "request": {
+                                "name": "List SNI codes",
+                                "description": {
+                                    "content": "Get a list of all SNI codes (Swedish Standard Industrial Classification). Supports filtering by hierarchy level and section.",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "path": [
+                                        "v1",
+                                        "sni-codes"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [
+                                        {
+                                            "disabled": true,
+                                            "description": {
+                                                "content": "Filter by hierarchy level (2=division, 3=group, 4=class, 5=subclass)",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "level",
+                                            "value": "2"
+                                        },
+                                        {
+                                            "disabled": true,
+                                            "description": {
+                                                "content": "Filter by section letter (A-U)",
+                                                "type": "text/plain"
+                                            },
+                                            "key": "section",
+                                            "value": "J"
+                                        }
+                                    ],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "disabled": false,
+                                        "description": {
+                                            "content": "Language for descriptions (sv or en)",
+                                            "type": "text/plain"
+                                        },
+                                        "key": "Accept-Language",
+                                        "value": "sv"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{bearerToken}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
                         }
                     ]
                 }

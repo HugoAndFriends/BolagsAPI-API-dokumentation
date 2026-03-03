@@ -1,0 +1,23 @@
+meta {
+  name: Get Group Members
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/group/members
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get all companies that belong to the same corporate group as the specified company. Returns the full hierarchy from ultimate parent down.
+
+  Requires Pro plan or higher.
+
+  Returns:
+  - orgnr: The queried company
+  - ultimate_parent_orgnr: Root of the group
+  - group_size: Total number of members
+  - members: Array of all companies in the group
+}

@@ -1,0 +1,23 @@
+meta {
+  name: Get Group
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/group
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get the corporate group structure for a company, including ultimate parent, parent chain, siblings, and direct subsidiaries.
+
+  Requires Pro plan or higher.
+
+  Returns:
+  - ultimate_parent: The top-level parent company
+  - parent_chain: Array of parent companies up to the ultimate parent
+  - siblings: Companies sharing the same direct parent
+  - subsidiaries: Direct subsidiaries of this company
+}

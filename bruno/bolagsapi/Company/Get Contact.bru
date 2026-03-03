@@ -1,0 +1,22 @@
+meta {
+  name: Get Contact
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/contact
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get contact information for a company including website, phone, email, and LinkedIn.
+
+  Returns:
+  - website: Company website URL
+  - phone: Phone number
+  - email: Contact email
+  - linkedin: LinkedIn profile URL
+  - updated_at: When the contact data was last updated
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Get SNI Codes
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/sni-codes
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~level: 2
+  ~section: J
+}
+
+headers {
+  Accept-Language: sv
+}
+
+docs {
+  Get a list of all SNI codes (Swedish Standard Industrial Classification).
+
+  Query Parameters:
+  - level: Filter by hierarchy level (2=division, 3=group, 4=class, 5=subclass)
+  - section: Filter by section letter (A-U)
+
+  Headers:
+  - Accept-Language: Language for descriptions (sv or en, default: sv)
+}

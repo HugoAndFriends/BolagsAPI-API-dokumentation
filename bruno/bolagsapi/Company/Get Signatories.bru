@@ -1,0 +1,20 @@
+meta {
+  name: Get Signatories
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/signatories
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get a list of persons authorized to sign for the company (firmatecknare) with their signing rights.
+
+  Returns an array of signatories including:
+  - name: Person name
+  - role: Role in the company
+  - signing_rights: Description of signing authority
+}

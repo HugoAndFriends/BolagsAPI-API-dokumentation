@@ -1,0 +1,22 @@
+meta {
+  name: Get Bankruptcy
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/bankruptcy
+  body: none
+  auth: inherit
+}
+
+docs {
+  Check if a company has any bankruptcy announcements and get the latest one if it exists.
+
+  Requires Starter plan or higher.
+
+  Returns:
+  - orgnr: The organization number
+  - has_bankruptcy: Whether company has any bankruptcy
+  - bankruptcy: Latest bankruptcy announcement (null if none)
+}

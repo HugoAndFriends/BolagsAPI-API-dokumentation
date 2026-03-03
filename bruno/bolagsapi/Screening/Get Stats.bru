@@ -1,0 +1,15 @@
+meta {
+  name: Get Stats
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/screening/stats
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get statistics about the screening database, including the number of PEP and sanctions entries.
+}

@@ -1,0 +1,32 @@
+meta {
+  name: Batch Screen
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/screening/batch
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "names": ["Anna Andersson", "Erik Svensson"],
+    "min_score": 80
+  }
+}
+
+docs {
+  Screen up to 50 person names in a single request against PEP and sanctions lists.
+
+  Requires Starter plan or higher.
+
+  Request Body:
+  - names: Array of person names to screen (max 50)
+  - min_score: Minimum match score 50-100 (default: 80)
+}

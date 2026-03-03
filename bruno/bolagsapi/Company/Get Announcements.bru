@@ -1,0 +1,28 @@
+meta {
+  name: Get Announcements
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/announcements
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~category: 3
+  ~include_text: false
+}
+
+docs {
+  Get POIT (Post- och Inrikes Tidningar) legal announcements for a company including bankruptcies, creditor calls, company registrations, and debt restructuring.
+
+  Query Parameters:
+  - category: Filter by category
+    - 1 = Kallelser (creditor calls)
+    - 2 = Bolagsverkets registreringar
+    - 3 = Konkurser (bankruptcies)
+    - 5 = Skuldsaneringar (debt restructuring)
+  - include_text: Include full announcement text (larger response), default: false
+}

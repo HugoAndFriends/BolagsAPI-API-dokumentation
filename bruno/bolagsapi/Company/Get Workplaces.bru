@@ -1,0 +1,17 @@
+meta {
+  name: Get Workplaces
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/workplaces
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get all workplace locations (arbetsställen) for a company, including CFAR numbers, addresses, employee counts per location, and SNI codes.
+
+  Returns an array of workplaces. Empty array if no data available.
+}

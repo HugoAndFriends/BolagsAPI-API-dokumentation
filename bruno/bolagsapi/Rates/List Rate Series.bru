@@ -1,0 +1,15 @@
+meta {
+  name: List Rate Series
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/rates/series
+  body: none
+  auth: inherit
+}
+
+docs {
+  List all available Riksbank rate series with their latest observation date.
+}

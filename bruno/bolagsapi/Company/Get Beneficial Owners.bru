@@ -1,0 +1,26 @@
+meta {
+  name: Get Beneficial Owners
+  type: http
+  seq: 18
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/beneficial-owners
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~datum: 2026-01-01
+  ~fresh: false
+}
+
+docs {
+  Get registered official beneficial owners (verkliga huvudmän) for a company.
+
+  Requires Pro or Business.
+
+  Query parameters:
+  - datum: Optional historical lookup date (YYYY-MM-DD)
+  - fresh: Set true to bypass cache and fetch fresh data
+}

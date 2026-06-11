@@ -7447,6 +7447,79 @@
                                             "response": []
                                         }
                                     ]
+                                },
+                                {
+                                    "name": "beneficial-owners",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "cae559cf-268c-422c-b543-e6b992f42b64",
+                                            "name": "Get official beneficial owners",
+                                            "request": {
+                                                "name": "Get official beneficial owners",
+                                                "description": {
+                                                    "content": "Returns registered beneficial owners (verkliga huvudmän) for a company. Requires Pro or Business.",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "path": [
+                                                        "v1",
+                                                        "company",
+                                                        ":orgnr",
+                                                        "beneficial-owners"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "datum",
+                                                            "value": "2026-01-01",
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Optional historical lookup date (YYYY-MM-DD)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": "fresh",
+                                                            "value": "false",
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Set true to bypass cache and fetch fresh data",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "key": "orgnr",
+                                                            "value": "{{orgnr}}",
+                                                            "type": "any"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
                                 }
                             ]
                         }
@@ -13339,6 +13412,470 @@
                                 }
                             },
                             "response": []
+                        }
+                    ]
+                },
+                {
+                    "name": "me",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "eba44134-cd01-406b-909e-285209fa9c31",
+                            "name": "Get current API caller",
+                            "request": {
+                                "name": "Get current API caller",
+                                "description": {
+                                    "content": "Return safe account metadata for the customer that owns the current API key, API key metadata, and current billing-period usage.",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "v1",
+                                        "me"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{bearerToken}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        }
+                    ]
+                },
+                {
+                    "name": "person",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "companies",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "420bd0ac-6c11-4390-b78e-cf0c8a56228f",
+                                    "name": "Get companies connected to a personnummer",
+                                    "request": {
+                                        "name": "Get companies connected to a personnummer",
+                                        "description": {
+                                            "content": "Returns companies where the person is connected through registered roles such as board member, CEO, signatory, auditor, or other company engagement. Requires Pro plan or higher.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "path": [
+                                                "v1",
+                                                "person",
+                                                "companies"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"personnummer\": \"{{personnummer}}\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "persons",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "beneficial-of",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "f0d1f4f3-88f0-41f5-9135-4c0891aae0f6",
+                                    "name": "Get companies where a person is beneficial owner",
+                                    "request": {
+                                        "name": "Get companies where a person is beneficial owner",
+                                        "description": {
+                                            "content": "Returns companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman). Requires Pro or Business.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "path": [
+                                                "v1",
+                                                "persons",
+                                                "beneficial-of"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"personnummer\": \"{{personnummer}}\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "name": "rates",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "985a9b10-7f4d-4198-8be7-a6d64d9ca8ce",
+                            "name": "Get latest rates",
+                            "request": {
+                                "name": "Get latest rates",
+                                "description": {
+                                    "content": "Get the latest interest rates and exchange rates from Sveriges Riksbank.",
+                                    "type": "text/plain"
+                                },
+                                "url": {
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "path": [
+                                        "v1",
+                                        "rates"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": {
+                                    "type": "bearer",
+                                    "bearer": [
+                                        {
+                                            "key": "token",
+                                            "value": "{{bearerToken}}"
+                                        }
+                                    ]
+                                }
+                            },
+                            "response": []
+                        },
+                        {
+                            "name": "series",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "d093f8df-676a-4f17-8ed1-57f78126d801",
+                                    "name": "List available rate series",
+                                    "request": {
+                                        "name": "List available rate series",
+                                        "description": {
+                                            "content": "List all available rate series with their latest observation date.",
+                                            "type": "text/plain"
+                                        },
+                                        "url": {
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "path": [
+                                                "v1",
+                                                "rates",
+                                                "series"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "GET",
+                                        "body": {},
+                                        "auth": {
+                                            "type": "bearer",
+                                            "bearer": [
+                                                {
+                                                    "key": "token",
+                                                    "value": "{{bearerToken}}"
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "response": []
+                                },
+                                {
+                                    "name": "{seriesId}",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "dce0aaae-3a27-4765-bd56-2efc1f2b3d2c",
+                                            "name": "Get historical rates for a series",
+                                            "request": {
+                                                "name": "Get historical rates for a series",
+                                                "description": {
+                                                    "content": "Get historical rate observations for a specific series. Returns up to 1000 observations.",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "path": [
+                                                        "v1",
+                                                        "rates",
+                                                        "series",
+                                                        ":seriesId"
+                                                    ],
+                                                    "query": [
+                                                        {
+                                                            "key": "from",
+                                                            "value": "{{fromDate}}",
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "Start date (YYYY-MM-DD)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        },
+                                                        {
+                                                            "key": "to",
+                                                            "value": "{{toDate}}",
+                                                            "disabled": true,
+                                                            "description": {
+                                                                "content": "End date (YYYY-MM-DD)",
+                                                                "type": "text/plain"
+                                                            }
+                                                        }
+                                                    ],
+                                                    "variable": [
+                                                        {
+                                                            "key": "seriesId",
+                                                            "value": "{{seriesId}}",
+                                                            "type": "any"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "latest",
+                            "description": "",
+                            "item": [
+                                {
+                                    "name": "{seriesId}",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "9b6f8aeb-3045-4625-b2a0-79309661ccbf",
+                                            "name": "Get latest rate for a series",
+                                            "request": {
+                                                "name": "Get latest rate for a series",
+                                                "description": {
+                                                    "content": "Get the most recent observation for a specific rate series.",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "path": [
+                                                        "v1",
+                                                        "rates",
+                                                        "latest",
+                                                        ":seriesId"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "key": "seriesId",
+                                                            "value": "{{seriesId}}",
+                                                            "type": "any"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "name": "date",
+                            "description": "",
+                            "item": [
+                                {
+                                    "name": "{date}",
+                                    "description": "",
+                                    "item": [
+                                        {
+                                            "id": "f3b8c5cd-3ca7-4177-a065-7681b50463e0",
+                                            "name": "Get all rates for a date",
+                                            "request": {
+                                                "name": "Get all rates for a date",
+                                                "description": {
+                                                    "content": "Get all rate observations for a specific date. Returns empty if the date is not a Swedish banking day.",
+                                                    "type": "text/plain"
+                                                },
+                                                "url": {
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "path": [
+                                                        "v1",
+                                                        "rates",
+                                                        "date",
+                                                        ":date"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "key": "date",
+                                                            "value": "{{rateDate}}",
+                                                            "type": "any"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "GET",
+                                                "body": {},
+                                                "auth": {
+                                                    "type": "bearer",
+                                                    "bearer": [
+                                                        {
+                                                            "key": "token",
+                                                            "value": "{{bearerToken}}"
+                                                        }
+                                                    ]
+                                                }
+                                            },
+                                            "response": []
+                                        }
+                                    ]
+                                }
+                            ]
                         }
                     ]
                 }

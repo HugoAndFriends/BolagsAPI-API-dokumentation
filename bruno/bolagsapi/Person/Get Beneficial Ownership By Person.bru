@@ -1,0 +1,25 @@
+meta {
+  name: Get Beneficial Ownership By Person
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/persons/beneficial-of
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "personnummer": "{{personnummer}}"
+  }
+}
+
+docs {
+  Get companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman).
+
+  This endpoint is separate from general company roles and engagements.
+
+  Requires Pro or Business.
+}

@@ -1,0 +1,26 @@
+meta {
+  name: Get Rate Series History
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/rates/series/{{seriesId}}
+  body: none
+  auth: inherit
+}
+
+params:query {
+  ~from: {{fromDate}}
+  ~to: {{toDate}}
+}
+
+docs {
+  Get historical rate observations for a specific Riksbank series.
+
+  Query parameters:
+  - from: Start date (YYYY-MM-DD)
+  - to: End date (YYYY-MM-DD)
+
+  Returns up to 1000 observations.
+}

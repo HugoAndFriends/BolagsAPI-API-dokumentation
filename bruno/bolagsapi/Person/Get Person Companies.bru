@@ -1,0 +1,26 @@
+meta {
+  name: Get Person Companies
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/person/companies
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "personnummer": "{{personnummer}}"
+  }
+}
+
+docs {
+  Get companies where a person is connected through registered roles such as board member, CEO, signatory, auditor, or other company engagement.
+
+  Requires Pro plan or higher.
+
+  Body:
+  - personnummer: Swedish personnummer or samordningsnummer, 12 digits with optional separator.
+}

@@ -1,0 +1,19 @@
+meta {
+  name: Get Latest Series Rate
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/rates/latest/{{seriesId}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get the most recent observation for a specific Riksbank rate series.
+
+  Example seriesId:
+  - SECBREPOEFF: policy rate
+  - SEKEURPMI: EUR/SEK exchange rate
+}

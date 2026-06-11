@@ -1,0 +1,17 @@
+meta {
+  name: Get Latest Rates
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/rates
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get the latest interest rates and exchange rates from Sveriges Riksbank.
+
+  Includes policy rate, reference rate, deposit/lending rates, and major currency exchange rates against SEK.
+}

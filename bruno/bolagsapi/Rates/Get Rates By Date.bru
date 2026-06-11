@@ -1,0 +1,17 @@
+meta {
+  name: Get Rates By Date
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/rates/date/{{rateDate}}
+  body: none
+  auth: inherit
+}
+
+docs {
+  Get all rate observations for a specific date.
+
+  Returns an empty result if the date is not a Swedish banking day.
+}

@@ -1,0 +1,17 @@
+meta {
+  name: Get Current Caller
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/me
+  body: none
+  auth: inherit
+}
+
+docs {
+  Return safe account metadata for the customer that owns the current API key, the current API key metadata, and current billing-period usage.
+
+  This endpoint requires bearer API-key authentication.
+}

@@ -1,0 +1,18 @@
+meta {
+  name: List BRF Periods
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/7020001140/brf/periods
+  body: none
+  auth: inherit
+}
+
+docs {
+  Requires the BRF module on the personal API key's customer. Team keys excluded.
+  Free discovery; check data_available and downloadable independently.
+  Example organization number; actual data availability varies.
+  Guide: https://bolagsapi.se/brf/docs
+}

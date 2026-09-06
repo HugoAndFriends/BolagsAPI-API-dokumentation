@@ -70,6 +70,22 @@ Bruno can also import directly from our OpenAPI spec:
 
 ## Available Endpoints
 
+### BRF module
+
+Activate the add-on under [Billing](https://bolagsapi.se/dashboard/billing#brf). Purchase requires BolagsAPI Business. Administrators can grant manual access without automatic Stripe billing. Use a personal API key on the same customer; team keys are excluded.
+
+- `GET /v1/company/{orgnr}/brf/periods` — discover up to 100 periods, newest first; no units charged.
+- `GET /v1/company/{orgnr}/brf?period=2025-12` — source-checked housing association data. Omit the period for the latest known report, without silently falling back to an older year.
+- `GET /v1/company/{orgnr}/reports/{report_id}` — check `downloadable` first. BRF module PDF downloads return bytes with HTTP 200. PDFs sourced from **AllaBRF are always blocked**, including on the publication plan.
+
+A successful BRF data response uses one of 10,000 units per module period. Period lists, HTTP 202 and errors are free. Base API units are not also deducted. `X-BRF-Data-Remaining` gives the remaining allowance. HTTP 202 means processing; wait according to `Retry-After`. HTTP 404 means unavailable, 403 no access, and 429 quota/rate limit reached.
+
+`quality.status=partial` does not certify the whole report. Each field has evidence (status, page, quote, unit); unknown or conflicting values are null. Empty loan/fee-change lists do not establish absence: inspect completeness flags. Amounts use SEK, areas m² and percentages percentage points. `apartments` and `residential_area_sqm` exclude rentals; `debt_per_sqm` uses total area, while `debt_per_residential_sqm` uses tenant-owned area. `fixed_until` is the interest reset date, not final maturity.
+
+The module includes 500 unique PDFs per period; subsequent PDFs use graduated pricing. Repeated association/fiscal-period downloads count once per module period. Track quotas under Usage, API calls under Logs and subscriptions/invoices under Billing.
+
+[Product and prices](https://bolagsapi.se/brf) · [BRF integration guide](https://bolagsapi.se/brf/docs) · [Full response schemas](https://api.bolagsapi.se/openapi.json)
+
 ### Account
 - `GET /v1/me` - Get current API caller, API key metadata, and billing-period usage
 

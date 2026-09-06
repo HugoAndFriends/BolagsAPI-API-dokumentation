@@ -13883,7 +13883,7 @@
         },
         {
             "name": "BRF",
-            "description": "Customer add-on. See https://bolagsapi.se/brf/docs. AllaBRF PDFs are blocked on every plan.",
+            "description": "Customer add-on. See https://bolagsapi.se/docs#brf-data. AllaBRF PDFs are blocked on every plan.",
             "item": [
                 {
                     "name": "List BRF Periods",
@@ -13901,7 +13901,7 @@
                             ]
                         },
                         "url": "{{baseUrl}}/v1/company/7020001140/brf/periods",
-                        "description": "Requires the BRF module on the personal API key's customer (no team keys). Free discovery; data_available and downloadable are independent. https://bolagsapi.se/brf/docs"
+                        "description": "Requires the BRF module on the personal API key's customer (no team keys). Free discovery; data_available and downloadable are independent. https://bolagsapi.se/docs#brf-data"
                     },
                     "response": []
                 },
@@ -13921,7 +13921,7 @@
                             ]
                         },
                         "url": "{{baseUrl}}/v1/company/7020001140/brf?period=2025-12",
-                        "description": "Requires the BRF module on the personal API key's customer (no team keys). One unit per 200. 202 processing: honor Retry-After; 404 unavailable, 403 no access, 429 quota/rate limit. Unknown fields are null. https://bolagsapi.se/brf/docs"
+                        "description": "Requires the BRF module on the personal API key's customer (no team keys). One unit per 200. 202 processing: honor Retry-After; 404 unavailable, 403 no access, 429 quota/rate limit. Unknown fields are null. https://bolagsapi.se/docs#brf-data"
                     },
                     "response": []
                 }

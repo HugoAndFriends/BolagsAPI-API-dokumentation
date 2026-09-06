@@ -84,7 +84,7 @@ A successful BRF data response uses one of 10,000 units per module period. Perio
 
 The module includes 500 unique PDFs per period; subsequent PDFs use graduated pricing. Repeated association/fiscal-period downloads count once per module period. Track quotas under Usage, API calls under Logs and subscriptions/invoices under Billing.
 
-[Product and prices](https://bolagsapi.se/brf) · [BRF integration guide](https://bolagsapi.se/brf/docs) · [Full response schemas](https://api.bolagsapi.se/openapi.json)
+[Product and prices](https://bolagsapi.se/brf) · [BRF integration guide](https://bolagsapi.se/docs#brf-data) · [Full response schemas](https://api.bolagsapi.se/openapi.json)
 
 ### Account
 - `GET /v1/me` - Get current API caller, API key metadata, and billing-period usage

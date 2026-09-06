@@ -1,0 +1,18 @@
+meta {
+  name: Get BRF Data
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/7020001140/brf?period=2025-12
+  body: none
+  auth: inherit
+}
+
+docs {
+  Requires the BRF module on the personal API key's customer. Team keys excluded.
+  One unit per successful 200. 202 processing: honor Retry-After; 404 unavailable, 403 no access, 429 quota/rate limit. Unknown fields are null.
+  Example organization number; actual data availability varies.
+  Guide: https://bolagsapi.se/brf/docs
+}

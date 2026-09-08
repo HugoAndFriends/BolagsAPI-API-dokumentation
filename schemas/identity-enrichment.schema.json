@@ -1,0 +1,553 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://api.bolagsapi.se/identity/enrichment.schema.json",
+  "title": "Auth by Hugo company enrichment",
+  "description": "Root validates enrichment.bolag. $defs also contains SSE complete, follow-up and OIDC user response schemas. OpenAPI: https://api.bolagsapi.se/openapi.json",
+  "$ref": "#/$defs/IdentityBolagEnrichment",
+  "$defs": {
+    "IdentityInitResponse": {
+      "type": "object",
+      "required": [
+        "orderRef",
+        "autoStartToken",
+        "autoStartUrl",
+        "collectUrl"
+      ],
+      "properties": {
+        "orderRef": {
+          "type": "string"
+        },
+        "autoStartToken": {
+          "type": "string"
+        },
+        "autoStartUrl": {
+          "type": "string",
+          "format": "uri"
+        },
+        "collectUrl": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "enrichmentUrl": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "description": "enrichmentUrl is present only when an enrichment scope was requested. QR secrets are never returned."
+    },
+    "IdentityDataStatus": {
+      "type": "string",
+      "enum": [
+        "fresh",
+        "stale",
+        "queued",
+        "refreshing",
+        "not_found",
+        "failed"
+      ],
+      "description": "Data availability, not BankID authentication status. Empty companies alone does not mean not_found. stale can contain usable older data."
+    },
+    "IdentityBolagData": {
+      "description": "Full BolagsAPI person engagement result, including pending and failed lookups that returned a structured result. All base fields are required; nullable fields remain present.",
+      "allOf": [
+        {
+          "$ref": "#/$defs/PersonCompaniesResponse"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "retry_after_seconds": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "enum": [
+                2,
+                30,
+                null
+              ],
+              "description": "2 seconds while pending, 30 after failure, null when no retry is requested."
+            }
+          },
+          "required": [
+            "retry_after_seconds"
+          ]
+        }
+      ]
+    },
+    "IdentityBolagError": {
+      "type": "object",
+      "description": "Transport/provider failure without a full lookup result. Company and source fields are absent, not null.",
+      "properties": {
+        "data_status": {
+          "const": "failed",
+          "type": "string"
+        },
+        "retry_after_seconds": {
+          "type": "integer",
+          "const": 30
+        },
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "data_status",
+        "retry_after_seconds",
+        "error"
+      ],
+      "not": {
+        "required": [
+          "companies"
+        ]
+      }
+    },
+    "IdentityBolagEnrichment": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/IdentityBolagData"
+        },
+        {
+          "$ref": "#/$defs/IdentityBolagError"
+        }
+      ]
+    },
+    "IdentityEnrichment": {
+      "type": "object",
+      "properties": {
+        "bolag": {
+          "$ref": "#/$defs/IdentityBolagEnrichment"
+        }
+      },
+      "required": [
+        "bolag"
+      ],
+      "description": "The enrichment:bolag scope returns this envelope. Other scopes may add keys in the future."
+    },
+    "IdentityUser": {
+      "type": "object",
+      "required": [
+        "sub"
+      ],
+      "properties": {
+        "sub": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "given_name": {
+          "type": "string"
+        },
+        "family_name": {
+          "type": "string"
+        },
+        "personal_number": {
+          "type": "string"
+        },
+        "enrichment": {
+          "$ref": "#/$defs/IdentityEnrichment"
+        }
+      },
+      "description": "sub is always present. name, given_name and family_name appear with profile; personal_number with pnr; enrichment with enrichment:bolag when delivered. Omitted scope fields are absent, never null. These are REST and /userinfo claims, not an ID-token schema."
+    },
+    "IdentityCompleteResponse": {
+      "type": "object",
+      "required": [
+        "status",
+        "user"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "complete"
+        },
+        "user": {
+          "$ref": "#/$defs/IdentityUser"
+        },
+        "enrichmentStatus": {
+          "$ref": "#/$defs/IdentityDataStatus"
+        },
+        "retryAfterSeconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "enum": [
+            2,
+            30,
+            null
+          ],
+          "description": "2 seconds while pending, 30 after failure, null when no retry is requested."
+        },
+        "enrichmentUrl": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "description": "JSON data of SSE event complete and data of webhook auth.complete. BankID succeeded even if enrichmentStatus is pending/failed. Enrichment metadata is added together when enrichment is available; it is absent without enrichment delivery, not null. Resolve enrichmentUrl against https://auth.byhugo.se.",
+      "dependentRequired": {
+        "enrichmentStatus": [
+          "retryAfterSeconds",
+          "enrichmentUrl"
+        ],
+        "retryAfterSeconds": [
+          "enrichmentStatus",
+          "enrichmentUrl"
+        ],
+        "enrichmentUrl": [
+          "enrichmentStatus",
+          "retryAfterSeconds"
+        ]
+      }
+    },
+    "IdentityEnrichmentResponse": {
+      "type": "object",
+      "required": [
+        "status",
+        "enrichment",
+        "retryAfterSeconds"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/IdentityDataStatus"
+        },
+        "enrichment": {
+          "$ref": "#/$defs/IdentityEnrichment"
+        },
+        "retryAfterSeconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "enum": [
+            2,
+            30,
+            null
+          ],
+          "description": "2 seconds while pending, 30 after failure, null when no retry is requested."
+        }
+      },
+      "description": "Follow-up response. HTTP 200 for fresh/stale/not_found, 202 for queued/refreshing, 503 for failed. Retry-After is present when retryAfterSeconds is non-null."
+    },
+    "IdentityPendingEvent": {
+      "type": "object",
+      "required": [
+        "status",
+        "qrData"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "pending"
+        },
+        "hintCode": {
+          "type": "string"
+        },
+        "qrData": {
+          "type": "string"
+        }
+      },
+      "description": "SSE pending JSON payload. hintCode is an optional, extensible BankID hint string."
+    },
+    "IdentityFailedEvent": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "failed"
+        },
+        "hintCode": {
+          "type": "string"
+        }
+      },
+      "description": "SSE failed JSON payload; hintCode may include identityMismatch or expiredTransaction as well as BankID values. This is authentication failure, distinct from enrichment failure."
+    },
+    "IdentityErrorEvent": {
+      "type": "object",
+      "required": [
+        "status",
+        "message"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "const": "error"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "IdentityApiError": {
+      "type": "object",
+      "required": [
+        "error",
+        "message"
+      ],
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "Request/authentication/session error. Not the enrichment response returned with HTTP 503."
+    },
+    "PersonRoleType": {
+      "type": "string",
+      "examples": [
+        "executive",
+        "chair",
+        "deputy",
+        "board_member",
+        "auditor",
+        "procurist",
+        "signatory",
+        "liquidator",
+        "limited_partner",
+        "partner",
+        "service_recipient",
+        "manager",
+        "owner_indicator",
+        "unknown"
+      ],
+      "x-known-values": [
+        "executive",
+        "chair",
+        "deputy",
+        "board_member",
+        "auditor",
+        "procurist",
+        "signatory",
+        "liquidator",
+        "limited_partner",
+        "partner",
+        "service_recipient",
+        "manager",
+        "owner_indicator",
+        "unknown"
+      ],
+      "description": "Open vocabulary: current normalized role values are listed in x-known-values. Stored role types are passed through; other strings may occur. Treat as string with a fallback, not a closed enum. The original human-readable role remains in title."
+    },
+    "PublicDataSource": {
+      "type": "string",
+      "enum": [
+        "bolagsverket",
+        "scb",
+        "skatteverket",
+        "prv",
+        "poit",
+        "finansinspektionen",
+        "riksbanken",
+        "konsumentverket",
+        "eu",
+        "un",
+        "ofac",
+        "riksdagen",
+        "annual_report_pdf",
+        "public_company_information",
+        "bolagsapi"
+      ],
+      "description": "Stable public source identifier. Sensitive acquisition providers are not exposed; fallback PDF-derived data is reported as annual_report_pdf."
+    },
+    "SourceAttribution": {
+      "type": "object",
+      "description": "Path-based attribution for a response section or nested field group.",
+      "properties": {
+        "path": {
+          "type": "string",
+          "example": "business.sni_codes"
+        },
+        "source": {
+          "$ref": "#/$defs/PublicDataSource"
+        },
+        "label": {
+          "type": "string",
+          "example": "SCB"
+        }
+      },
+      "required": [
+        "path",
+        "source",
+        "label"
+      ]
+    },
+    "SourceMeta": {
+      "type": "object",
+      "description": "Public data-source attribution. source/source_label are used for single-source responses; sources[] is used for composite responses. ingestion_path, when present, describes BolagsAPI ingestion/cache path and is not an origin authority.",
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/PublicDataSource"
+        },
+        "source_label": {
+          "type": "string",
+          "example": "Bolagsverket"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/SourceAttribution"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ingestion_path": {
+          "type": "string",
+          "enum": [
+            "bulk",
+            "api",
+            "cache"
+          ],
+          "description": "Internal ingestion/cache path retained separately from public source attribution."
+        }
+      }
+    },
+    "PersonCompaniesResponse": {
+      "type": "object",
+      "properties": {
+        "meta": {
+          "$ref": "#/$defs/SourceMeta",
+          "description": "Optional public source attribution passed through by Auth; may be absent in cached responses."
+        },
+        "person_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^per_1_[A-Za-z0-9_-]+$",
+          "description": "Opaque identifier used for this lookup, or null for personnummer-based lookups."
+        },
+        "personnummer_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "example": "fd9484eebfb4b7c34026534fdb6d4b53583d767d21c2bb5c0b5d6df7a96b63c1"
+        },
+        "source": {
+          "type": "string",
+          "const": "local_registry",
+          "example": "local_registry"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "db",
+            "fetched"
+          ],
+          "example": "db"
+        },
+        "data_status": {
+          "type": "string",
+          "enum": [
+            "fresh",
+            "stale",
+            "queued",
+            "refreshing",
+            "not_found",
+            "failed"
+          ],
+          "example": "fresh"
+        },
+        "last_checked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "companies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/PersonCompanyEngagement"
+          }
+        },
+        "count": {
+          "type": "integer",
+          "example": 2
+        },
+        "refreshing": {
+          "type": "boolean",
+          "example": false
+        }
+      },
+      "required": [
+        "person_id",
+        "personnummer_hash",
+        "source",
+        "mode",
+        "data_status",
+        "last_checked_at",
+        "companies",
+        "count",
+        "refreshing"
+      ]
+    },
+    "PersonCompanyEngagement": {
+      "type": "object",
+      "properties": {
+        "orgnr": {
+          "type": "string",
+          "example": "5567037485"
+        },
+        "name": {
+          "type": "string",
+          "example": "Spotify AB"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "deregistered",
+            "unknown"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "$ref": "#/$defs/PersonRoleType"
+              },
+              "title": {
+                "type": "string",
+                "example": "Styrelseledamot"
+              },
+              "active": {
+                "type": "boolean",
+                "example": true
+              },
+              "last_seen_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              }
+            },
+            "required": [
+              "type",
+              "title",
+              "active",
+              "last_seen_at"
+            ]
+          }
+        }
+      },
+      "required": [
+        "orgnr",
+        "name",
+        "status",
+        "roles"
+      ]
+    }
+  }
+}

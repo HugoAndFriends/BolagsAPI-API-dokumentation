@@ -1,0 +1,26 @@
+name: Documentation contracts
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: '25 7 * * *'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm run generate
+      - run: git diff --exit-code
+      - run: test -z "$(git status --porcelain)"
+      - name: Check published schema drift
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        run: npm run check:live

@@ -1,0 +1,40 @@
+meta {
+  name: exportCompanies
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/export
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json, text/csv
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "filters": {
+      "sni_codes": [
+        "62010"
+      ],
+      "cities": [
+        "Stockholm"
+      ],
+      "status": "active"
+    },
+    "preview": true
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -1,0 +1,19 @@
+{
+  "name": "bolagsapi-api-documentation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync.mjs",
+    "generate": "node scripts/generate.mjs",
+    "check": "node scripts/check.mjs",
+    "check:live": "node scripts/check.mjs --live"
+  },
+  "devDependencies": {
+    "@usebruno/converters": "0.23.0",
+    "@usebruno/lang": "0.39.0",
+    "openapi-to-postmanv2": "6.3.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

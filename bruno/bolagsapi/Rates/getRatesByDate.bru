@@ -1,0 +1,24 @@
+meta {
+  name: getRatesByDate
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/rates/date/{{date}}
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

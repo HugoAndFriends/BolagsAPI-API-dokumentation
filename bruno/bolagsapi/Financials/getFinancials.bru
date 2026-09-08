@@ -1,0 +1,31 @@
+meta {
+  name: getFinancials
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financials
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Include comparative data from reports (multiple values for same year)')
+  ~include_comparative: false
+  @description('Select company-only or consolidated group figures. When omitted, one consistent series is selected, preferring exact company figures, then safely unclassified official figures, coarse company fallbacks, and finally group figures. all returns separate rows when multiple scopes exist.')
+  ~scope: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

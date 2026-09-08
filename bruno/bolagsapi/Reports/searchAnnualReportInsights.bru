@@ -1,0 +1,56 @@
+meta {
+  name: searchAnnualReportInsights
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/reports/insights/search?q={{q}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Search query')
+  q: {{q}}
+  @description('Comma-separated signal filters')
+  ~signal_type: 
+  @description('Comma-separated source filters')
+  ~source: 
+  ~year_from: 
+  ~year_to: 
+  @description('Start period as YYYY-MM or YYYY-MM-DD')
+  ~period_from: 
+  @description('End period as YYYY-MM or YYYY-MM-DD')
+  ~period_to: 
+  @description('Comma-separated SNI filters')
+  ~sni: 
+  @description('Comma-separated city filters')
+  ~city: 
+  @description('Comma-separated county-code filters')
+  ~lan: 
+  @description('Comma-separated postal-code filters')
+  ~postal_code: 
+  ~employees_min: 
+  ~employees_max: 
+  ~revenue_min: 
+  ~revenue_max: 
+  ~active_only: true
+  ~include_financials: false
+  @description('Pro max 100, Business max 500')
+  ~limit: 10
+  ~offset: 0
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

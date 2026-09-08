@@ -1,0 +1,34 @@
+meta {
+  name: startIdentity
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{authBaseUrl}}/api/v1/identify
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{identityApiKey}}
+}
+
+body:json {
+  {
+    "scopes": [
+      "profile",
+      "enrichment:bolag"
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

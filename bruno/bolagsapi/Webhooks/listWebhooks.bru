@@ -1,0 +1,24 @@
+meta {
+  name: listWebhooks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/webhooks
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

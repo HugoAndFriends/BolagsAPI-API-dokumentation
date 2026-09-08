@@ -1,0 +1,31 @@
+meta {
+  name: getAIValuation
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/valuation/ai
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Language for summary and descriptions')
+  ~lang: sv
+  @description('Force regeneration (bypass cache)')
+  ~force: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

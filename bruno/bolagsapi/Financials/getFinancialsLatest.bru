@@ -1,0 +1,29 @@
+meta {
+  name: getFinancialsLatest
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/financials/latest
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Select the accounting scope. all considers every scope and returns the best latest row.')
+  ~scope: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

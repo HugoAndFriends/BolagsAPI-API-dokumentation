@@ -1,0 +1,24 @@
+meta {
+  name: getContact
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/contact
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

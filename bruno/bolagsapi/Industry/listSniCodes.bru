@@ -1,0 +1,33 @@
+meta {
+  name: listSniCodes
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/sni-codes
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Filter by hierarchy level (2=division, 3=group, 4=class, 5=subclass)')
+  ~level: 2
+  @description('Filter by section letter (A-V)')
+  ~section: J
+  @description('Filter by SNI version')
+  ~version: 2025
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

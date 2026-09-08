@@ -1,0 +1,28 @@
+meta {
+  name: getIdentityEnrichment
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{authBaseUrl}}/api/v1/identify/enrichment?orderRef={{orderRef}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  orderRef: {{orderRef}}
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{identityApiKey}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

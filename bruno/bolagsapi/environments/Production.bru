@@ -1,17 +1,25 @@
 vars {
   baseUrl: https://api.bolagsapi.se
-  bearerToken: YOUR_API_KEY_HERE
-  orgnr: 5560125790
+  authBaseUrl: https://auth.byhugo.se
+  orgnr: 5560553561
   sniCode: 62010
   kommunCode: 0180
-  taxYear: 2026
-  reportId: REPORT_ID_HERE
-  webhookId: WEBHOOK_ID_HERE
-  announcementId: KNG-2026-12345
-  personName: Anna Andersson
-  personnummer: 19890215-1234
-  seriesId: SEKEURPMI
-  fromDate: 2026-01-01
-  toDate: 2026-03-31
-  rateDate: 2026-04-02
+  year: 2026
+  date: 2026-09-01
+  seriesId: SECBREPOEFF
+  reportId: REPLACE_WITH_REPORT_ID
+  webhookId: REPLACE_WITH_WEBHOOK_ID
+  announcementId: REPLACE_WITH_ANNOUNCEMENT_ID
+  name: Anna Andersson
+  sessionId: REPLACE_WITH_SESSION_ID
+  person_id: REPLACE_WITH_PERSON_ID
+  personnummer: REPLACE_WITH_AUTHORIZED_PERSONNUMMER
+  orderRef: REPLACE_WITH_ORDERREF
+  q: REPLACE_WITH_Q
 }
+vars:secret [
+  bearerToken,
+  identityApiKey,
+  authAccessToken,
+  webhookSecret
+]

@@ -1,0 +1,31 @@
+meta {
+  name: getCompany
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description("Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans)")
+  ~include: financials,fi,prv
+  @description('Select a specific registered business when a sole trader has multiple businesses under the same personal identity number. Use the value returned by /v1/search.')
+  ~name_protection_number: 2
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

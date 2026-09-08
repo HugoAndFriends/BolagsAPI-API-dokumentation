@@ -1,0 +1,31 @@
+meta {
+  name: screenPerson
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/screening/person/{{name}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Minimum match score (50-100). Higher values = stricter matching.')
+  ~min_score: 80
+  @description('Force refresh cached results')
+  ~refresh: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

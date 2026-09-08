@@ -1,0 +1,87 @@
+meta {
+  name: searchCompanies
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/search
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Search query (min 3 characters if provided). Optional - filter-only searches are supported.')
+  ~q: tech
+  @description('Filter by city name(s), comma-separated for multiple')
+  ~city: Stockholm,Göteborg
+  @description("Filter by SNI code(s), comma-separated. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).")
+  ~sni: 62,63
+  @description('Filter by organization form(s), comma-separated')
+  ~org_form: AB,HB
+  @description('Filter by county code(s), comma-separated (01=Stockholm, 20=Dalarna, etc.)')
+  ~lan: 01,14
+  @description('Filter by municipality code or name, comma-separated for multiple')
+  ~municipality: 0880,Stockholm
+  @description('Filter by postal code(s), comma-separated. Supports both formats (11122 or 111 22)')
+  ~postal_code: 11122,11447
+  @description('Filter by street address (partial match, case-insensitive)')
+  ~street: Kungsgatan
+  @description('Only return active companies')
+  ~active_only: true
+  @description('Minimum number of employees in the latest parsed financial period')
+  ~employees_min: 
+  @description('Maximum number of employees in the latest parsed financial period')
+  ~employees_max: 
+  @description('Minimum annual revenue (SEK) in the latest parsed financial period')
+  ~revenue_min: 
+  @description('Maximum annual revenue (SEK) in the latest parsed financial period')
+  ~revenue_max: 
+  @description('Minimum equity ratio (0-100%)')
+  ~equity_ratio_min: 
+  @description('Filter by profitability (positive net income)')
+  ~profitable: 
+  @description('Only companies with annual reports')
+  ~has_reports: 
+  @description('Only companies with parsed financial data')
+  ~has_financials: 
+  @description('Filter subsidiaries of a parent company')
+  ~parent_orgnr: 5567037485
+  @description('Has Finansinspektionen license')
+  ~fi_licensed: 
+  @description('Exclude companies with FI warnings')
+  ~no_fi_warnings: 
+  @description('Has auditor remarks in reports')
+  ~has_auditor_remarks: 
+  @description('Filter by foreign ownership. true = only foreign-owned companies (parent company is not Swedish), false = only Swedish-owned subsidiaries')
+  ~foreign_owned: 
+  @description('Results per page. Maximum depends on tier: free=100, starter=500, pro=2000, business=10000')
+  ~limit: 10
+  @description('Pagination offset. For large datasets, prefer cursor pagination with after_orgnr')
+  ~offset: 0
+  @description('Cursor for keyset pagination. Returns companies after this org number. More efficient than offset for large datasets.')
+  ~after_orgnr: 5567037485
+  @description('Sort field. registered_date sorts by company registration date. revenue/employees sort by latest financial data (requires LATERAL JOIN, may be slower).')
+  ~order_by: name
+  @description('Sort direction')
+  ~order: asc
+  @description('Filter companies registered on or after this date (YYYY-MM-DD)')
+  ~registered_after: 2024-01-01
+  @description('Filter companies registered on or before this date (YYYY-MM-DD)')
+  ~registered_before: 2024-12-31
+  @description('Include revenue and employees in results. Automatically enabled when sorting by revenue/employees.')
+  ~include_financials: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

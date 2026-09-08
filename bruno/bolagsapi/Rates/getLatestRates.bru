@@ -1,0 +1,24 @@
+meta {
+  name: getLatestRates
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/rates
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

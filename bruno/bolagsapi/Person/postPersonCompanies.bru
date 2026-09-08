@@ -1,0 +1,31 @@
+meta {
+  name: postPersonCompanies
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/person/companies
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "person_id": "{{person_id}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

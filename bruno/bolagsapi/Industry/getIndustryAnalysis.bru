@@ -1,0 +1,29 @@
+meta {
+  name: getIndustryAnalysis
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/industry/{{sniCode}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('SNI version for reference-code lookup. Company matching expands through SNI 2007/SNI 2025 mappings.')
+  ~version: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

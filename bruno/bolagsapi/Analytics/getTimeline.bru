@@ -1,0 +1,29 @@
+meta {
+  name: getTimeline
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/timeline
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Include cached Bolagsverket company and financial-report cases. Requires Pro or higher.')
+  ~include_cases: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

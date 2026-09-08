@@ -1,0 +1,24 @@
+meta {
+  name: testWebhook
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{baseUrl}}/v1/webhooks/{{webhookId}}/test
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

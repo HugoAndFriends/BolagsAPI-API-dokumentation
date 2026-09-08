@@ -1,0 +1,39 @@
+meta {
+  name: getAnnouncements
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/announcements
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Filter by POIT category (1–9)')
+  ~category: 
+  @description('Filter by POIT announcement type ID')
+  ~type: 
+  @description('Earliest publication date')
+  ~from: 
+  @description('Latest publication date')
+  ~to: 
+  ~limit: 100
+  ~offset: 0
+  @description('Include full announcement text (larger response)')
+  ~include_text: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

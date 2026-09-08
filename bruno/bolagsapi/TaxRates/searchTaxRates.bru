@@ -1,0 +1,31 @@
+meta {
+  name: searchTaxRates
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/search?q=Stockholm
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Search query (municipality name, min 2 chars)')
+  q: Stockholm
+  @description('Filter by year (defaults to latest available)')
+  ~year: 2026
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

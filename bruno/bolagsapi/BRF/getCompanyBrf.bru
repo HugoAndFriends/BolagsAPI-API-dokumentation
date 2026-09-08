@@ -1,0 +1,29 @@
+meta {
+  name: getCompanyBrf
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/brf
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('YYYY-MM. Omit for latest known report; never silently falls back to an older verified year.')
+  ~period: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

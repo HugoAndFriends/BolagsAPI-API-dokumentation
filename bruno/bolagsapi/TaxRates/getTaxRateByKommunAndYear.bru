@@ -1,0 +1,24 @@
+meta {
+  name: getTaxRateByKommunAndYear
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/tax-rates/kommun/{{kommunCode}}/{{year}}
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

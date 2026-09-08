@@ -1,0 +1,31 @@
+meta {
+  name: listReports
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/reports
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Number of reports to return (1-100)')
+  ~limit: 10
+  @description('Starting position for pagination')
+  ~offset: 0
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

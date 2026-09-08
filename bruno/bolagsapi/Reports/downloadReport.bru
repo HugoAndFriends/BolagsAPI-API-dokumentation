@@ -1,0 +1,29 @@
+meta {
+  name: downloadReport
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/reports/{{reportId}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Output format: pdf (default) or raw for original iXBRL when available')
+  ~format: pdf
+}
+
+headers {
+  Accept: application/pdf, application/xhtml+xml, application/zip
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

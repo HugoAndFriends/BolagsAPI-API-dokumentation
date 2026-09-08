@@ -1,0 +1,34 @@
+meta {
+  name: batchScreen
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/screening/batch
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "names": [
+      "Anna Andersson"
+    ],
+    "min_score": 80
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

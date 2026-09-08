@@ -1,0 +1,29 @@
+meta {
+  name: screenCompany
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/screening
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Force refresh cached results')
+  ~refresh: false
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

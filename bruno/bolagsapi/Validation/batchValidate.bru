@@ -1,0 +1,33 @@
+meta {
+  name: batchValidate
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/validate/batch
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "orgnrs": [
+      "{{orgnr}}"
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

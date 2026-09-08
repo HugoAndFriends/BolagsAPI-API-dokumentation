@@ -1,0 +1,24 @@
+meta {
+  name: getIdentityUserInfo
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{authBaseUrl}}/userinfo
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{authAccessToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

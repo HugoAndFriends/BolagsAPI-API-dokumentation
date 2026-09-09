@@ -198,6 +198,47 @@
       "description": "Company lookup and information",
       "item": [
         {
+          "name": "getCompanyLei",
+          "request": {
+            "name": "LEI and international accounting-consolidating parents",
+            "description": "LEI and international accounting-consolidating parents\n\nPro+. Uses 3 enrichment units. Daily local GLEIF Golden Copy snapshot; no upstream lookup. Linkage uses a validated Swedish organisation number registered with Bolagsverket (RA000544), never a name match. Current ACTIVE/PUBLISHED direct and ultimate accounting-consolidating relationships are separate from legal ownership; no ownership percentage is inferred. Other relationship states, including LAPSED, are retained in other_relationships. Relations and exceptions refer to canonical_lei only. All matched identities are retained; competing identities return ambiguous and no canonical parents. An empty parent list does not establish that a company has no parent; reporting_exceptions preserves source reasons. Foreign parents may have no Swedish orgnr. Source record dates are independent of snapshot publication; stale means publication older than 48 hours. The same object is included as international_relationships on /group, independently of its Swedish structure.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/lei",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "lei"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "getCompany",
           "request": {
             "name": "Get company information",
@@ -513,7 +554,7 @@
           "name": "getAnnouncements",
           "request": {
             "name": "Get legal announcements",
-            "description": "Get legal announcements\n\nGet POIT (Post- och Inrikes Tidningar) legal announcements for a company including bankruptcies (konkurser), creditor calls (kallelser), company registrations, and debt restructuring (skuldsaneringar). A valid organization number with no matching announcements returns 200 with an empty announcements array. New POIT publications are polled every 15 minutes during the weekday publication window and queued for webhook delivery within one minute after ingestion.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get legal announcements\n\nRequires Starter plan or higher. Get POIT (Post- och Inrikes Tidningar) legal announcements for a company including bankruptcies (konkurser), creditor calls (kallelser), company registrations, and debt restructuring (skuldsaneringar). A valid organization number with no matching announcements returns 200 with an empty announcements array. New POIT publications are polled every 15 minutes during the weekday publication window and queued for webhook delivery within one minute after ingestion.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/announcements",
               "host": [
@@ -597,7 +638,7 @@
           "name": "getAnnouncementById",
           "request": {
             "name": "Get announcement details",
-            "description": "Get announcement details\n\nGet full details for a specific POIT announcement including the complete announcement text.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get announcement details\n\nRequires Starter plan or higher. Get full details for a specific POIT announcement including the complete announcement text.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/announcements/{{announcementId}}",
               "host": [
@@ -1016,6 +1057,59 @@
       "name": "Validation",
       "description": "Organization number validation",
       "item": [
+        {
+          "name": "validateVatNumber",
+          "request": {
+            "name": "Validate an EU VAT number through VIES",
+            "description": "Validate an EU VAT number through VIES\n\nStarter+. A single VAT check supporting the caller's intra-EU trade. Three enrichment units per successful response, including cached results and valid:false; errors consume no units. This is separate from Swedish SCB tax_status, syntactic organisation-number checks, and Stripe/Fortnox billing tax decisions. Name/address availability differs by country; null is not a mismatch. This endpoint does not perform approximate name matching. Results are cached for 24 hours per customer, VAT number and requester. Original check timestamps and consultation ID are preserved. Upstream outages, malformed upstream responses and timeouts never produce valid:false: retry according to Retry-After. Upstream timeout 10 seconds, no automatic retries.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/vat/validate",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "vat",
+                "validate"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"country_code\": \"SE\",\n  \"vat_number\": \"556016068001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
         {
           "name": "validateOrgnr",
           "request": {

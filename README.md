@@ -1,6 +1,6 @@
 # BolagsAPI documentation and collections
 
-OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published BolagsAPI API, including Identity enrichment response contracts. The current collection contains **65 operations**. [Endpoint inventory](docs/endpoints.md).
+OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published BolagsAPI API, including Identity enrichment response contracts. The current collection contains **67 operations**. [Endpoint inventory](docs/endpoints.md).
 
 ## Documentation and schemas
 

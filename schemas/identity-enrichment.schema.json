@@ -337,6 +337,8 @@
     "PublicDataSource": {
       "type": "string",
       "enum": [
+        "vies",
+        "gleif",
         "bolagsverket",
         "scb",
         "skatteverket",

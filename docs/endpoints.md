@@ -4,6 +4,8 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 
 | Method | Path | Authentication | Operation |
 | --- | --- | --- | --- |
+| POST | `/v1/vat/validate` | bearerAuth | validateVatNumber |
+| GET | `/v1/company/{orgnr}/lei` | bearerAuth | getCompanyLei |
 | GET | `/v1/reports/insights/search` | bearerAuth | searchAnnualReportInsights |
 | GET | `/v1/company/{orgnr}/reports/insights` | bearerAuth | getCompanyAnnualReportInsights |
 | GET | `/v1/me` | bearerAuth | getCurrentCaller |

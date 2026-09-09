@@ -14,6 +14,7 @@ if (!converted.result) throw new Error(converted.reason);
 const collection = converted.output[0].data;
 const variables = { baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
 const bodies = {
+  validateVatNumber: { country_code: 'SE', vat_number: '556016068001' },
   startIdentity: { scopes: ['profile', 'enrichment:bolag'] },
   postPersonCompanies: { person_id: '{{person_id}}' },
   getPersonBeneficialOf: { personnummer: '{{personnummer}}' },

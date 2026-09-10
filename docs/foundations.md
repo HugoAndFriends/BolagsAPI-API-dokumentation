@@ -27,6 +27,16 @@ Content-Type: application/json
 
 The existing `companies` array can now include foundation engagements as well as company engagements. Existing `person_id` values remain usable.
 
+## Access to embedded fields
+
+The additive object preserves the same access rules as the original endpoints:
+
+- Full `roles`: persons endpoint access (Pro or higher), with no active customer-specific restriction. Otherwise `roles` is null and `roles_access` is `restricted`; `role_count` still describes the source total.
+- `signatory_rules`: signatory endpoint access (Starter or higher). Restricted text is null and `signatory_rules_access` is `restricted`.
+- `phone` / `website`: contact endpoint access (Starter or higher). Restricted fields are null and `contact_access` is `restricted`.
+
+Available groups are marked `available`. Basic foundation fields and source metadata can remain visible when a field group is restricted. Null due to restricted access must not be interpreted as missing source data.
+
 ## Role observations and identity
 
 `foundation.roles` contains all current source observations, including organizations acting as auditors or administrators. Such organizations use `related_orgnr` and do not appear as people in the `persons` array.

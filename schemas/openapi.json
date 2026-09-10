@@ -6700,7 +6700,7 @@
                   "verified",
                   "unverified"
                 ],
-                "description": "Publication quality. Quarantined rows are excluded."
+                "description": "Current projections are unverified. verified is reserved for documented validation with retained evidence. Quarantined rows are excluded."
               }
             }
           }
@@ -7120,7 +7120,8 @@
             "type": "string",
             "enum": [
               "active",
-              "deregistered"
+              "deregistered",
+              "unknown"
             ]
           },
           "org_form": {
@@ -7277,11 +7278,13 @@
             "properties": {
               "active": {
                 "type": "boolean",
-                "description": "Whether company is registered for VAT, F-tax, or as employer (combined flag from SCB)"
+                "nullable": true,
+                "description": "Combined SCB tax activity; null when unknown. Does not establish VAT registration."
               },
               "registered_for_vat_or_employer": {
                 "type": "boolean",
-                "description": "Legacy alias for 'active' field"
+                "nullable": true,
+                "description": "Legacy alias for tax activity; includes F-tax. Null when unknown."
               },
               "f_tax": {
                 "type": "boolean",
@@ -7297,7 +7300,7 @@
               "vat": {
                 "type": "boolean",
                 "nullable": true,
-                "description": "VAT/moms registration status (null if not enriched)"
+                "description": "Separate VAT/moms registration: true, false, or null when unknown. SCB tax activity does not establish VAT registration."
               },
               "vat_registered_date": {
                 "type": "string",
@@ -7308,7 +7311,7 @@
               "employer": {
                 "type": "boolean",
                 "nullable": true,
-                "description": "Employer registration status (not yet available, always null)"
+                "description": "Separate employer registration: true, false, or null when unknown."
               }
             }
           },
@@ -7516,7 +7519,7 @@
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 10000,
-                "description": "Ownership-stability component index, not an assessment of individual owners. Divide by 100 for display on a 0-100 scale.",
+                "description": "Equity and company-age stability index, not a verification of owners. Divide by 100 for display on a 0-100 scale.",
                 "example": 8500
               },
               "composite_score": {
@@ -7529,25 +7532,36 @@
               "risk_indicators": {
                 "type": "object",
                 "properties": {
+                  "external_records_status": {
+                    "type": "string",
+                    "enum": [
+                      "not_covered",
+                      "available"
+                    ]
+                  },
                   "payment_remarks_count": {
                     "type": "integer",
-                    "description": "Number of payment remarks",
-                    "example": 0
+                    "nullable": true,
+                    "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                    "example": null
                   },
                   "payment_remarks_amount": {
                     "type": "integer",
-                    "description": "Total amount of payment remarks in SEK",
-                    "example": 0
+                    "nullable": true,
+                    "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                    "example": null
                   },
                   "petitions_count": {
                     "type": "integer",
-                    "description": "Number of petitions filed",
-                    "example": 0
+                    "nullable": true,
+                    "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                    "example": null
                   },
                   "petitions_amount": {
                     "type": "integer",
-                    "description": "Total amount of petitions in SEK",
-                    "example": 0
+                    "nullable": true,
+                    "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                    "example": null
                   },
                   "has_negative_equity": {
                     "type": "boolean",
@@ -8334,10 +8348,77 @@
           }
         }
       },
+      "ScreeningCoverage": {
+        "type": "object",
+        "required": [
+          "complete",
+          "datasetVersion",
+          "lists",
+          "truncated",
+          "scope",
+          "limitations"
+        ],
+        "properties": {
+          "complete": {
+            "type": "boolean",
+            "description": "Complete only for the requested named lists; never global PEP/RCA coverage."
+          },
+          "datasetVersion": {
+            "type": "string",
+            "description": "Atomic successful list publication identifiers"
+          },
+          "truncated": {
+            "type": "boolean",
+            "description": "More than 100 matching entities in a category; ranked before truncation"
+          },
+          "scope": {
+            "type": "string",
+            "enum": [
+              "EU_UN_OFAC_and_Swedish_parliament"
+            ]
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lists": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "available",
+                    "stale",
+                    "missing"
+                  ]
+                },
+                "publishedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                },
+                "entries": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
       "ScreeningResult": {
         "type": "object",
         "description": "Result of screening a person name",
         "properties": {
+          "coverage": {
+            "$ref": "#/components/schemas/ScreeningCoverage"
+          },
           "queryName": {
             "type": "string",
             "description": "The name that was screened",
@@ -8373,7 +8454,7 @@
               "medium",
               "high"
             ],
-            "description": "Overall risk assessment"
+            "description": "Observed name-match risk only. None means no returned hits, not clearance. Always inspect coverage."
           },
           "screenedAt": {
             "type": "string",
@@ -8389,6 +8470,60 @@
         "type": "object",
         "description": "Result of screening a company and its board members",
         "properties": {
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "complete": {
+                "type": "boolean",
+                "enum": [
+                  false
+                ],
+                "description": "Board completeness and beneficial-owner screening are not verified"
+              },
+              "board": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "missing",
+                      "stale",
+                      "available"
+                    ]
+                  },
+                  "observedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "nullable": true
+                  },
+                  "completeness": {
+                    "type": "string",
+                    "enum": [
+                      "not_verified"
+                    ]
+                  }
+                }
+              },
+              "beneficialOwners": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "not_screened"
+                    ]
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "rvh_disabled",
+                      "not_integrated"
+                    ]
+                  }
+                }
+              }
+            }
+          },
           "orgnr": {
             "type": "string",
             "description": "Organization number",
@@ -8458,28 +8593,20 @@
           "results": {
             "type": "array",
             "items": {
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "The name that was screened"
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/ScreeningResult"
                 },
-                "hasSanctionsHits": {
-                  "type": "boolean"
-                },
-                "hasPepHits": {
-                  "type": "boolean"
-                },
-                "riskLevel": {
-                  "type": "string",
-                  "enum": [
-                    "none",
-                    "low",
-                    "medium",
-                    "high"
-                  ]
+                {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The input name"
+                    }
+                  }
                 }
-              }
+              ]
             }
           },
           "summary": {
@@ -8509,9 +8636,13 @@
                 "type": "integer",
                 "description": "Number with low risk"
               },
+              "incomplete": {
+                "type": "integer",
+                "description": "Results whose coverage.complete is false"
+              },
               "noRisk": {
                 "type": "integer",
-                "description": "Number with no matches"
+                "description": "Number with riskLevel=none and complete coverage for the requested lists; not cleared identities"
               }
             }
           },
@@ -8522,50 +8653,35 @@
       },
       "ScreeningStats": {
         "type": "object",
-        "description": "Statistics about the screening database",
+        "description": "Current successful list publications; historical retired entries are excluded. Counts are observed, not fixed coverage guarantees.",
+        "required": [
+          "totalSanctionsEntries",
+          "totalPepEntries",
+          "sanctionsBySource",
+          "pepBySource",
+          "coverage"
+        ],
         "properties": {
-          "sanctions": {
+          "totalSanctionsEntries": {
+            "type": "integer"
+          },
+          "totalPepEntries": {
+            "type": "integer"
+          },
+          "sanctionsBySource": {
             "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer",
-                "description": "Total sanctions entries"
-              },
-              "eu": {
-                "type": "integer",
-                "description": "EU Consolidated List entries"
-              },
-              "un": {
-                "type": "integer",
-                "description": "UN Security Council entries"
-              },
-              "ofac": {
-                "type": "integer",
-                "description": "OFAC SDN entries"
-              }
+            "additionalProperties": {
+              "type": "integer"
             }
           },
-          "pep": {
+          "pepBySource": {
             "type": "object",
-            "properties": {
-              "total": {
-                "type": "integer",
-                "description": "Total PEP entries"
-              },
-              "riksdagen": {
-                "type": "integer",
-                "description": "Swedish Riksdagen entries"
-              },
-              "active": {
-                "type": "integer",
-                "description": "Currently active PEPs"
-              }
+            "additionalProperties": {
+              "type": "integer"
             }
           },
-          "lastUpdated": {
-            "type": "string",
-            "format": "date-time",
-            "description": "Last database update"
+          "coverage": {
+            "$ref": "#/components/schemas/ScreeningCoverage"
           },
           "meta": {
             "$ref": "#/components/schemas/SourceMeta"
@@ -9807,7 +9923,7 @@
         "properties": {
           "fiscal_year_end": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "example": "2023-12-31"
           },
           "year": {
@@ -9851,14 +9967,22 @@
           "report_id"
         ],
         "properties": {
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ],
+            "description": "Precision actually observed in the source"
+          },
           "fiscal_year_end": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "example": "2024-08-31"
           },
           "fiscal_year_start": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "nullable": true
           },
           "accounting_scope": {
@@ -10121,14 +10245,22 @@
             "type": "integer",
             "nullable": true
           },
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ],
+            "description": "Precision actually observed in the source"
+          },
           "fiscal_year_end": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "example": "2024-08-31"
           },
           "fiscal_year_start": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "nullable": true,
             "example": "2023-09-01",
             "description": "Start of fiscal year period. Available when data comes from parsed annual reports (iXBRL)."
@@ -10184,7 +10316,7 @@
         "properties": {
           "latest_year": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "example": "2024-08-31"
           },
           "accounting_scope": {
@@ -10196,7 +10328,7 @@
               "verified",
               "unverified"
             ],
-            "description": "Publication quality. Quarantined rows are excluded."
+            "description": "Current projections are unverified. verified is reserved for documented validation with retained evidence. Quarantined rows are excluded."
           },
           "extraction_schema_version": {
             "type": "integer",
@@ -10339,7 +10471,7 @@
           "verified",
           "unverified"
         ],
-        "description": "Public responses exclude quarantined rows. unverified rows remain visible with this explicit marker."
+        "description": "Public responses exclude quarantined rows. Current financial projections are unverified, including legacy rows formerly marked verified. verified is reserved for documented validation with retained evidence; ingestion alone is not certification."
       },
       "Webhook": {
         "type": "object",
@@ -10926,6 +11058,11 @@
         "type": "object",
         "description": "Financial stability metrics derived from public annual reports. NOT credit information under Kreditupplysningslagen (SFS 1973:1173).",
         "properties": {
+          "model_version": {
+            "type": "string",
+            "description": "Shared API and batch scoring model",
+            "example": "v2.3.0"
+          },
           "stability_grade": {
             "type": "string",
             "enum": [
@@ -10968,7 +11105,7 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 10000,
-            "description": "Ownership-stability component index, not an assessment of individual owners. Divide by 100 for display on a 0-100 scale.",
+            "description": "Equity and company-age stability index, not a verification of owners. Divide by 100 for display on a 0-100 scale.",
             "example": 8500
           },
           "composite_score": {
@@ -10982,25 +11119,37 @@
             "type": "object",
             "description": "Financial condition flags from public records. These are not a complete credit report.",
             "properties": {
+              "external_records_status": {
+                "type": "string",
+                "enum": [
+                  "not_covered",
+                  "available"
+                ],
+                "description": "External register coverage; missing observations are null, not zero."
+              },
               "public_defaults_count": {
                 "type": "integer",
-                "description": "Number of public payment defaults/remarks where available.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "public_defaults_amount": {
                 "type": "number",
-                "description": "Total amount of public payment defaults/remarks in SEK where available.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "petitions_count": {
                 "type": "integer",
-                "description": "Number of bankruptcy petitions or similar filings.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "petitions_amount": {
                 "type": "number",
-                "description": "Total amount of bankruptcy petitions or similar filings in SEK.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "has_negative_equity": {
                 "type": "boolean",
@@ -11100,7 +11249,7 @@
             "type": "integer",
             "minimum": 0,
             "maximum": 10000,
-            "description": "Ownership-stability component index, not an assessment of individual owners. Divide by 100 for display on a 0-100 scale.",
+            "description": "Equity and company-age stability index, not a verification of owners. Divide by 100 for display on a 0-100 scale.",
             "example": 8500
           },
           "composite_score": {
@@ -11113,25 +11262,36 @@
           "risk_indicators": {
             "type": "object",
             "properties": {
+              "external_records_status": {
+                "type": "string",
+                "enum": [
+                  "not_covered",
+                  "available"
+                ]
+              },
               "payment_remarks_count": {
                 "type": "integer",
-                "description": "Number of payment remarks",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "payment_remarks_amount": {
                 "type": "number",
-                "description": "Total amount of payment remarks in SEK",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "petitions_count": {
                 "type": "integer",
-                "description": "Number of bankruptcy petitions or similar filings.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "petitions_amount": {
                 "type": "number",
-                "description": "Total amount of bankruptcy petitions or similar filings in SEK.",
-                "example": 0
+                "nullable": true,
+                "description": "External register observation. Null means not covered; never interpret as a verified zero.",
+                "example": null
               },
               "has_negative_equity": {
                 "type": "boolean",
@@ -11256,7 +11416,8 @@
           },
           "f_skatt": {
             "type": "boolean",
-            "description": "Registered for F-skatt/moms"
+            "nullable": true,
+            "description": "Separate F-tax registration; null means unknown"
           },
           "age_years": {
             "type": "number",
@@ -12048,9 +12209,17 @@
             "type": "string",
             "example": "5567037485"
           },
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ],
+            "description": "Precision actually observed in the source"
+          },
           "fiscal_year_end": {
             "type": "string",
-            "format": "date",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
             "example": "2024-08-31"
           },
           "rating": {

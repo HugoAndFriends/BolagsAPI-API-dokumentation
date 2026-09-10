@@ -336,7 +336,7 @@
           "name": "getSignatories",
           "request": {
             "name": "Get signatories with signing rights",
-            "description": "Get signatories with signing rights\n\nGet persons authorized to sign for the company. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get signatories with signing rights\n\nGet persons authorized to sign for the company. For foundations, explicit source signatories are returned with signing_right UNKNOWN; no automatic signing authority is inferred from the free text. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/signatories",
               "host": [

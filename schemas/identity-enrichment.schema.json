@@ -301,6 +301,8 @@
     "PersonRoleType": {
       "type": "string",
       "examples": [
+        "auditor_deputy",
+        "administrator",
         "executive",
         "chair",
         "deputy",
@@ -317,6 +319,8 @@
         "unknown"
       ],
       "x-known-values": [
+        "auditor_deputy",
+        "administrator",
         "executive",
         "chair",
         "deputy",

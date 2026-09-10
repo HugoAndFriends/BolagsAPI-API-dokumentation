@@ -8,7 +8,7 @@ OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published Bo
 - [Identity guide and complete response reference](https://bolagsapi.se/identity/docs#response-schemas)
 - [Published OpenAPI](https://api.bolagsapi.se/openapi.json) · [offline snapshot](schemas/openapi.json)
 - [Identity JSON Schema 2020-12](https://api.bolagsapi.se/identity/enrichment.schema.json) · [offline snapshot](schemas/identity-enrichment.schema.json)
-- [Identity integration notes](docs/identity.md) · [BRF integration notes](docs/brf.md)
+- [Identity integration notes](docs/identity.md) · [BRF integration notes](docs/brf.md) · [Foundations and representatives](docs/foundations.md)
 
 The snapshots include response field types, required fields, nullable values and enumerations where the API defines closed sets. See [source URLs, synchronization time and checksums](schemas/sources.json). The collection covers the published OpenAPI surface, not internal dashboard endpoints or all Auth features; the linked guides cover the wider products.
 

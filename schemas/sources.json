@@ -1,13 +1,13 @@
 {
-  "syncedAt": "2026-09-10T13:32:00.553Z",
+  "syncedAt": "2026-09-10T20:45:22.358Z",
   "sources": {
     "openapi.json": {
       "url": "https://api.bolagsapi.se/openapi.json",
-      "sha256": "7fb33557bc8cd849921802f290deff32af80e34b858c823db823c765ea7e0c02"
+      "sha256": "5b4d5b563bbdf19464dd4f31e317848ac35c4b5290217dca5ba7947470027c3d"
     },
     "identity-enrichment.schema.json": {
       "url": "https://api.bolagsapi.se/identity/enrichment.schema.json",
-      "sha256": "d39b385891a598d372a66c4f834bb4bd8e7bbe6ada4a38d851b153cef25a13cb"
+      "sha256": "33585c3a1c2e45edb658aeb891a5f5c09621dbf864dcf2c33852d73e6a12adae"
     }
   }
 }

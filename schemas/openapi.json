@@ -732,7 +732,7 @@
           "Company"
         ],
         "summary": "Get signatories with signing rights",
-        "description": "Get persons authorized to sign for the company. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed.",
+        "description": "Get persons authorized to sign for the company. For foundations, explicit source signatories are returned with signing_right UNKNOWN; no automatic signing authority is inferred from the free text. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed.",
         "operationId": "getSignatories",
         "security": [
           {
@@ -5535,6 +5535,185 @@
       }
     },
     "schemas": {
+      "Foundation": {
+        "type": "object",
+        "description": "Länsstyrelsen source snapshot. Nightly import; excludes pension, staff and collective-agreement foundations. All source roles are retained; partial identifiers are never merged into a verified person identity. Omitted for organizations outside this source.",
+        "properties": {
+          "source": {
+            "type": "string",
+            "const": "lansstyrelsen_stiftelser"
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "source_id": {
+            "type": "string"
+          },
+          "active_in_source": {
+            "type": "boolean"
+          },
+          "data_status": {
+            "type": "string",
+            "enum": [
+              "fresh",
+              "stale"
+            ],
+            "description": "Stale after 36 hours without successful source verification. Source absence does not prove deregistration."
+          },
+          "last_checked_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "content_hash": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "purpose": {
+            "type": "string",
+            "nullable": true
+          },
+          "foundation_type": {
+            "type": "integer",
+            "nullable": true
+          },
+          "county_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string",
+                "nullable": true
+              },
+              "care_of": {
+                "type": "string",
+                "nullable": true
+              },
+              "postal_code": {
+                "type": "string",
+                "nullable": true
+              },
+              "city": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "signatory_rules": {
+            "type": "string",
+            "nullable": true
+          },
+          "role_count": {
+            "type": "integer"
+          },
+          "coverage": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FoundationRole"
+            }
+          }
+        },
+        "required": [
+          "source",
+          "source_id",
+          "active_in_source",
+          "data_status",
+          "last_checked_at",
+          "roles",
+          "role_count"
+        ]
+      },
+      "FoundationRole": {
+        "type": "object",
+        "description": "One source role observation. source_record_id identifies the observation, not a globally resolved person. Organizations remain organization relations; roles do not imply ownership. Raw person identifiers are not returned.",
+        "properties": {
+          "source_record_id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PersonRoleType"
+          },
+          "title": {
+            "type": "string"
+          },
+          "entity_type": {
+            "type": "string",
+            "enum": [
+              "organization",
+              "person_or_unknown"
+            ]
+          },
+          "identity_resolution": {
+            "type": "string",
+            "enum": [
+              "resolved",
+              "unresolved"
+            ]
+          },
+          "identifier_precision": {
+            "type": "string",
+            "enum": [
+              "person",
+              "organization",
+              "birth_date_only",
+              "unknown"
+            ]
+          },
+          "person_id": {
+            "type": "string",
+            "nullable": true
+          },
+          "personnummer_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "related_orgnr": {
+            "type": "string",
+            "nullable": true
+          },
+          "principal": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "source_record_id",
+          "name",
+          "type",
+          "title",
+          "entity_type",
+          "identity_resolution",
+          "identifier_precision"
+        ]
+      },
       "VatValidationRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -6438,6 +6617,8 @@
       "PersonRoleType": {
         "type": "string",
         "examples": [
+          "auditor_deputy",
+          "administrator",
           "executive",
           "chair",
           "deputy",
@@ -6454,6 +6635,8 @@
           "unknown"
         ],
         "x-known-values": [
+          "auditor_deputy",
+          "administrator",
           "executive",
           "chair",
           "deputy",
@@ -7093,6 +7276,9 @@
       "Company": {
         "type": "object",
         "properties": {
+          "foundation": {
+            "$ref": "#/components/schemas/Foundation"
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -8692,6 +8878,9 @@
         "type": "object",
         "description": "Signatory rules (firmateckning) for a company",
         "properties": {
+          "foundation": {
+            "$ref": "#/components/schemas/Foundation"
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -8718,6 +8907,7 @@
             "type": "string",
             "enum": [
               "fresh",
+              "stale",
               "refreshing",
               "queued",
               "not_found",
@@ -8734,6 +8924,9 @@
         "type": "object",
         "description": "Signatories (firmatecknare) with signing rights for a company",
         "properties": {
+          "foundation": {
+            "$ref": "#/components/schemas/Foundation"
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -8766,6 +8959,7 @@
             "type": "string",
             "enum": [
               "fresh",
+              "stale",
               "refreshing",
               "queued",
               "not_found",
@@ -8807,6 +9001,9 @@
         "type": "object",
         "description": "Board members, executives, and auditors for a company",
         "properties": {
+          "foundation": {
+            "$ref": "#/components/schemas/Foundation"
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -8821,6 +9018,7 @@
             "type": "string",
             "enum": [
               "fresh",
+              "stale",
               "refreshing",
               "queued",
               "not_found",
@@ -8943,6 +9141,7 @@
             "type": "string",
             "enum": [
               "fresh",
+              "stale",
               "refreshing",
               "queued",
               "not_found",
@@ -9013,6 +9212,7 @@
             "type": "string",
             "enum": [
               "fresh",
+              "stale",
               "refreshing",
               "queued",
               "not_found",

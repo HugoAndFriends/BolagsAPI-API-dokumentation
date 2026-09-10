@@ -5625,14 +5625,39 @@
             "type": "string",
             "nullable": true
           },
+          "contact_access": {
+            "type": "string",
+            "enum": [
+              "available",
+              "restricted"
+            ],
+            "description": "Phone/website inherit contact endpoint access; null when restricted."
+          },
+          "signatory_rules_access": {
+            "type": "string",
+            "enum": [
+              "available",
+              "restricted"
+            ],
+            "description": "Signing text inherits signatory endpoint access; null when restricted."
+          },
           "role_count": {
             "type": "integer"
           },
           "coverage": {
             "type": "string"
           },
+          "roles_access": {
+            "type": "string",
+            "enum": [
+              "available",
+              "restricted"
+            ],
+            "description": "Full role observations require persons endpoint access (Pro+) and no customer restriction. Otherwise roles is null; role_count remains the source total."
+          },
           "roles": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FoundationRole"
             }
@@ -5645,6 +5670,7 @@
           "data_status",
           "last_checked_at",
           "roles",
+          "roles_access",
           "role_count"
         ]
       },

@@ -3440,7 +3440,7 @@
           "Export"
         ],
         "summary": "Export company data",
-        "description": "Export company data matching filters. Use preview=true to get row count estimate and sample data before executing. Returns CSV or JSON format.",
+        "description": "Export company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count and up to 100 sample rows without consuming export rows. A full export returns one row per organisation, up to 100000 rows and 64 MiB, from one consistent snapshot. Business includes 1000000 export rows per UTC calendar month shared by the payer; no base API units or additional monetary charge. Preview and execution are separate snapshots.",
         "operationId": "exportCompanies",
         "security": [
           {
@@ -3448,6 +3448,18 @@
           }
         ],
         "parameters": [
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": false,
+            "description": "Use a unique key per full export and reuse it with an identical request on retries. Results remain replayable for 24 hours, with no extra rows consumed. Conflicting or expired keys return 409. Scoped to the paying account and personal/team context.",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[!-~]+$"
+            }
+          },
           {
             "name": "Accept-Language",
             "in": "header",
@@ -3484,6 +3496,37 @@
                       "status": "active"
                     },
                     "preview": true
+                  }
+                },
+                "financialList": {
+                  "summary": "Financial and contact list for an external application",
+                  "value": {
+                    "filters": {
+                      "cities": [
+                        "Stockholm"
+                      ],
+                      "org_forms": [
+                        "AB"
+                      ],
+                      "employees_min": 5,
+                      "revenue_min": 10000000,
+                      "has_email": true
+                    },
+                    "fields": [
+                      "orgnr",
+                      "name",
+                      "city",
+                      "email",
+                      "website",
+                      "revenue",
+                      "net_income",
+                      "employees",
+                      "equity_ratio",
+                      "period_end",
+                      "accounting_scope",
+                      "quality_status"
+                    ],
+                    "format": "json"
                   }
                 },
                 "fullExport": {
@@ -3556,8 +3599,41 @@
               }
             }
           },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Idempotency key conflicts or snapshot has expired",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Request exceeds 32 KiB or result exceeds 64 MiB",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Export temporarily unavailable or timed out; retry with the same key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -12902,6 +12978,7 @@
       },
       "ExportRequest": {
         "type": "object",
+        "additionalProperties": false,
         "required": [
           "filters"
         ],
@@ -12918,13 +12995,80 @@
                 "name",
                 "org_form",
                 "status",
+                "active",
                 "registered_date",
                 "street_address",
                 "postal_code",
                 "city",
                 "sni_codes",
                 "sni_descriptions",
-                "f_skatt"
+                "f_skatt",
+                "vat",
+                "employer",
+                "municipality",
+                "county",
+                "county_name",
+                "email",
+                "phone",
+                "website",
+                "ad_blocked",
+                "phone_blocked",
+                "contact_updated_at",
+                "updated_at",
+                "employees",
+                "period_end",
+                "currency",
+                "accounting_scope",
+                "quality_status",
+                "financial_source",
+                "has_financials",
+                "revenue",
+                "other_revenue",
+                "inventory_change",
+                "cost_of_goods_sold",
+                "other_external_costs",
+                "operating_costs",
+                "operating_result",
+                "depreciation",
+                "financial_items",
+                "financial_income",
+                "financial_costs",
+                "result_after_financial",
+                "result_before_tax",
+                "tax_expense",
+                "net_income",
+                "total_assets",
+                "fixed_assets",
+                "intangible_assets",
+                "tangible_assets",
+                "financial_assets",
+                "current_assets",
+                "inventory",
+                "accounts_receivable",
+                "cash_and_bank",
+                "equity",
+                "share_capital",
+                "retained_earnings",
+                "free_equity",
+                "restricted_equity",
+                "untaxed_reserves",
+                "provisions",
+                "long_term_liabilities",
+                "short_term_liabilities",
+                "accounts_payable",
+                "salaries_board",
+                "salaries_other",
+                "personnel_costs",
+                "proposed_dividend",
+                "ebitda",
+                "personnel_costs_per_employee",
+                "equity_ratio",
+                "quick_ratio",
+                "current_ratio",
+                "debt_ratio",
+                "return_on_equity",
+                "return_on_assets",
+                "profit_margin"
               ]
             },
             "description": "Fields to include in export. Defaults to orgnr, name, org_form, status, city, sni_codes"
@@ -12941,20 +13085,100 @@
           "preview": {
             "type": "boolean",
             "default": false,
-            "description": "If true, return row count estimate and sample data without consuming quota"
+            "description": "If true, return exact row count and sample data without consuming quota"
           }
         }
       },
       "ExportFilters": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
+          "counties": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "pattern": "^\\d{2}$"
+            }
+          },
+          "municipalities": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "maxLength": 100
+            },
+            "description": "Official municipality codes or names"
+          },
+          "has_vat": {
+            "type": "boolean"
+          },
+          "is_employer": {
+            "type": "boolean"
+          },
+          "profitable": {
+            "type": "boolean"
+          },
+          "has_financials": {
+            "type": "boolean"
+          },
+          "has_email": {
+            "type": "boolean"
+          },
+          "has_phone": {
+            "type": "boolean"
+          },
+          "has_website": {
+            "type": "boolean"
+          },
+          "role_email_only": {
+            "type": "boolean"
+          },
+          "exclude_marketing_blocked": {
+            "type": "boolean"
+          },
+          "exclude_sole_traders": {
+            "type": "boolean"
+          },
+          "employees_min": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "employees_max": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "revenue_min": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "revenue_max": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "net_income_min": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "net_income_max": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "equity_ratio_min": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "equity_ratio_max": {
+            "type": "number",
+            "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
           "sni_codes": {
             "type": "array",
             "items": {
               "type": "string",
-              "pattern": "^\\d{5}$"
+              "pattern": "^\\d{2,5}$"
             },
-            "description": "Filter by SNI codes (5 digits)",
+            "description": "Filter by SNI codes or prefixes (2–5 digits), across all five registered industries. Exact mapped codes also match the other SNI version.",
             "example": [
               "62010",
               "62020"
@@ -12991,11 +13215,17 @@
                 "HB",
                 "KB",
                 "EK",
+                "EKF",
                 "EF",
                 "BRF",
                 "FL",
                 "OF",
-                "TSF"
+                "TSF",
+                "49",
+                "51",
+                "53",
+                "54",
+                "55"
               ]
             },
             "description": "Filter by organization forms",
@@ -13015,7 +13245,7 @@
           },
           "has_f_skatt": {
             "type": "boolean",
-            "description": "Filter by F-skatt/VAT registration status"
+            "description": "Filter by actual F-tax registration; unknown status does not match either boolean value"
           },
           "registered_after": {
             "type": "string",
@@ -13038,13 +13268,48 @@
             "type": "boolean",
             "const": true
           },
+          "matched_rows": {
+            "type": "integer",
+            "description": "Exact count in the preview snapshot"
+          },
+          "count_is_exact": {
+            "type": "boolean",
+            "const": true
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "phone": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "website": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "financials": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "description": "Counts across all matching companies, not just the sample. Restricted data categories are omitted."
+          },
           "estimated_rows": {
             "type": "integer",
-            "description": "Estimated number of rows matching filters"
+            "description": "Exact number of rows matching filters; retained for compatibility"
           },
           "estimated_cost_sek": {
             "type": "number",
-            "description": "Estimated cost in SEK (0.01 SEK per row, minimum 10 SEK)"
+            "deprecated": true,
+            "description": "Legacy estimate only; not an invoiced charge. Export rows are included in Business."
           },
           "sample": {
             "type": "array",
@@ -13065,6 +13330,65 @@
             "type": "boolean",
             "const": false
           },
+          "export_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "complete": {
+            "type": "boolean",
+            "const": true
+          },
+          "coverage": {
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "phone": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "website": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "financials": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "description": "Restricted data categories are omitted, including on replay."
+          },
+          "billing": {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "const": "included_rows"
+              },
+              "charged_sek": {
+                "type": "number",
+                "const": 0
+              },
+              "month": {
+                "type": "string",
+                "description": "UTC calendar month, YYYY-MM"
+              },
+              "used_rows": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "included_rows": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "remaining_rows": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
           "rows": {
             "type": "integer",
             "description": "Number of rows exported"
@@ -13075,7 +13399,8 @@
           },
           "cost_sek": {
             "type": "number",
-            "description": "Cost charged in SEK"
+            "deprecated": true,
+            "description": "Legacy estimate only; not charged. Use billing.charged_sek for this export."
           },
           "generated_at": {
             "type": "string",
@@ -13094,7 +13419,343 @@
       },
       "ExportRow": {
         "type": "object",
+        "required": [
+          "orgnr"
+        ],
         "properties": {
+          "revenue": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "other_revenue": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "inventory_change": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "cost_of_goods_sold": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "other_external_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "operating_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "operating_result": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "depreciation": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "financial_items": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "financial_income": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "financial_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "result_after_financial": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "result_before_tax": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "tax_expense": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "net_income": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "total_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "fixed_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "intangible_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "tangible_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "financial_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "current_assets": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "inventory": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "accounts_receivable": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "cash_and_bank": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "equity": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "share_capital": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "retained_earnings": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "free_equity": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "restricted_equity": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "untaxed_reserves": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "provisions": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "long_term_liabilities": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "short_term_liabilities": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "accounts_payable": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "salaries_board": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "salaries_other": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "personnel_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "proposed_dividend": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "ebitda": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "personnel_costs_per_employee": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "equity_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "quick_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "current_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "debt_ratio": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "return_on_equity": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "return_on_assets": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "profit_margin": {
+            "type": "number",
+            "nullable": true,
+            "description": "Percentage, e.g. 42.5 means 42.5%"
+          },
+          "active": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "SCB activity flag; distinct from legal registration status"
+          },
+          "municipality": {
+            "type": "string",
+            "nullable": true
+          },
+          "county": {
+            "type": "string",
+            "nullable": true
+          },
+          "county_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "website": {
+            "type": "string",
+            "nullable": true
+          },
+          "ad_blocked": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Known SCB marketing restriction; null means unknown"
+          },
+          "phone_blocked": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Currently unknown (null); no separate telephone suppression source"
+          },
+          "vat": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "employer": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "has_financials": {
+            "type": "boolean"
+          },
+          "contact_updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "nullable": true,
+            "format": "date-time"
+          },
+          "employees": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Reported employee count, never an SCB size-class code"
+          },
+          "period_end": {
+            "type": "string",
+            "nullable": true,
+            "description": "Latest selected financial period; YYYY-MM or YYYY-MM-DD as reported"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "accounting_scope": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "company",
+              "group",
+              "unknown",
+              null
+            ]
+          },
+          "quality_status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "unverified",
+              null
+            ],
+            "description": "Matches the public financial quality contract; no legacy verified claim"
+          },
+          "financial_source": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public source identifier for the financial period"
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -13149,7 +13810,8 @@
             ]
           },
           "f_skatt": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           }
         }
       }

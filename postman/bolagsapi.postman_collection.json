@@ -2549,7 +2549,7 @@
           "name": "exportCompanies",
           "request": {
             "name": "Export company data",
-            "description": "Export company data\n\nExport company data matching filters. Use preview=true to get row count estimate and sample data before executing. Returns CSV or JSON format.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Export company data\n\nExport company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count and up to 100 sample rows without consuming export rows. A full export returns one row per organisation, up to 100000 rows and 64 MiB, from one consistent snapshot. Business includes 1000000 export rows per UTC calendar month shared by the payer; no base API units or additional monetary charge. Preview and execution are separate snapshots.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/export",
               "host": [

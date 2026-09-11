@@ -974,7 +974,7 @@
           "Person"
         ],
         "summary": "Get companies connected to a person (Pro+)",
-        "description": "Returns companies where the person is connected through registered roles such as board member, CEO, signatory, auditor, or other company engagement. A supplied personnummer starts a demand-driven background identity resolution when local data is missing; poll responses returned with HTTP 202 according to Retry-After. No bulk identity resolution is performed for company boards. Supply a person_id from the company persons endpoint when no personnummer is available. This endpoint is for general company engagements, not official beneficial ownership.",
+        "description": "Returns companies where the person is connected through registered roles such as board member, CEO, signatory, auditor, or other company engagement. Includes registered sole-trader businesses with role proprietor, alongside engagements in ABs and other organizations. A supplied personnummer starts a demand-driven background identity resolution when local data is missing; poll responses returned with HTTP 202 according to Retry-After. No bulk identity resolution is performed for company boards. Supply a person_id from the company persons endpoint when no personnummer is available. This endpoint is for general company engagements, not official beneficial ownership.",
         "operationId": "postPersonCompanies",
         "security": [
           {
@@ -1028,7 +1028,7 @@
         },
         "responses": {
           "200": {
-            "description": "Companies connected to the person",
+            "description": "Available company engagements, including registered sole traders. If refreshing is true, more engagements may arrive; follow Retry-After. data_status failed with companies means available data is returned but the source refresh failed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -1038,7 +1038,7 @@
             }
           },
           "202": {
-            "description": "Person data is queued or refreshing. Poll after Retry-After. A lookup still pending after five minutes returns 503 instead. Neither response is billed.",
+            "description": "No company data is available yet and the lookup is queued or refreshing. Poll after Retry-After. After five minutes pending without data, returns 503 instead. Neither response is billed.",
             "headers": {
               "Retry-After": {
                 "schema": {
@@ -1068,7 +1068,7 @@
             "$ref": "#/components/responses/RateLimited"
           },
           "503": {
-            "description": "person_lookup_failed: lookup failed or exceeded five minutes pending. Stop polling and contact support with request_id. Not billed.",
+            "description": "person_lookup_failed: no usable company data and lookup failed or exceeded five minutes pending. Stop polling and contact support with request_id. Not billed.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6729,6 +6729,7 @@
       "PersonRoleType": {
         "type": "string",
         "examples": [
+          "proprietor",
           "auditor_deputy",
           "administrator",
           "executive",
@@ -6747,6 +6748,7 @@
           "unknown"
         ],
         "x-known-values": [
+          "proprietor",
           "auditor_deputy",
           "administrator",
           "executive",
@@ -9936,11 +9938,13 @@
         "properties": {
           "orgnr": {
             "type": "string",
-            "example": "5567037485"
+            "example": "5567037485",
+            "description": "Canonical company identifier. For a sole trader this is the full 12-digit personnummer or coordination number used as the business identifier; accepted by GET /v1/company/{orgnr}."
           },
           "name": {
             "type": "string",
-            "example": "Spotify AB"
+            "example": "Spotify AB",
+            "description": "Registered business name, or an empty string when no name is available. Multiple registered names for one sole trader are grouped under the same identifier."
           },
           "status": {
             "type": "string",

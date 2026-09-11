@@ -301,6 +301,7 @@
     "PersonRoleType": {
       "type": "string",
       "examples": [
+        "proprietor",
         "auditor_deputy",
         "administrator",
         "executive",
@@ -319,6 +320,7 @@
         "unknown"
       ],
       "x-known-values": [
+        "proprietor",
         "auditor_deputy",
         "administrator",
         "executive",
@@ -509,11 +511,13 @@
       "properties": {
         "orgnr": {
           "type": "string",
-          "example": "5567037485"
+          "example": "5567037485",
+          "description": "Canonical company identifier. For a sole trader this is the full 12-digit personnummer or coordination number used as the business identifier; accepted by GET /v1/company/{orgnr}."
         },
         "name": {
           "type": "string",
-          "example": "Spotify AB"
+          "example": "Spotify AB",
+          "description": "Registered business name, or an empty string when no name is available. Multiple registered names for one sole trader are grouped under the same identifier."
         },
         "status": {
           "type": "string",

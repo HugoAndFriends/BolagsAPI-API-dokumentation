@@ -21,6 +21,10 @@
   ],
   "tags": [
     {
+      "name": "Statistics",
+      "description": "SCB statistical datasets, benchmarks, regions and open data files (Pro+)"
+    },
+    {
       "name": "Identity",
       "description": "Auth by Hugo response contracts; these endpoints use auth.byhugo.se. See https://bolagsapi.se/identity/docs#response-schemas"
     },
@@ -98,6 +102,554 @@
     }
   ],
   "paths": {
+    "/v1/statistics/datasets": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "searchStatisticsDatasets",
+        "summary": "Find statistical datasets and file distributions",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            }
+          },
+          {
+            "name": "kind",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "pxweb",
+                "agency",
+                "geodata",
+                "reference"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 100 datasets; follow next_offset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsCatalog"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/statistics/datasets/{id}": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getStatisticsDataset",
+        "summary": "Read dataset metadata and availability",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset and source metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsDataset"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/statistics/query": {
+      "post": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "queryStatistics",
+        "summary": "Query a published statistical snapshot",
+        "description": "Pro+. Preserves source units, periods and missing-value markers. 202 indicates incomplete collection; retry later. A published snapshot may precede the latest source update. Request body maximum 64 KiB.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StatisticsSelection"
+              },
+              "example": {
+                "dataset": "TAB2017",
+                "selection": {
+                  "Region": [
+                    "0180"
+                  ],
+                  "ContentsCode": [
+                    "OE0101D1"
+                  ],
+                  "Tid": [
+                    "2026"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Complete selection from one published snapshot",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Collection is not complete; no partial snapshot returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsPending"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/industry/{sniCode}/benchmarks": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getScbIndustryBenchmarks",
+        "summary": "Official SCB industry quartiles",
+        "description": "Select compatible industry, employee size, measures and year. Requires version=2007. No automatic SNI conversion or exact company percentile is inferred. Population and measure definitions are in metadata.",
+        "parameters": [
+          {
+            "name": "sniCode",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "const": "2007"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "size_class",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "metrics",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "region",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quartile observations",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsResult"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Collection pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsPending"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/regions/{code}/statistics": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getRegionStatistics",
+        "summary": "Find published datasets for a county or municipality",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 100 datasets with source Region codes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsRegion"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/statistics/datasets/{id}/files/{ordinal}": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getStatisticsFile",
+        "summary": "Download a published data file",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ordinal",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "source",
+                "parquet"
+              ],
+              "default": "source"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Download URL, valid for 60 seconds",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsFile"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Collection pending",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsPending"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/statistics/agencies": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "listStatisticalAgencies",
+        "summary": "List SCB authority register observations",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Up to 100 authority observations; orgnr is null when no valid organization identity is available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StatisticsAgencies"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid parameters or dimension codes"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Pro or higher required, or endpoint restricted for this account"
+          },
+          "404": {
+            "description": "Dataset or file not found"
+          },
+          "413": {
+            "description": "Request body exceeds 64 KiB"
+          },
+          "422": {
+            "description": "Selection or format not supported; narrow large queries"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Archive temporarily unavailable"
+          }
+        }
+      }
+    },
     "/v1/vat/validate": {
       "post": {
         "tags": [
@@ -5621,6 +6173,378 @@
       }
     },
     "schemas": {
+      "StatisticsDataset": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "source",
+          "license",
+          "coverage",
+          "snapshot",
+          "catalog"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "pxweb",
+              "agency",
+              "geodata",
+              "reference"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "license": {
+            "type": "string"
+          },
+          "source_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_source_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "published_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checked_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "removed_at": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "snapshot": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverage": {
+            "enum": [
+              "published",
+              "not_yet_published"
+            ],
+            "description": "Catalog presence does not imply data availability."
+          },
+          "file_count": {
+            "type": "integer",
+            "description": "Published file ordinals are 0 through file_count minus one."
+          },
+          "collection": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "catalog": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "metadata": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": true,
+            "description": "Source JSON-stat metadata: dimensions, ordered codes, units, scale, periods, population, geography version and footnotes. Values in different groups may overlap and must not be summed indiscriminately."
+          }
+        }
+      },
+      "StatisticsCatalog": {
+        "type": "object",
+        "required": [
+          "datasets",
+          "offset",
+          "next_offset"
+        ],
+        "properties": {
+          "datasets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatisticsDataset"
+            }
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "next_offset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      },
+      "StatisticsSelection": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "dataset",
+          "selection"
+        ],
+        "properties": {
+          "dataset": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,80}$"
+          },
+          "selection": {
+            "type": "object",
+            "maxProperties": 20,
+            "additionalProperties": {
+              "type": "array",
+              "minItems": 1,
+              "maxItems": 10000,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "maxLength": 200
+              }
+            },
+            "description": "Explicit source codes for every dimension. Maximum 10000 cell combinations; no implicit aggregation or wildcard selection."
+          }
+        }
+      },
+      "StatisticsResult": {
+        "type": "object",
+        "required": [
+          "ready",
+          "dataset",
+          "selection",
+          "metadata",
+          "observations",
+          "total"
+        ],
+        "properties": {
+          "ready": {
+            "const": true
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/StatisticsDataset"
+          },
+          "selection": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "observations": {
+            "type": "array",
+            "maxItems": 10000,
+            "items": {
+              "type": "object",
+              "required": [
+                "dimensions",
+                "value",
+                "status"
+              ],
+              "properties": {
+                "dimensions": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "value": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Original source marker. Null values are not zero; '..' can mean unavailable, uncertain or confidential without distinguishing the cause."
+                }
+              }
+            }
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      },
+      "StatisticsPending": {
+        "type": "object",
+        "required": [
+          "ready",
+          "dataset"
+        ],
+        "properties": {
+          "ready": {
+            "const": false
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/StatisticsDataset"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "StatisticsFile": {
+        "type": "object",
+        "required": [
+          "ready",
+          "dataset",
+          "url",
+          "expires_in",
+          "format"
+        ],
+        "properties": {
+          "ready": {
+            "const": true
+          },
+          "dataset": {
+            "$ref": "#/components/schemas/StatisticsDataset"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "expires_in": {
+            "const": 60
+          },
+          "source_sha256": {
+            "type": "string"
+          },
+          "format": {
+            "enum": [
+              "source",
+              "parquet"
+            ]
+          }
+        }
+      },
+      "StatisticsRegion": {
+        "type": "object",
+        "required": [
+          "region_code",
+          "datasets"
+        ],
+        "properties": {
+          "region_code": {
+            "type": "string"
+          },
+          "datasets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatisticsDataset"
+            }
+          }
+        }
+      },
+      "StatisticsAgencies": {
+        "type": "object",
+        "required": [
+          "agencies",
+          "offset",
+          "next_offset"
+        ],
+        "properties": {
+          "datasets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StatisticsDataset"
+            }
+          },
+          "agencies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "orgnr": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "category": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "address": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "postal_code": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "city": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "website": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "email": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "phone": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "source": {
+                  "const": "scb"
+                }
+              }
+            }
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "next_offset": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          }
+        }
+      },
       "Foundation": {
         "type": "object",
         "description": "Länsstyrelsen source snapshot. Nightly import; excludes pension, staff and collective-agreement foundations. All source roles are retained; partial identifiers are never merged into a verified person identity. Omitted for organizations outside this source.",

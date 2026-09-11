@@ -1,0 +1,28 @@
+meta {
+  name: listStatisticalAgencies
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{baseUrl}}/v1/statistics/agencies
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~offset: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

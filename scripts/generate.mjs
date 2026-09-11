@@ -12,8 +12,9 @@ for (const { path, method } of operations) input.paths[path][method].tags = inpu
 const converted = await new Promise((resolve, reject) => converter.convertV2({ type: 'json', data: input }, { folderStrategy: 'Tags', parametersResolution: 'Example' }, (error, result) => error ? reject(error) : resolve(result)));
 if (!converted.result) throw new Error(converted.reason);
 const collection = converted.output[0].data;
-const variables = { baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
+const variables = { datasetId: 'TAB2017', ordinal: '0', code: '0180', baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
 const bodies = {
+  queryStatistics: { dataset: 'TAB2017', selection: { Region: ['0180'], ContentsCode: ['OE0101D1'], Tid: ['2026'] } },
   validateVatNumber: { country_code: 'SE', vat_number: '556016068001' },
   startIdentity: { scopes: ['profile', 'enrichment:bolag'] },
   postPersonCompanies: { person_id: '{{person_id}}' },
@@ -38,13 +39,14 @@ for (const item of requests(collection.item)) {
   const host = token === 'bearerToken' ? 'baseUrl' : 'authBaseUrl';
   item.request.auth = { type: 'bearer', bearer: [{ key: 'token', value: `{{${token}}}`, type: 'string' }] };
   const resolvedPath = path.replace(/\{([^}]+)\}/g, (_, name) => {
-    const key = name === 'id' ? path.includes('webhooks') ? 'webhookId' : 'announcementId' : name;
+    const key = name === 'id' ? path.includes('/statistics/datasets') ? 'datasetId' : path.includes('webhooks') ? 'webhookId' : 'announcementId' : name;
     variables[key] ??= `REPLACE_WITH_${key.toUpperCase()}`;
     return `{{${key}}}`;
   });
   const params = [...(op.item.parameters ?? []), ...(operation.parameters ?? [])].filter(p => p.in === 'query');
   const query = params.map(p => {
-    let value = p.example ?? p.schema?.example ?? p.schema?.default ?? '';
+    let value = p.example ?? p.schema?.example ?? p.schema?.default ?? p.schema?.const ?? '';
+    if (operation.operationId === 'getScbIndustryBenchmarks') value = ({ year: '2024', size_class: '1-4', metrics: '0000028M' })[p.name] ?? value;
     if (p.name === 'sessionId') value = '{{sessionId}}';
     if (p.required && value === '') { variables[p.name] ??= `REPLACE_WITH_${p.name.toUpperCase()}`; value = `{{${p.name}}}`; }
     return { key: p.name, value: String(value), description: p.description ?? '', disabled: !p.required };

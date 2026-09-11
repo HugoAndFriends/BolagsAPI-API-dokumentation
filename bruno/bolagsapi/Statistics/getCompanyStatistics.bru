@@ -1,17 +1,13 @@
 meta {
-  name: listStatisticalAgencies
+  name: getCompanyStatistics
   type: http
-  seq: 7
+  seq: 5
 }
 
 get {
-  url: {{baseUrl}}/v1/statistics/agencies
+  url: {{baseUrl}}/v1/company/{{orgnr}}/statistics
   body: none
   auth: bearer
-}
-
-params:query {
-  ~offset: 
 }
 
 headers {

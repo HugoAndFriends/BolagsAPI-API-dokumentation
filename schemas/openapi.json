@@ -22,7 +22,7 @@
   "tags": [
     {
       "name": "Statistics",
-      "description": "SCB statistical datasets, benchmarks, regions and open data files (Pro+)"
+      "description": "SCB statistical datasets, benchmarks, regions and open data files (Starter+)"
     },
     {
       "name": "Identity",
@@ -163,7 +163,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -223,7 +223,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -255,7 +255,7 @@
         ],
         "operationId": "queryStatistics",
         "summary": "Query a published statistical snapshot",
-        "description": "Pro+. Preserves source units, periods and missing-value markers. 202 indicates incomplete collection; retry later. A published snapshot may precede the latest source update. Request body maximum 64 KiB.",
+        "description": "Starter+. Preserves source units, periods and missing-value markers. 202 indicates incomplete collection; retry later. A published snapshot may precede the latest source update. Request body maximum 64 KiB.",
         "requestBody": {
           "required": true,
           "content": {
@@ -308,7 +308,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -419,7 +419,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -479,7 +479,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -569,7 +569,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -630,7 +630,7 @@
             "description": "Authentication required"
           },
           "403": {
-            "description": "Pro or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted for this account"
           },
           "404": {
             "description": "Dataset or file not found"
@@ -3700,8 +3700,8 @@
         "tags": [
           "Industry"
         ],
-        "summary": "Get industry analysis (Pro+)",
-        "description": "Get statistics about companies in a specific SNI code industry. Requires Pro plan or higher.",
+        "summary": "Get industry analysis (Starter+)",
+        "description": "Get statistics about companies in a specific SNI code industry. Requires Starter plan or higher.",
         "operationId": "getIndustryAnalysis",
         "security": [
           {

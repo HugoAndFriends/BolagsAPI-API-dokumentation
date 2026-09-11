@@ -1038,7 +1038,7 @@
             }
           },
           "202": {
-            "description": "Person data is queued or refreshing. Poll after Retry-After; this response is not billed.",
+            "description": "Person data is queued or refreshing. Poll after Retry-After. A lookup still pending after five minutes returns 503 instead. Neither response is billed.",
             "headers": {
               "Retry-After": {
                 "schema": {
@@ -1066,6 +1066,16 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "person_lookup_failed: lookup failed or exceeded five minutes pending. Stop polling and contact support with request_id. Not billed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -9835,6 +9845,14 @@
       "PersonCompaniesResponse": {
         "type": "object",
         "properties": {
+          "unresolved_company_count": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "description": "Source engagement rows omitted because the company identifier could not be resolved. A positive count means the result is incomplete. Null means coverage is unknown; older cached responses may omit this field."
+          },
           "meta": {
             "$ref": "#/components/schemas/SourceMeta",
             "description": "Optional public source attribution passed through by Auth; may be absent in cached responses."

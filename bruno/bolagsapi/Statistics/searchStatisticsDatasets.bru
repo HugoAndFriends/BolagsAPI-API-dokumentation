@@ -1,0 +1,30 @@
+meta {
+  name: searchStatisticsDatasets
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/statistics/datasets
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~q: 
+  ~offset: 
+  ~kind: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

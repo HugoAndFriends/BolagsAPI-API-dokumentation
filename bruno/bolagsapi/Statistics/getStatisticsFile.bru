@@ -1,0 +1,28 @@
+meta {
+  name: getStatisticsFile
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/statistics/datasets/{{datasetId}}/files/{{ordinal}}
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~format: source
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

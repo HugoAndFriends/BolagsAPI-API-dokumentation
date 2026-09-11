@@ -4,6 +4,13 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 
 | Method | Path | Authentication | Operation |
 | --- | --- | --- | --- |
+| GET | `/v1/statistics/datasets` | bearerAuth | searchStatisticsDatasets |
+| GET | `/v1/statistics/datasets/{id}` | bearerAuth | getStatisticsDataset |
+| POST | `/v1/statistics/query` | bearerAuth | queryStatistics |
+| GET | `/v1/industry/{sniCode}/benchmarks` | bearerAuth | getScbIndustryBenchmarks |
+| GET | `/v1/regions/{code}/statistics` | bearerAuth | getRegionStatistics |
+| GET | `/v1/statistics/datasets/{id}/files/{ordinal}` | bearerAuth | getStatisticsFile |
+| GET | `/v1/statistics/agencies` | bearerAuth | listStatisticalAgencies |
 | POST | `/v1/vat/validate` | bearerAuth | validateVatNumber |
 | GET | `/v1/company/{orgnr}/lei` | bearerAuth | getCompanyLei |
 | GET | `/v1/reports/insights/search` | bearerAuth | searchAnnualReportInsights |

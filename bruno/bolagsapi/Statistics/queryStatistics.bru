@@ -1,0 +1,42 @@
+meta {
+  name: queryStatistics
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/v1/statistics/query
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "dataset": "TAB2017",
+    "selection": {
+      "Region": [
+        "0180"
+      ],
+      "ContentsCode": [
+        "OE0101D1"
+      ],
+      "Tid": [
+        "2026"
+      ]
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

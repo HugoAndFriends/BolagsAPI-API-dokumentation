@@ -1,6 +1,6 @@
 # Foundations and representatives
 
-BolagsAPI imports Länsstyrelsen's foundation registry every night. It covers published active foundations in the county administrative boards' register, excluding pension, staff and collective-agreement foundations. [Official source](https://stiftelser.lansstyrelsen.se/%C3%96ppendata).
+Look up foundation purposes, representatives and signing rules using your existing API requests. Coverage includes published active foundations in the county administrative boards' register, excluding pension, staff and collective-agreement foundations.
 
 ## Existing requests, additional data
 
@@ -13,7 +13,7 @@ BolagsAPI imports Länsstyrelsen's foundation registry every night. It covers pu
 | `POST /v1/person/companies` | Foundation engagements linked to the same verified person identity as existing company engagements. |
 | `GET /v1/search/persons` | Person observations from foundations, with unresolved identities kept separate. |
 
-Use your existing API key and the same requests in Postman or Bruno. The `foundation` object is omitted when the organization has no linked source record. Organizations without a valid organization number are retained internally and cannot be queried through an organization-number route.
+Use your existing API key and the same requests in Postman or Bruno. The `foundation` object is omitted when the organization has no linked source record.
 
 For example, a person lookup remains:
 
@@ -49,14 +49,14 @@ Useful fields:
 - `identifier_precision`: `person`, `organization`, `birth_date_only` or `unknown`.
 - `identity_resolution`: whether a person identity is resolved. Unresolved observations have null `person_id` and `personnummer_hash`.
 
-A name or date of birth alone never causes an automatic merge with another person. Raw personal identifiers and representatives' private contact payloads are not returned. Roles do not establish ownership or beneficial ownership.
+Unresolved observations do not establish that two roles belong to the same person. Roles do not establish ownership or beneficial ownership.
 
 ## Freshness and coverage
 
-`foundation.source` is `lansstyrelsen_stiftelser`. `last_checked_at` records the latest successful verification; `published_at` records our publication of that file version; `content_hash` identifies the downloaded file. Unchanged content advances verification time without duplicating roles.
+`foundation.source` is `lansstyrelsen_stiftelser`. `last_checked_at` is the latest successful verification, `published_at` the data publication time and `content_hash` the source version identifier.
 
-`data_status` becomes `stale` after 36 hours without verification. The last good dataset remains available when an import fails. `active_in_source: false` means the organization left the current source population; it does not prove deregistration. A current foundation snapshot does not establish a complete list of a person's engagements.
+`data_status: stale` means the data has not been verified recently. `active_in_source: false` means the organization left the current source population; it does not prove deregistration. A current foundation snapshot does not establish a complete list of a person's engagements.
 
-Existing BV/SCB company fields retain priority. The `foundation` object preserves Länsstyrelsen's source-specific view, including any differing values.
+The `foundation` object contains foundation-specific information and may differ from the general company fields.
 
 [Swedish/English customer guide and examples](https://bolagsapi.se/docs#company) · [Persons guide](https://bolagsapi.se/docs#persons) · [Person-company lookup](https://bolagsapi.se/docs#person-companies) · [OpenAPI snapshot](../schemas/openapi.json)

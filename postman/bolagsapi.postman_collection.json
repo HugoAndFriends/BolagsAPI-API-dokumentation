@@ -2,40 +2,46 @@
   "item": [
     {
       "name": "Statistics",
-      "description": "SCB statistical datasets, benchmarks, regions and open data files (Starter+)",
+      "description": "Business bankruptcies, new businesses, company counts and industry context (Starter+)",
       "item": [
         {
-          "name": "searchStatisticsDatasets",
+          "name": "getBusinessBankruptcies",
           "request": {
-            "name": "Find statistical datasets and file distributions",
-            "description": "Find statistical datasets and file distributions\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Business bankruptcies by month",
+            "description": "Business bankruptcies by month\n\nStarter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are suppressed.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
-              "raw": "{{baseUrl}}/v1/statistics/datasets",
+              "raw": "{{baseUrl}}/v1/statistics/bankruptcies",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "v1",
                 "statistics",
-                "datasets"
+                "bankruptcies"
               ],
               "query": [
                 {
-                  "key": "q",
+                  "key": "from",
                   "value": "",
-                  "description": "",
+                  "description": "First period, inclusive. Defaults to the last 12 published periods; with to only, returns that period.",
                   "disabled": true
                 },
                 {
-                  "key": "offset",
+                  "key": "to",
                   "value": "",
-                  "description": "",
+                  "description": "Last period, inclusive. Defaults to latest available, which may lag the calendar.",
                   "disabled": true
                 },
                 {
-                  "key": "kind",
+                  "key": "county",
                   "value": "",
-                  "description": "",
+                  "description": "Two-digit county code; omitted means all counties. Available codes and labels are included in the response.",
+                  "disabled": true
+                },
+                {
+                  "key": "industry",
+                  "value": "",
+                  "description": "Grouped SNI 2007 industry, e.g. 41-43. Available groups are included in the response.",
                   "disabled": true
                 }
               ]
@@ -64,22 +70,46 @@
           }
         },
         {
-          "name": "getStatisticsDataset",
+          "name": "getNewBusinesses",
           "request": {
-            "name": "Read dataset metadata and availability",
-            "description": "Read dataset metadata and availability\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "New business activity by quarter",
+            "description": "New business activity by quarter\n\nStarter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
-              "raw": "{{baseUrl}}/v1/statistics/datasets/{{datasetId}}",
+              "raw": "{{baseUrl}}/v1/statistics/new-businesses",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "v1",
                 "statistics",
-                "datasets",
-                "{{datasetId}}"
+                "new-businesses"
               ],
-              "query": []
+              "query": [
+                {
+                  "key": "from",
+                  "value": "",
+                  "description": "First period, inclusive. Defaults to the last 12 published periods; with to only, returns that period.",
+                  "disabled": true
+                },
+                {
+                  "key": "to",
+                  "value": "",
+                  "description": "Last period, inclusive. Defaults to latest available, which may lag the calendar.",
+                  "disabled": true
+                },
+                {
+                  "key": "county",
+                  "value": "",
+                  "description": "Two-digit county code; omitted means all counties. Available codes and labels are included in the response.",
+                  "disabled": true
+                },
+                {
+                  "key": "industry",
+                  "value": "",
+                  "description": "Grouped SNI 2007 industry, e.g. 41-43. Available groups are included in the response.",
+                  "disabled": true
+                }
+              ]
             },
             "header": [
               {
@@ -105,33 +135,60 @@
           }
         },
         {
-          "name": "queryStatistics",
+          "name": "countCompanies",
           "request": {
-            "name": "Query a published statistical snapshot",
-            "description": "Query a published statistical snapshot\n\nStarter+. Preserves source units, periods and missing-value markers. 202 indicates incomplete collection; retry later. A published snapshot may precede the latest source update. Request body maximum 64 KiB.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Count and group companies in BolagsAPI",
+            "description": "Count and group companies in BolagsAPI\n\nStarter+. Current stored organizations counted once per organization number. This is not a national census or historical company count. Null group codes mean unknown; field filters exclude unknown values. Primary SNI codes are used as recorded; their classification version is not verified. Do not automatically compare these cohorts with SNI 2007 benchmarks.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
-              "raw": "{{baseUrl}}/v1/statistics/query",
+              "raw": "{{baseUrl}}/v1/statistics/companies",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "v1",
                 "statistics",
-                "query"
+                "companies"
               ],
-              "query": []
+              "query": [
+                {
+                  "key": "sni_code",
+                  "value": "",
+                  "description": "Primary SNI prefix, 2–5 digits as recorded",
+                  "disabled": true
+                },
+                {
+                  "key": "municipality",
+                  "value": "",
+                  "description": "Exact SCB seat municipality code, not postal-code inference",
+                  "disabled": true
+                },
+                {
+                  "key": "legal_form",
+                  "value": "",
+                  "description": "Recorded legal form, e.g. AB",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Registration status",
+                  "disabled": true
+                },
+                {
+                  "key": "group_by",
+                  "value": "legal_form",
+                  "description": "Grouping; up to 100 largest groups",
+                  "disabled": true
+                }
+              ]
             },
             "header": [
               {
                 "key": "Accept",
                 "value": "application/json"
-              },
-              {
-                "key": "Content-Type",
-                "value": "application/json"
               }
             ],
-            "method": "POST",
+            "method": "GET",
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -141,15 +198,6 @@
                   "type": "string"
                 }
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"dataset\": \"TAB2017\",\n  \"selection\": {\n    \"Region\": [\n      \"0180\"\n    ],\n    \"ContentsCode\": [\n      \"OE0101D1\"\n    ],\n    \"Tid\": [\n      \"2026\"\n    ]\n  }\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             }
           },
           "event": [],
@@ -158,12 +206,12 @@
           }
         },
         {
-          "name": "getScbIndustryBenchmarks",
+          "name": "getIndustryBenchmarks",
           "request": {
-            "name": "Official SCB industry quartiles",
-            "description": "Official SCB industry quartiles\n\nSelect compatible industry, employee size, measures and year. Requires version=2007. No automatic SNI conversion or exact company percentile is inferred. Population and measure definitions are in metadata.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Industry quartiles for business key figures",
+            "description": "Industry quartiles for business key figures\n\nStarter+. Compare compatible financial definitions, industry, employee size and year. No automatic SNI conversion or company percentile. Null and source_status preserve missing or suppressed values.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
-              "raw": "{{baseUrl}}/v1/industry/{{sniCode}}/benchmarks?version=2007&year=2024&size_class=1-4&metrics=0000028M",
+              "raw": "{{baseUrl}}/v1/industry/{{sniCode}}/benchmarks?version=2007&size_class=1-4",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -177,31 +225,25 @@
                 {
                   "key": "version",
                   "value": "2007",
-                  "description": "",
+                  "description": "Industry classification",
                   "disabled": false
                 },
                 {
                   "key": "year",
                   "value": "2024",
-                  "description": "",
-                  "disabled": false
+                  "description": "Defaults to latest published year",
+                  "disabled": true
                 },
                 {
                   "key": "size_class",
                   "value": "1-4",
-                  "description": "",
+                  "description": "Employee size",
                   "disabled": false
                 },
                 {
                   "key": "metrics",
-                  "value": "0000028M",
-                  "description": "",
-                  "disabled": false
-                },
-                {
-                  "key": "region",
-                  "value": "",
-                  "description": "",
+                  "value": "operating_margin",
+                  "description": "Comma-separated operating_margin, net_margin, equity_ratio, quick_ratio, revenue_per_employee, revenue. Defaults to operating_margin,equity_ratio,revenue_per_employee.",
                   "disabled": true
                 }
               ]
@@ -230,119 +272,22 @@
           }
         },
         {
-          "name": "getRegionStatistics",
+          "name": "getCompanyStatistics",
           "request": {
-            "name": "Find published datasets for a county or municipality",
-            "description": "Find published datasets for a county or municipality\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Industry and regional context for a company",
+            "description": "Industry and regional context for a company\n\nStarter+. Uses the organization's recorded primary SNI and SCB seat county. Returns an industry cohort and the last 12 available periods of regional bankruptcies/new businesses. These are surroundings, not the company's own events or risk. Missing classification or county yields null sections.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
-              "raw": "{{baseUrl}}/v1/regions/{{code}}/statistics",
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/statistics",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "v1",
-                "regions",
-                "{{code}}",
+                "company",
+                "{{orgnr}}",
                 "statistics"
               ],
               "query": []
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "name": "getStatisticsFile",
-          "request": {
-            "name": "Download a published data file",
-            "description": "Download a published data file\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
-            "url": {
-              "raw": "{{baseUrl}}/v1/statistics/datasets/{{datasetId}}/files/{{ordinal}}",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "v1",
-                "statistics",
-                "datasets",
-                "{{datasetId}}",
-                "files",
-                "{{ordinal}}"
-              ],
-              "query": [
-                {
-                  "key": "format",
-                  "value": "source",
-                  "description": "",
-                  "disabled": true
-                }
-              ]
-            },
-            "header": [
-              {
-                "key": "Accept",
-                "value": "application/json"
-              }
-            ],
-            "method": "GET",
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{bearerToken}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "event": [],
-          "protocolProfileBehavior": {
-            "disableBodyPruning": true
-          }
-        },
-        {
-          "name": "listStatisticalAgencies",
-          "request": {
-            "name": "List SCB authority register observations",
-            "description": "List SCB authority register observations\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
-            "url": {
-              "raw": "{{baseUrl}}/v1/statistics/agencies",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "v1",
-                "statistics",
-                "agencies"
-              ],
-              "query": [
-                {
-                  "key": "offset",
-                  "value": "",
-                  "description": "",
-                  "disabled": true
-                }
-              ]
             },
             "header": [
               {

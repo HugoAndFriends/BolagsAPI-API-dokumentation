@@ -22,7 +22,7 @@
   "tags": [
     {
       "name": "Statistics",
-      "description": "SCB statistical datasets, benchmarks, regions and open data files (Starter+)"
+      "description": "Business bankruptcies, new businesses, company counts and industry context (Starter+)"
     },
     {
       "name": "Identity",
@@ -102,7 +102,7 @@
     }
   ],
   "paths": {
-    "/v1/statistics/datasets": {
+    "/v1/statistics/bankruptcies": {
       "get": {
         "tags": [
           "Statistics"
@@ -112,218 +112,257 @@
             "bearerAuth": []
           }
         ],
-        "operationId": "searchStatisticsDatasets",
-        "summary": "Find statistical datasets and file distributions",
+        "operationId": "getBusinessBankruptcies",
+        "summary": "Business bankruptcies by month",
+        "description": "Starter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are suppressed.",
         "parameters": [
           {
-            "name": "q",
+            "name": "from",
+            "description": "First period, inclusive. Defaults to the last 12 published periods; with to only, returns that period.",
             "in": "query",
-            "required": false,
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])$"
+            }
+          },
+          {
+            "name": "to",
+            "description": "Last period, inclusive. Defaults to latest available, which may lag the calendar.",
+            "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "offset",
+            "name": "county",
+            "description": "Two-digit county code; omitted means all counties. Available codes and labels are included in the response.",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 100000
+              "type": "string"
             }
           },
           {
-            "name": "kind",
+            "name": "industry",
+            "description": "Grouped SNI 2007 industry, e.g. 41-43. Available groups are included in the response.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Business statistics with source and coverage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessTimeSeries"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported parameters"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Starter or higher required, or endpoint restricted"
+          },
+          "404": {
+            "description": "Company or source unavailable"
+          },
+          "422": {
+            "description": "Period unavailable, incompatible filters or unsupported comparison"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Data temporarily unavailable; no fabricated zero returned"
+          }
+        }
+      }
+    },
+    "/v1/statistics/new-businesses": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "getNewBusinesses",
+        "summary": "New business activity by quarter",
+        "description": "Starter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined.",
+        "parameters": [
+          {
+            "name": "from",
+            "description": "First period, inclusive. Defaults to the last 12 published periods; with to only, returns that period.",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{4}-Q[1-4]$"
+            }
+          },
+          {
+            "name": "to",
+            "description": "Last period, inclusive. Defaults to latest available, which may lag the calendar.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "county",
+            "description": "Two-digit county code; omitted means all counties. Available codes and labels are included in the response.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "industry",
+            "description": "Grouped SNI 2007 industry, e.g. 41-43. Available groups are included in the response.",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Business statistics with source and coverage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessTimeSeries"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid or unsupported parameters"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Starter or higher required, or endpoint restricted"
+          },
+          "404": {
+            "description": "Company or source unavailable"
+          },
+          "422": {
+            "description": "Period unavailable, incompatible filters or unsupported comparison"
+          },
+          "429": {
+            "description": "Rate or account quota exceeded"
+          },
+          "503": {
+            "description": "Data temporarily unavailable; no fabricated zero returned"
+          }
+        }
+      }
+    },
+    "/v1/statistics/companies": {
+      "get": {
+        "tags": [
+          "Statistics"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "operationId": "countCompanies",
+        "summary": "Count and group companies in BolagsAPI",
+        "description": "Starter+. Current stored organizations counted once per organization number. This is not a national census or historical company count. Null group codes mean unknown; field filters exclude unknown values. Primary SNI codes are used as recorded; their classification version is not verified. Do not automatically compare these cohorts with SNI 2007 benchmarks.",
+        "parameters": [
+          {
+            "name": "sni_code",
+            "description": "Primary SNI prefix, 2–5 digits as recorded",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "municipality",
+            "description": "Exact SCB seat municipality code, not postal-code inference",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "legal_form",
+            "description": "Recorded legal form, e.g. AB",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "description": "Registration status",
             "in": "query",
             "schema": {
               "enum": [
-                "pxweb",
-                "agency",
-                "geodata",
-                "reference"
+                "active",
+                "deregistered"
               ]
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Up to 100 datasets; follow next_offset",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsCatalog"
-                }
-              }
-            }
           },
-          "400": {
-            "description": "Invalid parameters or dimension codes"
-          },
-          "401": {
-            "description": "Authentication required"
-          },
-          "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
-          },
-          "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
-          },
-          "422": {
-            "description": "Selection or format not supported; narrow large queries"
-          },
-          "429": {
-            "description": "Rate or account quota exceeded"
-          },
-          "503": {
-            "description": "Archive temporarily unavailable"
-          }
-        }
-      }
-    },
-    "/v1/statistics/datasets/{id}": {
-      "get": {
-        "tags": [
-          "Statistics"
-        ],
-        "security": [
           {
-            "bearerAuth": []
-          }
-        ],
-        "operationId": "getStatisticsDataset",
-        "summary": "Read dataset metadata and availability",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
+            "name": "group_by",
+            "description": "Grouping; up to 100 largest groups",
+            "in": "query",
             "schema": {
-              "type": "string"
+              "enum": [
+                "industry",
+                "municipality",
+                "legal_form",
+                "status"
+              ],
+              "default": "legal_form"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Dataset and source metadata",
+            "description": "Business statistics with source and coverage",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatisticsDataset"
+                  "$ref": "#/components/schemas/BusinessCompanyCounts"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid parameters or dimension codes"
+            "description": "Invalid or unsupported parameters"
           },
           "401": {
             "description": "Authentication required"
           },
           "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted"
           },
           "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
+            "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Selection or format not supported; narrow large queries"
+            "description": "Period unavailable, incompatible filters or unsupported comparison"
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Archive temporarily unavailable"
-          }
-        }
-      }
-    },
-    "/v1/statistics/query": {
-      "post": {
-        "tags": [
-          "Statistics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "operationId": "queryStatistics",
-        "summary": "Query a published statistical snapshot",
-        "description": "Starter+. Preserves source units, periods and missing-value markers. 202 indicates incomplete collection; retry later. A published snapshot may precede the latest source update. Request body maximum 64 KiB.",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StatisticsSelection"
-              },
-              "example": {
-                "dataset": "TAB2017",
-                "selection": {
-                  "Region": [
-                    "0180"
-                  ],
-                  "ContentsCode": [
-                    "OE0101D1"
-                  ],
-                  "Tid": [
-                    "2026"
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Complete selection from one published snapshot",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsResult"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Collection is not complete; no partial snapshot returned",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsPending"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid parameters or dimension codes"
-          },
-          "401": {
-            "description": "Authentication required"
-          },
-          "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
-          },
-          "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
-          },
-          "422": {
-            "description": "Selection or format not supported; narrow large queries"
-          },
-          "429": {
-            "description": "Rate or account quota exceeded"
-          },
-          "503": {
-            "description": "Archive temporarily unavailable"
+            "description": "Data temporarily unavailable; no fabricated zero returned"
           }
         }
       }
@@ -338,9 +377,9 @@
             "bearerAuth": []
           }
         ],
-        "operationId": "getScbIndustryBenchmarks",
-        "summary": "Official SCB industry quartiles",
-        "description": "Select compatible industry, employee size, measures and year. Requires version=2007. No automatic SNI conversion or exact company percentile is inferred. Population and measure definitions are in metadata.",
+        "operationId": "getIndustryBenchmarks",
+        "summary": "Industry quartiles for business key figures",
+        "description": "Starter+. Compare compatible financial definitions, industry, employee size and year. No automatic SNI conversion or company percentile. Null and source_status preserve missing or suppressed values.",
         "parameters": [
           {
             "name": "sniCode",
@@ -352,244 +391,91 @@
           },
           {
             "name": "version",
+            "description": "Industry classification",
             "in": "query",
-            "required": true,
             "schema": {
               "const": "2007"
-            }
+            },
+            "required": true
           },
           {
             "name": "year",
+            "description": "Defaults to latest published year",
             "in": "query",
-            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
             "name": "size_class",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "metrics",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "region",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Quartile observations",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsResult"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Collection pending",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsPending"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid parameters or dimension codes"
-          },
-          "401": {
-            "description": "Authentication required"
-          },
-          "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
-          },
-          "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
-          },
-          "422": {
-            "description": "Selection or format not supported; narrow large queries"
-          },
-          "429": {
-            "description": "Rate or account quota exceeded"
-          },
-          "503": {
-            "description": "Archive temporarily unavailable"
-          }
-        }
-      }
-    },
-    "/v1/regions/{code}/statistics": {
-      "get": {
-        "tags": [
-          "Statistics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "operationId": "getRegionStatistics",
-        "summary": "Find published datasets for a county or municipality",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Up to 100 datasets with source Region codes",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsRegion"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid parameters or dimension codes"
-          },
-          "401": {
-            "description": "Authentication required"
-          },
-          "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
-          },
-          "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
-          },
-          "422": {
-            "description": "Selection or format not supported; narrow large queries"
-          },
-          "429": {
-            "description": "Rate or account quota exceeded"
-          },
-          "503": {
-            "description": "Archive temporarily unavailable"
-          }
-        }
-      }
-    },
-    "/v1/statistics/datasets/{id}/files/{ordinal}": {
-      "get": {
-        "tags": [
-          "Statistics"
-        ],
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "operationId": "getStatisticsFile",
-        "summary": "Download a published data file",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "ordinal",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "minimum": 0
-            }
-          },
-          {
-            "name": "format",
+            "description": "Employee size",
             "in": "query",
             "schema": {
               "enum": [
-                "source",
-                "parquet"
-              ],
-              "default": "source"
+                "001",
+                "1-4",
+                "1-19",
+                "+5",
+                "5-9",
+                "10-19",
+                "+20",
+                "20-49",
+                "+50",
+                "50-99",
+                "50-199",
+                "100-199",
+                "200-499",
+                "+500",
+                "TOT"
+              ]
+            },
+            "required": true
+          },
+          {
+            "name": "metrics",
+            "description": "Comma-separated operating_margin, net_margin, equity_ratio, quick_ratio, revenue_per_employee, revenue. Defaults to operating_margin,equity_ratio,revenue_per_employee.",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Download URL, valid for 60 seconds",
+            "description": "Business statistics with source and coverage",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatisticsFile"
-                }
-              }
-            }
-          },
-          "202": {
-            "description": "Collection pending",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StatisticsPending"
+                  "$ref": "#/components/schemas/BusinessBenchmarks"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid parameters or dimension codes"
+            "description": "Invalid or unsupported parameters"
           },
           "401": {
             "description": "Authentication required"
           },
           "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted"
           },
           "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
+            "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Selection or format not supported; narrow large queries"
+            "description": "Period unavailable, incompatible filters or unsupported comparison"
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Archive temporarily unavailable"
+            "description": "Data temporarily unavailable; no fabricated zero returned"
           }
         }
       }
     },
-    "/v1/statistics/agencies": {
+    "/v1/company/{orgnr}/statistics": {
       "get": {
         "tags": [
           "Statistics"
@@ -599,53 +485,50 @@
             "bearerAuth": []
           }
         ],
-        "operationId": "listStatisticalAgencies",
-        "summary": "List SCB authority register observations",
+        "operationId": "getCompanyStatistics",
+        "summary": "Industry and regional context for a company",
+        "description": "Starter+. Uses the organization's recorded primary SNI and SCB seat county. Returns an industry cohort and the last 12 available periods of regional bankruptcies/new businesses. These are surroundings, not the company's own events or risk. Missing classification or county yields null sections.",
         "parameters": [
           {
-            "name": "offset",
-            "in": "query",
+            "name": "orgnr",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 100000
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Up to 100 authority observations; orgnr is null when no valid organization identity is available",
+            "description": "Business statistics with source and coverage",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StatisticsAgencies"
+                  "$ref": "#/components/schemas/CompanyStatistics"
                 }
               }
             }
           },
           "400": {
-            "description": "Invalid parameters or dimension codes"
+            "description": "Invalid or unsupported parameters"
           },
           "401": {
             "description": "Authentication required"
           },
           "403": {
-            "description": "Starter or higher required, or endpoint restricted for this account"
+            "description": "Starter or higher required, or endpoint restricted"
           },
           "404": {
-            "description": "Dataset or file not found"
-          },
-          "413": {
-            "description": "Request body exceeds 64 KiB"
+            "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Selection or format not supported; narrow large queries"
+            "description": "Period unavailable, incompatible filters or unsupported comparison"
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Archive temporarily unavailable"
+            "description": "Data temporarily unavailable; no fabricated zero returned"
           }
         }
       }
@@ -6173,375 +6056,551 @@
       }
     },
     "schemas": {
-      "StatisticsDataset": {
+      "BusinessTimeSeries": {
         "type": "object",
         "required": [
-          "id",
-          "kind",
-          "label",
+          "topic",
+          "frequency",
+          "unit",
+          "definition",
+          "filters",
           "source",
-          "license",
-          "coverage",
-          "snapshot",
-          "catalog"
+          "observations",
+          "from",
+          "to",
+          "available_from",
+          "available_to"
         ],
         "properties": {
-          "id": {
-            "type": "string"
-          },
-          "kind": {
+          "topic": {
             "enum": [
-              "pxweb",
-              "agency",
-              "geodata",
-              "reference"
+              "bankruptcies",
+              "new-businesses"
             ]
           },
-          "label": {
-            "type": "string"
-          },
-          "source": {
-            "type": "string"
-          },
-          "license": {
-            "type": "string"
-          },
-          "source_updated_at": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "published_source_updated_at": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "published_at": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "checked_at": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "removed_at": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "snapshot": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "coverage": {
+          "frequency": {
             "enum": [
-              "published",
-              "not_yet_published"
-            ],
-            "description": "Catalog presence does not imply data availability."
+              "month",
+              "quarter"
+            ]
           },
-          "file_count": {
-            "type": "integer",
-            "description": "Published file ordinals are 0 through file_count minus one."
+          "unit": {
+            "const": "count"
           },
-          "collection": {
+          "definition": {
+            "type": "string"
+          },
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "available_from": {
+            "type": "string"
+          },
+          "available_to": {
+            "type": "string"
+          },
+          "aggregation": {
+            "type": "string"
+          },
+          "filters": {
             "type": "object",
-            "additionalProperties": true
-          },
-          "catalog": {
-            "type": "object",
-            "additionalProperties": true
-          },
-          "metadata": {
-            "type": [
-              "object",
-              "null"
-            ],
-            "additionalProperties": true,
-            "description": "Source JSON-stat metadata: dimensions, ordered codes, units, scale, periods, population, geography version and footnotes. Values in different groups may overlap and must not be summed indiscriminately."
-          }
-        }
-      },
-      "StatisticsCatalog": {
-        "type": "object",
-        "required": [
-          "datasets",
-          "offset",
-          "next_offset"
-        ],
-        "properties": {
-          "datasets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatisticsDataset"
+            "properties": {
+              "county": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "industry": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "industry_classification": {
+                "type": "string"
+              }
             }
           },
-          "offset": {
-            "type": "integer"
-          },
-          "next_offset": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          }
-        }
-      },
-      "StatisticsSelection": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "dataset",
-          "selection"
-        ],
-        "properties": {
-          "dataset": {
-            "type": "string",
-            "pattern": "^[A-Za-z0-9_-]{1,80}$"
-          },
-          "selection": {
+          "available_filters": {
             "type": "object",
-            "maxProperties": 20,
-            "additionalProperties": {
-              "type": "array",
-              "minItems": 1,
-              "maxItems": 10000,
-              "uniqueItems": true,
-              "items": {
-                "type": "string",
-                "maxLength": 200
+            "properties": {
+              "county": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "label"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "industry": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "code",
+                    "label"
+                  ],
+                  "properties": {
+                    "code": {
+                      "type": "string"
+                    },
+                    "label": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
-            },
-            "description": "Explicit source codes for every dimension. Maximum 10000 cell combinations; no implicit aggregation or wildcard selection."
-          }
-        }
-      },
-      "StatisticsResult": {
-        "type": "object",
-        "required": [
-          "ready",
-          "dataset",
-          "selection",
-          "metadata",
-          "observations",
-          "total"
-        ],
-        "properties": {
-          "ready": {
-            "const": true
+            }
           },
-          "dataset": {
-            "$ref": "#/components/schemas/StatisticsDataset"
-          },
-          "selection": {
+          "source": {
             "type": "object",
-            "additionalProperties": true
-          },
-          "metadata": {
-            "type": "object",
-            "additionalProperties": true
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "classification": {
+                "type": "string"
+              }
+            }
           },
           "observations": {
             "type": "array",
-            "maxItems": 10000,
             "items": {
               "type": "object",
               "required": [
-                "dimensions",
-                "value",
-                "status"
+                "period",
+                "businesses"
               ],
               "properties": {
-                "dimensions": {
+                "period": {
+                  "type": "string"
+                },
+                "businesses": {
                   "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
+                  "required": [
+                    "value",
+                    "status",
+                    "source_status"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "status": {
+                      "enum": [
+                        "available",
+                        "unavailable"
+                      ]
+                    },
+                    "source_status": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
                   }
                 },
-                "value": {
-                  "type": [
-                    "number",
-                    "null"
-                  ]
-                },
-                "status": {
-                  "type": [
-                    "string",
-                    "null"
+                "affected_employees": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "status",
+                    "source_status"
                   ],
-                  "description": "Original source marker. Null values are not zero; '..' can mean unavailable, uncertain or confidential without distinguishing the cause."
+                  "properties": {
+                    "value": {
+                      "type": [
+                        "integer",
+                        "null"
+                      ],
+                      "minimum": 0
+                    },
+                    "status": {
+                      "enum": [
+                        "available",
+                        "unavailable"
+                      ]
+                    },
+                    "source_status": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
                 }
               }
             }
+          }
+        }
+      },
+      "BusinessCompanyCounts": {
+        "type": "object",
+        "required": [
+          "filters",
+          "group_by",
+          "total",
+          "groups",
+          "truncated",
+          "as_of",
+          "source"
+        ],
+        "properties": {
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "group_by": {
+            "enum": [
+              "industry",
+              "municipality",
+              "legal_form",
+              "status"
+            ]
           },
           "total": {
-            "type": "integer"
-          }
-        }
-      },
-      "StatisticsPending": {
-        "type": "object",
-        "required": [
-          "ready",
-          "dataset"
-        ],
-        "properties": {
-          "ready": {
-            "const": false
+            "type": "integer",
+            "minimum": 0
           },
-          "dataset": {
-            "$ref": "#/components/schemas/StatisticsDataset"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      },
-      "StatisticsFile": {
-        "type": "object",
-        "required": [
-          "ready",
-          "dataset",
-          "url",
-          "expires_in",
-          "format"
-        ],
-        "properties": {
-          "ready": {
-            "const": true
-          },
-          "dataset": {
-            "$ref": "#/components/schemas/StatisticsDataset"
-          },
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "expires_in": {
-            "const": 60
-          },
-          "source_sha256": {
-            "type": "string"
-          },
-          "format": {
-            "enum": [
-              "source",
-              "parquet"
-            ]
-          }
-        }
-      },
-      "StatisticsRegion": {
-        "type": "object",
-        "required": [
-          "region_code",
-          "datasets"
-        ],
-        "properties": {
-          "region_code": {
-            "type": "string"
-          },
-          "datasets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatisticsDataset"
-            }
-          }
-        }
-      },
-      "StatisticsAgencies": {
-        "type": "object",
-        "required": [
-          "agencies",
-          "offset",
-          "next_offset"
-        ],
-        "properties": {
-          "datasets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StatisticsDataset"
-            }
-          },
-          "agencies": {
+          "groups": {
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "code",
+                "count"
+              ],
               "properties": {
-                "orgnr": {
+                "code": {
                   "type": [
                     "string",
                     "null"
                   ]
                 },
-                "category": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "address": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "postal_code": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "city": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "website": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "email": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "phone": {
-                  "type": [
-                    "string",
-                    "null"
-                  ]
-                },
-                "source": {
-                  "const": "scb"
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
                 }
               }
             }
           },
-          "offset": {
-            "type": "integer"
+          "truncated": {
+            "type": "boolean",
+            "description": "Only the largest 100 groups are returned. total includes all matching groups."
           },
-          "next_offset": {
+          "as_of": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "classification": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "BusinessBenchmarks": {
+        "type": "object",
+        "required": [
+          "sni_code",
+          "sni_version",
+          "year",
+          "size_class",
+          "population",
+          "source",
+          "metrics"
+        ],
+        "properties": {
+          "sni_code": {
+            "type": "string"
+          },
+          "sni_version": {
+            "const": "2007"
+          },
+          "year": {
+            "type": "string"
+          },
+          "size_class": {
+            "type": "string"
+          },
+          "population": {
+            "type": "string"
+          },
+          "source": {
+            "type": "object",
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "note": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "coverage": {
+                "type": "string"
+              },
+              "classification": {
+                "type": "string"
+              }
+            }
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "metric",
+                "label",
+                "unit",
+                "lower_quartile",
+                "median",
+                "upper_quartile"
+              ],
+              "properties": {
+                "metric": {
+                  "enum": [
+                    "operating_margin",
+                    "net_margin",
+                    "equity_ratio",
+                    "quick_ratio",
+                    "revenue_per_employee",
+                    "revenue"
+                  ]
+                },
+                "label": {
+                  "type": "string"
+                },
+                "unit": {
+                  "enum": [
+                    "percent",
+                    "SEK_thousands"
+                  ]
+                },
+                "lower_quartile": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "source_status"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "source_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "median": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "source_status"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "source_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                },
+                "upper_quartile": {
+                  "type": "object",
+                  "required": [
+                    "value",
+                    "source_status"
+                  ],
+                  "properties": {
+                    "value": {
+                      "type": [
+                        "number",
+                        "null"
+                      ]
+                    },
+                    "source_status": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "CompanyStatistics": {
+        "type": "object",
+        "required": [
+          "orgnr",
+          "primary_sni_code",
+          "county_code",
+          "municipality_code",
+          "industry_cohort",
+          "regional_bankruptcies",
+          "regional_new_businesses",
+          "interpretation"
+        ],
+        "properties": {
+          "orgnr": {
+            "type": "string"
+          },
+          "primary_sni_code": {
             "type": [
-              "integer",
+              "string",
               "null"
             ]
+          },
+          "county_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "municipality_code": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "industry_cohort": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BusinessCompanyCounts"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "regional_bankruptcies": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BusinessTimeSeries"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "regional_new_businesses": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BusinessTimeSeries"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "interpretation": {
+            "type": "string"
           }
         }
       },

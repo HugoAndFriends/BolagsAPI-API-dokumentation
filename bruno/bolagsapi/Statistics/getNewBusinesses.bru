@@ -1,0 +1,35 @@
+meta {
+  name: getNewBusinesses
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/v1/statistics/new-businesses
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('First period, inclusive. Defaults to the last 12 published periods; with to only, returns that period.')
+  ~from: 
+  @description('Last period, inclusive. Defaults to latest available, which may lag the calendar.')
+  ~to: 
+  @description('Two-digit county code; omitted means all counties. Available codes and labels are included in the response.')
+  ~county: 
+  @description('Grouped SNI 2007 industry, e.g. 41-43. Available groups are included in the response.')
+  ~industry: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -1,0 +1,37 @@
+meta {
+  name: countCompanies
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/statistics/companies
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Primary SNI prefix, 2–5 digits as recorded')
+  ~sni_code: 
+  @description('Exact SCB seat municipality code, not postal-code inference')
+  ~municipality: 
+  @description('Recorded legal form, e.g. AB')
+  ~legal_form: 
+  @description('Registration status')
+  ~status: 
+  @description('Grouping; up to 100 largest groups')
+  ~group_by: legal_form
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

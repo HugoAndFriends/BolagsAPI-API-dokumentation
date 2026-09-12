@@ -7754,6 +7754,7 @@
       "PublicDataSource": {
         "type": "string",
         "enum": [
+          "lantmateriet",
           "vies",
           "gleif",
           "bolagsverket",
@@ -7788,6 +7789,27 @@
           "label": {
             "type": "string",
             "example": "SCB"
+          },
+          "product": {
+            "type": "string",
+            "example": "Belägenhetsadress Nedladdning, vektor"
+          },
+          "copyright": {
+            "type": "string",
+            "example": "© Lantmäteriet"
+          },
+          "license": {
+            "type": "string",
+            "example": "CC BY 4.0"
+          },
+          "license_url": {
+            "type": "string",
+            "format": "uri",
+            "example": "https://creativecommons.org/licenses/by/4.0/"
+          },
+          "processing": {
+            "type": "string",
+            "example": "Address matching and transformation to WGS84"
           }
         },
         "required": [
@@ -8487,6 +8509,73 @@
           "address": {
             "type": "object",
             "properties": {
+              "coordinates": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "WGS84 (EPSG:4326) address point. Null unless geocoding_status is matched; not a building boundary or an interpolated location.",
+                "properties": {
+                  "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  },
+                  "precision": {
+                    "type": "string",
+                    "enum": [
+                      "address"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "lantmateriet"
+                    ]
+                  },
+                  "source_updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time",
+                    "description": "Update time of the source address delivery, when known."
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude",
+                  "precision",
+                  "source",
+                  "source_updated_at"
+                ]
+              },
+              "geocoding_status": {
+                "type": "string",
+                "enum": [
+                  "matched",
+                  "ambiguous",
+                  "not_found",
+                  "missing_address",
+                  "unsupported_address",
+                  "restricted",
+                  "unavailable"
+                ],
+                "description": "matched: one address point; ambiguous: multiple candidates; not_found: no match; missing_address: street or postal code missing; unsupported_address: foreign, postal-box or invalid address; restricted: withheld for privacy (including sole traders and unknown legal form); unavailable: coordinate service or source unavailable. Other company data remains usable."
+              },
+              "geocoding_updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When this address was last evaluated against the source. Null for restricted or unavailable results; separate from the company/workplace update time."
+              },
               "street": {
                 "type": "string",
                 "nullable": true
@@ -8609,6 +8698,73 @@
             "nullable": true,
             "description": "Main workplace visiting address from SCB enrichment when available.",
             "properties": {
+              "coordinates": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "WGS84 (EPSG:4326) address point. Null unless geocoding_status is matched; not a building boundary or an interpolated location.",
+                "properties": {
+                  "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  },
+                  "precision": {
+                    "type": "string",
+                    "enum": [
+                      "address"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "lantmateriet"
+                    ]
+                  },
+                  "source_updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time",
+                    "description": "Update time of the source address delivery, when known."
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude",
+                  "precision",
+                  "source",
+                  "source_updated_at"
+                ]
+              },
+              "geocoding_status": {
+                "type": "string",
+                "enum": [
+                  "matched",
+                  "ambiguous",
+                  "not_found",
+                  "missing_address",
+                  "unsupported_address",
+                  "restricted",
+                  "unavailable"
+                ],
+                "description": "matched: one address point; ambiguous: multiple candidates; not_found: no match; missing_address: street or postal code missing; unsupported_address: foreign, postal-box or invalid address; restricted: withheld for privacy (including sole traders and unknown legal form); unavailable: coordinate service or source unavailable. Other company data remains usable."
+              },
+              "geocoding_updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When this address was last evaluated against the source. Null for restricted or unavailable results; separate from the company/workplace update time."
+              },
               "street": {
                 "type": "string",
                 "nullable": true,
@@ -13292,6 +13448,73 @@
           "address": {
             "type": "object",
             "properties": {
+              "coordinates": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "description": "WGS84 (EPSG:4326) address point. Null unless geocoding_status is matched; not a building boundary or an interpolated location.",
+                "properties": {
+                  "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                  },
+                  "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                  },
+                  "precision": {
+                    "type": "string",
+                    "enum": [
+                      "address"
+                    ]
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "lantmateriet"
+                    ]
+                  },
+                  "source_updated_at": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "format": "date-time",
+                    "description": "Update time of the source address delivery, when known."
+                  }
+                },
+                "required": [
+                  "latitude",
+                  "longitude",
+                  "precision",
+                  "source",
+                  "source_updated_at"
+                ]
+              },
+              "geocoding_status": {
+                "type": "string",
+                "enum": [
+                  "matched",
+                  "ambiguous",
+                  "not_found",
+                  "missing_address",
+                  "unsupported_address",
+                  "restricted",
+                  "unavailable"
+                ],
+                "description": "matched: one address point; ambiguous: multiple candidates; not_found: no match; missing_address: street or postal code missing; unsupported_address: foreign, postal-box or invalid address; restricted: withheld for privacy (including sole traders and unknown legal form); unavailable: coordinate service or source unavailable. Other company data remains usable."
+              },
+              "geocoding_updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "When this address was last evaluated against the source. Null for restricted or unavailable results; separate from the company/workplace update time."
+              },
               "street": {
                 "type": "string",
                 "nullable": true,

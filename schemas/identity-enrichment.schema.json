@@ -343,6 +343,7 @@
     "PublicDataSource": {
       "type": "string",
       "enum": [
+        "lantmateriet",
         "vies",
         "gleif",
         "bolagsverket",
@@ -377,6 +378,27 @@
         "label": {
           "type": "string",
           "example": "SCB"
+        },
+        "product": {
+          "type": "string",
+          "example": "Belägenhetsadress Nedladdning, vektor"
+        },
+        "copyright": {
+          "type": "string",
+          "example": "© Lantmäteriet"
+        },
+        "license": {
+          "type": "string",
+          "example": "CC BY 4.0"
+        },
+        "license_url": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "processing": {
+          "type": "string",
+          "example": "Address matching and transformation to WGS84"
         }
       },
       "required": [

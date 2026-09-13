@@ -301,6 +301,7 @@
     "PersonRoleType": {
       "type": "string",
       "examples": [
+        "proprietor",
         "auditor_deputy",
         "administrator",
         "executive",
@@ -319,6 +320,7 @@
         "unknown"
       ],
       "x-known-values": [
+        "proprietor",
         "auditor_deputy",
         "administrator",
         "executive",
@@ -341,6 +343,7 @@
     "PublicDataSource": {
       "type": "string",
       "enum": [
+        "lantmateriet",
         "vies",
         "gleif",
         "bolagsverket",
@@ -375,6 +378,27 @@
         "label": {
           "type": "string",
           "example": "SCB"
+        },
+        "product": {
+          "type": "string",
+          "example": "Belägenhetsadress Nedladdning, vektor"
+        },
+        "copyright": {
+          "type": "string",
+          "example": "© Lantmäteriet"
+        },
+        "license": {
+          "type": "string",
+          "example": "CC BY 4.0"
+        },
+        "license_url": {
+          "type": "string",
+          "format": "uri",
+          "example": "https://creativecommons.org/licenses/by/4.0/"
+        },
+        "processing": {
+          "type": "string",
+          "example": "Address matching and transformation to WGS84"
         }
       },
       "required": [
@@ -418,6 +442,14 @@
     "PersonCompaniesResponse": {
       "type": "object",
       "properties": {
+        "unresolved_company_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "description": "Source engagement rows omitted because the company identifier could not be resolved. A positive count means the result is incomplete. Null means coverage is unknown; older cached responses may omit this field."
+        },
         "meta": {
           "$ref": "#/$defs/SourceMeta",
           "description": "Optional public source attribution passed through by Auth; may be absent in cached responses."
@@ -501,11 +533,13 @@
       "properties": {
         "orgnr": {
           "type": "string",
-          "example": "5567037485"
+          "example": "5567037485",
+          "description": "Canonical company identifier. For a sole trader this is the full 12-digit personnummer or coordination number used as the business identifier; accepted by GET /v1/company/{orgnr}."
         },
         "name": {
           "type": "string",
-          "example": "Spotify AB"
+          "example": "Spotify AB",
+          "description": "Registered business name, or an empty string when no name is available. Multiple registered names for one sole trader are grouped under the same identifier."
         },
         "status": {
           "type": "string",

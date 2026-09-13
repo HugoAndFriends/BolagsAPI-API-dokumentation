@@ -1,0 +1,35 @@
+meta {
+  name: getIndustryBenchmarks
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{baseUrl}}/v1/industry/{{sniCode}}/benchmarks?version=2007&size_class=1-4
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Industry classification')
+  version: 2007
+  @description('Employee size')
+  size_class: 1-4
+  @description('Defaults to latest published year')
+  ~year: 2024
+  @description('Comma-separated operating_margin, net_margin, equity_ratio, quick_ratio, revenue_per_employee, revenue. Defaults to operating_margin,equity_ratio,revenue_per_employee.')
+  ~metrics: operating_margin
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -44,7 +44,8 @@ for (const item of requests(collection.item)) {
   });
   const params = [...(op.item.parameters ?? []), ...(operation.parameters ?? [])].filter(p => p.in === 'query');
   const query = params.map(p => {
-    let value = p.example ?? p.schema?.example ?? p.schema?.default ?? '';
+    let value = p.example ?? p.schema?.example ?? p.schema?.default ?? p.schema?.const ?? '';
+    if (operation.operationId === 'getIndustryBenchmarks') value = ({ year: '2024', size_class: '1-4', metrics: 'operating_margin' })[p.name] ?? value;
     if (p.name === 'sessionId') value = '{{sessionId}}';
     if (p.required && value === '') { variables[p.name] ??= `REPLACE_WITH_${p.name.toUpperCase()}`; value = `{{${p.name}}}`; }
     return { key: p.name, value: String(value), description: p.description ?? '', disabled: !p.required };

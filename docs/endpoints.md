@@ -4,6 +4,11 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 
 | Method | Path | Authentication | Operation |
 | --- | --- | --- | --- |
+| GET | `/v1/statistics/bankruptcies` | bearerAuth | getBusinessBankruptcies |
+| GET | `/v1/statistics/new-businesses` | bearerAuth | getNewBusinesses |
+| GET | `/v1/statistics/companies` | bearerAuth | countCompanies |
+| GET | `/v1/industry/{sniCode}/benchmarks` | bearerAuth | getIndustryBenchmarks |
+| GET | `/v1/company/{orgnr}/statistics` | bearerAuth | getCompanyStatistics |
 | POST | `/v1/vat/validate` | bearerAuth | validateVatNumber |
 | GET | `/v1/company/{orgnr}/lei` | bearerAuth | getCompanyLei |
 | GET | `/v1/reports/insights/search` | bearerAuth | searchAnnualReportInsights |

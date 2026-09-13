@@ -3885,7 +3885,7 @@
           "Export"
         ],
         "summary": "Export company data",
-        "description": "Export company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count and up to 100 sample rows without consuming export rows. A full export returns one row per organisation, up to 100000 rows and 64 MiB, from one consistent snapshot. Business includes 1000000 export rows per UTC calendar month shared by the payer; no base API units or additional monetary charge. Preview and execution are separate snapshots.",
+        "description": "Export company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count, a current cost estimate and up to 100 sample rows for free. Each delivered row consumes one ordinary API unit from the payer's shared subscription allowance. Additional units use the customer's basic overage rate and respect stop limits, spending caps and prepaid credit. Delivery limits are 100000 rows and 64 MiB per export, and 1000000 rows per UTC calendar month; these are not additional free allowances. Preview and execution are separate snapshots.",
         "operationId": "exportCompanies",
         "security": [
           {
@@ -3897,7 +3897,7 @@
             "name": "Idempotency-Key",
             "in": "header",
             "required": false,
-            "description": "Use a unique key per full export and reuse it with an identical request on retries. Results remain replayable for 24 hours, with no extra rows consumed. Conflicting or expired keys return 409. Scoped to the paying account and personal/team context.",
+            "description": "Use a unique key per full export and reuse it with an identical request on retries. Results remain replayable for 24 hours without additional rows, API units or charges. Conflicting or expired keys return 409. Scoped to the paying account and personal/team context.",
             "schema": {
               "type": "string",
               "minLength": 1,
@@ -4003,6 +4003,32 @@
         "responses": {
           "200": {
             "description": "Export data (JSON format) or preview result",
+            "headers": {
+              "X-Export-Units": {
+                "description": "Ordinary API units consumed by a new full export; one per row. Replay retains the original value.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Export-Overage-Units": {
+                "description": "Export units beyond the shared included allowance.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "X-Export-Cost-SEK": {
+                "description": "Additional cost incurred for a new full export, excluding VAT. Older replays retain their legacy estimate.",
+                "schema": {
+                  "type": "number"
+                }
+              },
+              "X-Monthly-Remaining": {
+                "description": "Shared included API units remaining after this export was committed.",
+                "schema": {
+                  "type": "integer"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -4031,7 +4057,7 @@
             "$ref": "#/components/responses/Unauthorized"
           },
           "402": {
-            "description": "Quota exceeded",
+            "description": "Export row limit, shared API quota, overusage cap or prepaid balance exceeded",
             "content": {
               "application/json": {
                 "schema": {
@@ -14536,8 +14562,16 @@
           },
           "estimated_cost_sek": {
             "type": "number",
-            "deprecated": true,
-            "description": "Legacy estimate only; not an invoiced charge. Export rows are included in Business."
+            "description": "Estimated additional SEK cost using current shared API usage and the customer's basic overage rate. Preview is free; usage may change before execution."
+          },
+          "estimated_units": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "One ordinary API unit per matching row"
+          },
+          "overage_unit_price_sek": {
+            "type": "number",
+            "description": "Customer's overage price per exported row, in SEK excluding VAT"
           },
           "sample": {
             "type": "array",
@@ -14593,11 +14627,15 @@
             "properties": {
               "mode": {
                 "type": "string",
-                "const": "included_rows"
+                "enum": [
+                  "api_units",
+                  "included_rows"
+                ],
+                "description": "New exports use api_units. A replay of an older export retains included_rows and its original accounting."
               },
               "charged_sek": {
                 "type": "number",
-                "const": 0
+                "description": "Additional amount incurred for this delivery, excluding VAT. Queued for billing or deducted from prepaid credit; not an invoice payment confirmation. Replay retains the original amount without charging it again."
               },
               "month": {
                 "type": "string",
@@ -14609,11 +14647,55 @@
               },
               "included_rows": {
                 "type": "integer",
-                "minimum": 0
+                "minimum": 0,
+                "deprecated": true,
+                "description": "Monthly export row limit; not an additional free allowance"
               },
               "remaining_rows": {
                 "type": "integer",
                 "minimum": 0
+              },
+              "units": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Ordinary API units consumed by this export; one per row"
+              },
+              "overage_units": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Only units beyond the shared subscription allowance"
+              },
+              "overage_unit_price_sek": {
+                "type": "number"
+              },
+              "included_units": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "used_units": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "remaining_units": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "period_start": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "period_end": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "payment_mode": {
+                "type": "string",
+                "enum": [
+                  "metered",
+                  "hard_stop",
+                  "metered_cap",
+                  "prepaid_credits"
+                ]
               }
             }
           },
@@ -14628,7 +14710,7 @@
           "cost_sek": {
             "type": "number",
             "deprecated": true,
-            "description": "Legacy estimate only; not charged. Use billing.charged_sek for this export."
+            "description": "Alias of billing.charged_sek for new exports; older replayed exports retain their legacy estimate."
           },
           "generated_at": {
             "type": "string",

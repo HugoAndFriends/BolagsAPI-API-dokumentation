@@ -1,9 +1,9 @@
 {
-  "syncedAt": "2026-09-12T09:51:05.240Z",
+  "syncedAt": "2026-09-13T21:16:37.969Z",
   "sources": {
     "openapi.json": {
       "url": "https://api.bolagsapi.se/openapi.json",
-      "sha256": "fb76091b1e961cdf89f7ad263c11167ca6f6e874c1320187c66ef6e6fd61ee8a"
+      "sha256": "88ab092ff33224836975e7d4545bd238d21c2db9fed25c73e1a4fa1c8997eec0"
     },
     "identity-enrichment.schema.json": {
       "url": "https://api.bolagsapi.se/identity/enrichment.schema.json",

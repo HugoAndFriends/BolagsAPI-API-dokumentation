@@ -14765,7 +14765,128 @@
                 "debt_ratio",
                 "return_on_equity",
                 "return_on_assets",
-                "profit_margin"
+                "profit_margin",
+                "scb_company_name",
+                "registered_name",
+                "scb_email",
+                "employee_size_class_code",
+                "revenue_size_class_code",
+                "financial_revenue_size_class",
+                "financial_revenue_size_class_code",
+                "revenue_class_year",
+                "sme_class",
+                "sme_class_code",
+                "a_region",
+                "a_region_code",
+                "mailing_address_status",
+                "mailing_address_status_code",
+                "sector",
+                "sector_code",
+                "activity_started_date",
+                "activity_ended_date",
+                "workplace_count",
+                "registered_name_count",
+                "ownership_category_code",
+                "public_private_code",
+                "company_status_code",
+                "foreign_ownership",
+                "foreign_ownership_code",
+                "owner_country",
+                "owner_country_code",
+                "import_export",
+                "export_size_class",
+                "export_size_class_code",
+                "import_size_class",
+                "import_size_class_code",
+                "trade_nordic",
+                "trade_eu",
+                "trade_other_europe",
+                "trade_asia_except_far_east",
+                "trade_far_east",
+                "trade_north_central_america",
+                "trade_south_america",
+                "trade_africa",
+                "main_workplace_cfar",
+                "main_workplace_name",
+                "main_workplace_email",
+                "main_workplace_phone",
+                "main_workplace_municipality",
+                "main_workplace_municipality_code",
+                "main_workplace_county",
+                "main_workplace_county_code",
+                "sni_code_1",
+                "sni_description_1",
+                "sni_section_1",
+                "sni_section_code_1",
+                "sni_code_2",
+                "sni_description_2",
+                "sni_section_2",
+                "sni_section_code_2",
+                "sni_code_3",
+                "sni_description_3",
+                "sni_section_3",
+                "sni_section_code_3",
+                "sni_code_4",
+                "sni_description_4",
+                "sni_section_4",
+                "sni_section_code_4",
+                "sni_code_5",
+                "sni_description_5",
+                "sni_section_5",
+                "sni_section_code_5",
+                "description",
+                "co_address",
+                "country",
+                "name_protection_number",
+                "deregistered_date",
+                "deregistration_reason_code",
+                "municipality_code",
+                "scb_legal_form",
+                "scb_activity_status",
+                "scb_registration_status",
+                "scb_registered_date",
+                "employee_size_class",
+                "revenue_size_class",
+                "ownership_category",
+                "public_private",
+                "company_status",
+                "visiting_street",
+                "visiting_postal_code",
+                "visiting_city",
+                "scb_phone",
+                "scb_updated_at",
+                "f_skatt_status_code",
+                "vat_status_code",
+                "employer_status_code",
+                "parent_orgnr",
+                "parent_name",
+                "part_of_group",
+                "linkedin_url",
+                "f_skatt_registered_date",
+                "f_skatt_deregistered_date",
+                "vat_registered_date",
+                "vat_deregistered_date",
+                "period_start",
+                "auditor_remarks",
+                "auditor_opinion_type",
+                "financial_parsed_at",
+                "postal_municipality",
+                "postal_municipality_code",
+                "coordinates_attribution",
+                "latitude",
+                "longitude",
+                "geocoding_status",
+                "geocoding_updated_at",
+                "coordinates_source",
+                "coordinates_source_updated_at",
+                "visiting_latitude",
+                "visiting_longitude",
+                "visiting_geocoding_status",
+                "visiting_geocoding_updated_at",
+                "visiting_coordinates_source",
+                "visiting_coordinates_source_updated_at",
+                "phone_source",
+                "email_source"
               ]
             },
             "description": "Fields to include in export. Defaults to orgnr, name, org_form, status, city, sni_codes"
@@ -15223,6 +15344,494 @@
           "orgnr"
         ],
         "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "co_address": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "name_protection_number": {
+            "type": "string",
+            "nullable": true
+          },
+          "deregistered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "deregistration_reason_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "municipality_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_legal_form": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_activity_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_registration_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_registered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "employee_size_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "revenue_size_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownership_category": {
+            "type": "string",
+            "nullable": true
+          },
+          "public_private": {
+            "type": "string",
+            "nullable": true
+          },
+          "company_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_street": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_postal_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_city": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_updated_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "f_skatt_status_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "vat_status_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "employer_status_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent_orgnr": {
+            "type": "string",
+            "nullable": true
+          },
+          "parent_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "part_of_group": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "linkedin_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "f_skatt_registered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "f_skatt_deregistered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "vat_registered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "vat_deregistered_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "period_start": {
+            "type": "string",
+            "nullable": true
+          },
+          "auditor_remarks": {
+            "type": "string",
+            "nullable": true
+          },
+          "auditor_opinion_type": {
+            "type": "string",
+            "nullable": true
+          },
+          "financial_parsed_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "postal_municipality": {
+            "type": "string",
+            "nullable": true
+          },
+          "postal_municipality_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinates_attribution": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_company_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "registered_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "scb_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "employee_size_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "revenue_size_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "financial_revenue_size_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "financial_revenue_size_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "revenue_class_year": {
+            "type": "string",
+            "nullable": true
+          },
+          "sme_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "sme_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "a_region": {
+            "type": "string",
+            "nullable": true
+          },
+          "a_region_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "mailing_address_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "mailing_address_status_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "sector": {
+            "type": "string",
+            "nullable": true
+          },
+          "sector_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "activity_started_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "activity_ended_date": {
+            "type": "string",
+            "nullable": true
+          },
+          "workplace_count": {
+            "type": "string",
+            "nullable": true
+          },
+          "registered_name_count": {
+            "type": "string",
+            "nullable": true
+          },
+          "ownership_category_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "public_private_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "company_status_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "foreign_ownership": {
+            "type": "string",
+            "nullable": true
+          },
+          "foreign_ownership_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner_country": {
+            "type": "string",
+            "nullable": true
+          },
+          "owner_country_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "import_export": {
+            "type": "string",
+            "nullable": true
+          },
+          "export_size_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "export_size_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "import_size_class": {
+            "type": "string",
+            "nullable": true
+          },
+          "import_size_class_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_nordic": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_eu": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_other_europe": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_asia_except_far_east": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_far_east": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_north_central_america": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_south_america": {
+            "type": "string",
+            "nullable": true
+          },
+          "trade_africa": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_cfar": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_municipality": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_municipality_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_county": {
+            "type": "string",
+            "nullable": true
+          },
+          "main_workplace_county_code": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_code_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_description_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_code_1": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_code_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_description_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_code_2": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_code_3": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_description_3": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_3": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_code_3": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_code_4": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_description_4": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_4": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_code_4": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_code_5": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_description_5": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_5": {
+            "type": "string",
+            "nullable": true
+          },
+          "sni_section_code_5": {
+            "type": "string",
+            "nullable": true
+          },
+          "latitude": {
+            "type": "number",
+            "nullable": true,
+            "description": "Matched address coordinate in WGS84. Null for restricted, ambiguous or unavailable addresses."
+          },
+          "longitude": {
+            "type": "number",
+            "nullable": true,
+            "description": "Matched address coordinate in WGS84. Null for restricted, ambiguous or unavailable addresses."
+          },
+          "geocoding_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "geocoding_updated_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinates_source": {
+            "type": "string",
+            "nullable": true
+          },
+          "coordinates_source_updated_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_latitude": {
+            "type": "number",
+            "nullable": true,
+            "description": "Matched address coordinate in WGS84. Null for restricted, ambiguous or unavailable addresses."
+          },
+          "visiting_longitude": {
+            "type": "number",
+            "nullable": true,
+            "description": "Matched address coordinate in WGS84. Null for restricted, ambiguous or unavailable addresses."
+          },
+          "visiting_geocoding_status": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_geocoding_updated_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_coordinates_source": {
+            "type": "string",
+            "nullable": true
+          },
+          "visiting_coordinates_source_updated_at": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone_source": {
+            "type": "string",
+            "nullable": true
+          },
+          "email_source": {
+            "type": "string",
+            "nullable": true
+          },
           "revenue": {
             "type": "integer",
             "nullable": true,

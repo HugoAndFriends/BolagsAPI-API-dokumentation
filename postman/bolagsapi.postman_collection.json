@@ -1539,6 +1539,546 @@
               ],
               "query": [
                 {
+                  "key": "include_scb",
+                  "value": "false",
+                  "description": "Include the SCB profile in every search result. Company lookup always includes it.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.tax_activity_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB tax activity code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.registration_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB registration status code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.legal_form_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB legal form code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.marketing_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB marketing code: 1 allowed, 2 blocked. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.registered_date",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB registration date as stored. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.f_tax_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB F-tax registration code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.vat_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB VAT registration code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.employer_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB employer registration code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.municipality_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Registered-seat municipality code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.municipality",
+                  "value": "",
+                  "description": "Exact stored SCB value. Registered-seat municipality. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.county_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Registered-seat county code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.county",
+                  "value": "",
+                  "description": "Exact stored SCB value. Registered-seat county. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.scb_phone",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB phone number. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.visiting_street",
+                  "value": "",
+                  "description": "Exact stored SCB value. Visiting street address. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.visiting_postal_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Visiting postal code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.visiting_city",
+                  "value": "",
+                  "description": "Exact stored SCB value. Visiting postal city. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.employee_size_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. Employee size interval, not an exact headcount. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.revenue_size_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. Revenue size interval, not an exact financial amount. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.ownership_category",
+                  "value": "",
+                  "description": "Exact stored SCB value. SCB ownership category, not verified owners. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.public_private",
+                  "value": "",
+                  "description": "Exact stored SCB value. Private/public classification; public does not establish listing. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.company_status",
+                  "value": "",
+                  "description": "Exact stored SCB value. Detailed SCB company status. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.scb_company_name",
+                  "value": "",
+                  "description": "Exact stored SCB value. Företagsnamn SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.registered_name",
+                  "value": "",
+                  "description": "Exact stored SCB value. Registrerad firma SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.scb_email",
+                  "value": "",
+                  "description": "Exact stored SCB value. E-post SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.employee_size_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass anställda kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.revenue_size_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass omsättning kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.financial_revenue_size_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass finansiell omsättning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.financial_revenue_size_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass finansiell omsättning kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.revenue_class_year",
+                  "value": "",
+                  "description": "Exact stored SCB value. Omsättningsklass år. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sme_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. SME-klass. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sme_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. SME-klass kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.a_region",
+                  "value": "",
+                  "description": "Exact stored SCB value. A-region. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.a_region_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. A-region kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.mailing_address_status",
+                  "value": "",
+                  "description": "Exact stored SCB value. Postadressens utskicksstatus. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.mailing_address_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Postadressens utskicksstatus kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sector",
+                  "value": "",
+                  "description": "Exact stored SCB value. Sektor. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sector_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Sektor kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.activity_started_date",
+                  "value": "",
+                  "description": "Exact stored SCB value. Verksamhet startdatum SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.activity_ended_date",
+                  "value": "",
+                  "description": "Exact stored SCB value. Verksamhet slutdatum SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.workplace_count",
+                  "value": "",
+                  "description": "Exact stored SCB value. Antal arbetsställen SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.registered_name_count",
+                  "value": "",
+                  "description": "Exact stored SCB value. Antal registrerade firmor SCB. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.ownership_category_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Ägarkategori kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.public_private_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Privat/publikt kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.company_status_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bolagsstatus kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.foreign_ownership",
+                  "value": "",
+                  "description": "Exact stored SCB value. Utländskt ägande. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.foreign_ownership_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Utländskt ägande kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.owner_country",
+                  "value": "",
+                  "description": "Exact stored SCB value. Ägarland. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.owner_country_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Ägarland kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.import_export",
+                  "value": "",
+                  "description": "Exact stored SCB value. Export/import registermarkering. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.export_size_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass export. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.export_size_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass export kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.import_size_class",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass import. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.import_size_class_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Storleksklass import kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_nordic",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Norden. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_eu",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel EU. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_other_europe",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel övriga Europa. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_asia_except_far_east",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Asien utom Fjärran Östern. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_far_east",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Fjärran Östern. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_north_central_america",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Nord- och Centralamerika. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_south_america",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Sydamerika. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.trade_africa",
+                  "value": "",
+                  "description": "Exact stored SCB value. Handel Afrika. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_cfar",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe CFAR. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_name",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe benämning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_email",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe e-post. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_phone",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe telefon. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_municipality",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe kommun. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_municipality_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe kommunkod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_county",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe län. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.main_workplace_county_code",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställe länskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_code_1",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 1 kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_description_1",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 1. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_1",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 1 avdelning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_code_1",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 1 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_code_2",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 2 kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_description_2",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 2. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_2",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 2 avdelning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_code_2",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 2 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_code_3",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 3 kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_description_3",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 3. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_3",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 3 avdelning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_code_3",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 3 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_code_4",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 4 kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_description_4",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 4. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_4",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 4 avdelning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_code_4",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 4 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_code_5",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 5 kod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_description_5",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 5. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_5",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 5 avdelning. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
+                  "key": "scb.sni_section_code_5",
+                  "value": "",
+                  "description": "Exact stored SCB value. Bransch 5 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
                   "key": "q",
                   "value": "tech",
                   "description": "Search query (min 3 characters if provided). Optional - filter-only searches are supported.",

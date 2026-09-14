@@ -2860,10 +2860,132 @@
       "description": "Bulk data export",
       "item": [
         {
+          "name": "retainExportJob",
+          "request": {
+            "name": "Extend export availability",
+            "description": "Extend export availability\n\nExtend an available ready file to at least 60 days from now. Access restrictions still apply; no new API units or export charges. Expired files cannot be revived.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/export/{{announcementId}}/retain",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "export",
+                "{{announcementId}}",
+                "retain"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "getExportJob",
+          "request": {
+            "name": "Get export status",
+            "description": "Get export status\n\nPoll after an asynchronous export. Access remains scoped to the paying account and personal/team context. When ready, download_url points to an authenticated download. Failed jobs include an error code. Reusing the original Idempotency-Key never creates another charge.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/export/{{announcementId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "export",
+                "{{announcementId}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "downloadExportJob",
+          "request": {
+            "name": "Download completed export",
+            "description": "Download completed export\n\nStreams the complete frozen file, with current access checks. Downloading again consumes no additional export units. Save the file before expires_at.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/export/{{announcementId}}/download",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "export",
+                "{{announcementId}}",
+                "download"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv, application/json, application/x-ndjson"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "exportCompanies",
           "request": {
             "name": "Export company data",
-            "description": "Export company data\n\nExport company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count, a current cost estimate and up to 100 sample rows for free. Each delivered row consumes one ordinary API unit from the payer's shared subscription allowance. Additional units use the customer's basic overage rate and respect stop limits, spending caps and prepaid credit. Delivery limits are 100000 rows and 64 MiB per export, and 1000000 rows per UTC calendar month; these are not additional free allowances. Preview and execution are separate snapshots.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Export company data\n\nExport company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count, a current cost estimate and up to 100 sample rows for free. Each delivered row consumes one ordinary API unit from the payer's shared subscription allowance. Additional units use the customer's basic overage rate and respect stop limits, spending caps and prepaid credit. Synchronous delivery limits are 100000 rows, 64 MiB and 1000000 rows per UTC month. Use preview=true with include=[count] for a count-only search snapshot, and include=[sample,coverage] separately. Use async=true with preview=false for larger complete exports; HTTP 202 returns a durable job ID. Async exports use the shared API billing limits without the synchronous row ceilings. Use data_version and expected_rows to guard the snapshot.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/export",
               "host": [

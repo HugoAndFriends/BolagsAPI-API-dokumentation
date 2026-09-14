@@ -1,0 +1,24 @@
+meta {
+  name: downloadExportJob
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseUrl}}/v1/export/{{announcementId}}/download
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: text/csv, application/json, application/x-ndjson
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -4,6 +4,9 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 
 | Method | Path | Authentication | Operation |
 | --- | --- | --- | --- |
+| POST | `/v1/export/{id}/retain` | bearerAuth | retainExportJob |
+| GET | `/v1/export/{id}` | bearerAuth | getExportJob |
+| GET | `/v1/export/{id}/download` | bearerAuth | downloadExportJob |
 | GET | `/v1/statistics/bankruptcies` | bearerAuth | getBusinessBankruptcies |
 | GET | `/v1/statistics/new-businesses` | bearerAuth | getNewBusinesses |
 | GET | `/v1/statistics/companies` | bearerAuth | countCompanies |

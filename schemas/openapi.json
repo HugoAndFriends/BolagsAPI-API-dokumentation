@@ -102,6 +102,170 @@
     }
   ],
   "paths": {
+    "/v1/export/{id}/retain": {
+      "post": {
+        "tags": [
+          "Export"
+        ],
+        "summary": "Extend export availability",
+        "operationId": "retainExportJob",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Export job ID"
+          }
+        ],
+        "description": "Extend an available ready file to at least 60 days from now. Access restrictions still apply; no new API units or export charges. Expired files cannot be revived.",
+        "responses": {
+          "200": {
+            "description": "Retained export",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJob"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Export is not ready or has expired"
+          },
+          "503": {
+            "description": "Export temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/export/{id}": {
+      "get": {
+        "tags": [
+          "Export"
+        ],
+        "summary": "Get export status",
+        "operationId": "getExportJob",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Export job ID"
+          }
+        ],
+        "description": "Poll after an asynchronous export. Access remains scoped to the paying account and personal/team context. When ready, download_url points to an authenticated download. Failed jobs include an error code. Reusing the original Idempotency-Key never creates another charge.",
+        "responses": {
+          "200": {
+            "description": "Current status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJob"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Export is not ready or has expired"
+          },
+          "503": {
+            "description": "Export temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/export/{id}/download": {
+      "get": {
+        "tags": [
+          "Export"
+        ],
+        "summary": "Download completed export",
+        "operationId": "downloadExportJob",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Export job ID"
+          }
+        ],
+        "description": "Streams the complete frozen file, with current access checks. Downloading again consumes no additional export units. Save the file before expires_at.",
+        "responses": {
+          "200": {
+            "description": "Complete export file",
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExportRow"
+                  }
+                }
+              },
+              "application/x-ndjson": {
+                "schema": {
+                  "type": "string",
+                  "description": "One ExportRow JSON object per line"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "description": "Export is not ready or has expired"
+          },
+          "503": {
+            "description": "Export temporarily unavailable"
+          }
+        }
+      }
+    },
     "/v1/statistics/bankruptcies": {
       "get": {
         "tags": [
@@ -3990,7 +4154,7 @@
           "Export"
         ],
         "summary": "Export company data",
-        "description": "Export company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count, a current cost estimate and up to 100 sample rows for free. Each delivered row consumes one ordinary API unit from the payer's shared subscription allowance. Additional units use the customer's basic overage rate and respect stop limits, spending caps and prepaid credit. Delivery limits are 100000 rows and 64 MiB per export, and 1000000 rows per UTC calendar month; these are not additional free allowances. Preview and execution are separate snapshots.",
+        "description": "Export company, contact and latest financial data with a Business API key (personal or team). Preview returns an exact count, a current cost estimate and up to 100 sample rows for free. Each delivered row consumes one ordinary API unit from the payer's shared subscription allowance. Additional units use the customer's basic overage rate and respect stop limits, spending caps and prepaid credit. Synchronous delivery limits are 100000 rows, 64 MiB and 1000000 rows per UTC month. Use preview=true with include=[count] for a count-only search snapshot, and include=[sample,coverage] separately. Use async=true with preview=false for larger complete exports; HTTP 202 returns a durable job ID. Async exports use the shared API billing limits without the synchronous row ceilings. Use data_version and expected_rows to guard the snapshot.",
         "operationId": "exportCompanies",
         "security": [
           {
@@ -4151,6 +4315,16 @@
                 "schema": {
                   "type": "string",
                   "description": "CSV file content"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Export queued or existing job returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJob"
                 }
               }
             }
@@ -14448,6 +14622,57 @@
           }
         }
       },
+      "ExportJob": {
+        "type": "object",
+        "properties": {
+          "export_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "ready",
+              "failed",
+              "expired"
+            ]
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "rows": {
+            "type": "integer"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "csv",
+              "json",
+              "ndjson"
+            ]
+          },
+          "generated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          },
+          "download_url": {
+            "type": "string",
+            "nullable": true
+          },
+          "billing": {
+            "$ref": "#/components/schemas/ExportJsonResponse/properties/billing"
+          }
+        }
+      },
       "ExportRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -14549,10 +14774,39 @@
             "type": "string",
             "enum": [
               "csv",
-              "json"
+              "json",
+              "ndjson"
             ],
             "default": "csv",
             "description": "Output format"
+          },
+          "include": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "enum": [
+                "count",
+                "sample",
+                "coverage"
+              ]
+            },
+            "description": "Preview parts to return. Requires preview=true. Omitted parts are absent, not zero. Without include, the original complete preview is returned."
+          },
+          "async": {
+            "type": "boolean",
+            "description": "Prepare the complete export in the background; requires preview=false and Idempotency-Key. Returns HTTP 202."
+          },
+          "expected_rows": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Fail without billing if the frozen count differs"
+          },
+          "data_version": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Require this search snapshot; selection_changed means refresh the preview"
           },
           "preview": {
             "type": "boolean",
@@ -14643,6 +14897,19 @@
           "equity_ratio_max": {
             "type": "number",
             "description": "Inclusive bound; employees in people, money in whole SEK, equity ratio in percent"
+          },
+          "excluded_orgnrs": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "pattern": "^\\d{10}$"
+            },
+            "description": "Exclude specific organizations"
+          },
+          "verified_marketing_only": {
+            "type": "boolean",
+            "description": "Require known unblocked marketing status and no telephone number while telephone suppression remains unknown"
           },
           "sni_codes": {
             "type": "array",
@@ -14747,6 +15014,11 @@
           "count_is_exact": {
             "type": "boolean",
             "const": true
+          },
+          "data_version": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Search snapshot timestamp; returned when include is specified"
           },
           "generated_at": {
             "type": "string",

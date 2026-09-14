@@ -114,7 +114,7 @@
         ],
         "operationId": "getBusinessBankruptcies",
         "summary": "Business bankruptcies by month",
-        "description": "Starter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are suppressed.",
+        "description": "Starter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are missing or marked. calculation_method describes the method; missing_reason and components explain unavailable values for each measure.",
         "parameters": [
           {
             "name": "from",
@@ -162,7 +162,14 @@
             }
           },
           "400": {
-            "description": "Invalid or unsupported parameters"
+            "description": "Invalid or unsupported parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication required"
@@ -174,13 +181,27 @@
             "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Period unavailable, incompatible filters or unsupported comparison"
+            "description": "Period unavailable, incompatible filters or unsupported comparison",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Data temporarily unavailable; no fabricated zero returned"
+            "description": "Data temporarily unavailable; inspect reason",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           }
         }
       }
@@ -197,7 +218,7 @@
         ],
         "operationId": "getNewBusinesses",
         "summary": "New business activity by quarter",
-        "description": "Starter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined.",
+        "description": "Starter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined. calculation_method, missing_reason and components follow the same rules as bankruptcies; missing is never zero.",
         "parameters": [
           {
             "name": "from",
@@ -245,7 +266,14 @@
             }
           },
           "400": {
-            "description": "Invalid or unsupported parameters"
+            "description": "Invalid or unsupported parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication required"
@@ -257,13 +285,27 @@
             "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Period unavailable, incompatible filters or unsupported comparison"
+            "description": "Period unavailable, incompatible filters or unsupported comparison",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Data temporarily unavailable; no fabricated zero returned"
+            "description": "Data temporarily unavailable; inspect reason",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           }
         }
       }
@@ -344,7 +386,14 @@
             }
           },
           "400": {
-            "description": "Invalid or unsupported parameters"
+            "description": "Invalid or unsupported parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication required"
@@ -356,13 +405,27 @@
             "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Period unavailable, incompatible filters or unsupported comparison"
+            "description": "Period unavailable, incompatible filters or unsupported comparison",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Data temporarily unavailable; no fabricated zero returned"
+            "description": "Data temporarily unavailable; inspect reason",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           }
         }
       }
@@ -452,7 +515,14 @@
             }
           },
           "400": {
-            "description": "Invalid or unsupported parameters"
+            "description": "Invalid or unsupported parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication required"
@@ -464,13 +534,27 @@
             "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Period unavailable, incompatible filters or unsupported comparison"
+            "description": "Period unavailable, incompatible filters or unsupported comparison",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Data temporarily unavailable; no fabricated zero returned"
+            "description": "Data temporarily unavailable; inspect reason",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           }
         }
       }
@@ -510,7 +594,14 @@
             }
           },
           "400": {
-            "description": "Invalid or unsupported parameters"
+            "description": "Invalid or unsupported parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "401": {
             "description": "Authentication required"
@@ -522,13 +613,27 @@
             "description": "Company or source unavailable"
           },
           "422": {
-            "description": "Period unavailable, incompatible filters or unsupported comparison"
+            "description": "Period unavailable, incompatible filters or unsupported comparison",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           },
           "429": {
             "description": "Rate or account quota exceeded"
           },
           "503": {
-            "description": "Data temporarily unavailable; no fabricated zero returned"
+            "description": "Data temporarily unavailable; inspect reason",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BusinessStatisticsError"
+                }
+              }
+            }
           }
         }
       }
@@ -6082,6 +6187,35 @@
       }
     },
     "schemas": {
+      "BusinessStatisticsError": {
+        "type": "object",
+        "required": [
+          "error",
+          "message",
+          "reason"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "reason": {
+            "enum": [
+              "invalid_request",
+              "not_published",
+              "period_unavailable",
+              "not_ready",
+              "technical_error"
+            ],
+            "description": "not_published: requested period is later than the available source revision (422), not a live upstream publication check. period_unavailable: historical period missing/outside coverage (422). not_ready: no usable local publication (503). technical_error: data could not be read/verified (503)."
+          }
+        }
+      },
       "BusinessTimeSeries": {
         "type": "object",
         "required": [
@@ -6244,7 +6378,10 @@
                   "required": [
                     "value",
                     "status",
-                    "source_status"
+                    "source_status",
+                    "calculation_method",
+                    "missing_reason",
+                    "components"
                   ],
                   "properties": {
                     "value": {
@@ -6264,6 +6401,45 @@
                       "type": "array",
                       "items": {
                         "type": "string"
+                      },
+                      "description": "Publisher marks, unchanged. '..' means unavailable or confidential; it does not identify which."
+                    },
+                    "calculation_method": {
+                      "enum": [
+                        "source_total",
+                        "source_value",
+                        "sum"
+                      ],
+                      "description": "A separately published total, a single filtered source value, or a complete sum of non-overlapping components. Describes the method even when value is null."
+                    },
+                    "missing_reason": {
+                      "enum": [
+                        null,
+                        "incomplete_components",
+                        "source_unavailable"
+                      ],
+                      "description": "Null when available. incomplete_components means a sum contains missing/marked source cells; source_unavailable means the selected source cell is missing/marked."
+                    },
+                    "components": {
+                      "type": "object",
+                      "required": [
+                        "expected",
+                        "available",
+                        "missing"
+                      ],
+                      "properties": {
+                        "expected": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "available": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "missing": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
                       }
                     }
                   }
@@ -6273,7 +6449,10 @@
                   "required": [
                     "value",
                     "status",
-                    "source_status"
+                    "source_status",
+                    "calculation_method",
+                    "missing_reason",
+                    "components"
                   ],
                   "properties": {
                     "value": {
@@ -6293,6 +6472,45 @@
                       "type": "array",
                       "items": {
                         "type": "string"
+                      },
+                      "description": "Publisher marks, unchanged. '..' means unavailable or confidential; it does not identify which."
+                    },
+                    "calculation_method": {
+                      "enum": [
+                        "source_total",
+                        "source_value",
+                        "sum"
+                      ],
+                      "description": "A separately published total, a single filtered source value, or a complete sum of non-overlapping components. Describes the method even when value is null."
+                    },
+                    "missing_reason": {
+                      "enum": [
+                        null,
+                        "incomplete_components",
+                        "source_unavailable"
+                      ],
+                      "description": "Null when available. incomplete_components means a sum contains missing/marked source cells; source_unavailable means the selected source cell is missing/marked."
+                    },
+                    "components": {
+                      "type": "object",
+                      "required": [
+                        "expected",
+                        "available",
+                        "missing"
+                      ],
+                      "properties": {
+                        "expected": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "available": {
+                          "type": "integer",
+                          "minimum": 0
+                        },
+                        "missing": {
+                          "type": "integer",
+                          "minimum": 0
+                        }
                       }
                     }
                   }

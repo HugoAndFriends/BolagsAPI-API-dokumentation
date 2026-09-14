@@ -8,7 +8,7 @@
           "name": "getBusinessBankruptcies",
           "request": {
             "name": "Business bankruptcies by month",
-            "description": "Business bankruptcies by month\n\nStarter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are suppressed.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Business bankruptcies by month\n\nStarter+. Official business bankruptcies and affected employees. Up to 24 months. Filter county OR grouped SNI 2007 industry; their intersection is unsupported. Null/marked components make an aggregate unavailable, not zero. National monthly totals may therefore be unavailable when county components are missing or marked. calculation_method describes the method; missing_reason and components explain unavailable values for each measure.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/statistics/bankruptcies",
               "host": [
@@ -73,7 +73,7 @@
           "name": "getNewBusinesses",
           "request": {
             "name": "New business activity by quarter",
-            "description": "New business activity by quarter\n\nStarter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "New business activity by quarter\n\nStarter+. Genuinely new business activity under Tillväxtanalys definitions, not newly registered legal entities. Up to 12 quarters; county and grouped SNI 2007 industry can be combined. calculation_method, missing_reason and components follow the same rules as bankruptcies; missing is never zero.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/statistics/new-businesses",
               "host": [

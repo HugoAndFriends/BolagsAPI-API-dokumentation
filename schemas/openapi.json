@@ -16440,6 +16440,7 @@
                 "postal_municipality",
                 "postal_municipality_code",
                 "coordinates_attribution",
+                "company_source",
                 "latitude",
                 "longitude",
                 "geocoding_status",
@@ -17066,6 +17067,11 @@
           "coordinates_attribution": {
             "type": "string",
             "nullable": true
+          },
+          "company_source": {
+            "type": "string",
+            "nullable": true,
+            "description": "Source of the core company record: bolagsverket, scb or lansstyrelsen_stiftelser. Null when not established; does not attribute unrelated contact or financial fields."
           },
           "scb_company_name": {
             "type": "string",

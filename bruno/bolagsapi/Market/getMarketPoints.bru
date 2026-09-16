@@ -1,0 +1,29 @@
+meta {
+  name: getMarketPoints
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{baseUrl}}/v1/market/queries/{{query_id}}/points
+  body: none
+  auth: bearer
+}
+
+params:query {
+  ~limit: 1000
+  ~cursor: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

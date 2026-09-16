@@ -13,6 +13,12 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 | GET | `/v1/industry/{sniCode}/benchmarks` | bearerAuth | getIndustryBenchmarks |
 | GET | `/v1/company/{orgnr}/statistics` | bearerAuth | getCompanyStatistics |
 | GET | `/v1/announcements` | bearerAuth | getAnnouncementFeed |
+| POST | `/v1/market/markets` | bearerAuth | createMarket |
+| GET | `/v1/market/markets/{market_id}` | bearerAuth | getMarket |
+| DELETE | `/v1/market/markets/{market_id}` | bearerAuth | deleteMarket |
+| POST | `/v1/market/markets/{market_id}/refresh` | bearerAuth | refreshMarket |
+| GET | `/v1/market/queries/{query_id}` | bearerAuth | getMarketQuery |
+| GET | `/v1/market/queries/{query_id}/points` | bearerAuth | getMarketPoints |
 | POST | `/v1/vat/validate` | bearerAuth | validateVatNumber |
 | GET | `/v1/company/{orgnr}/lei` | bearerAuth | getCompanyLei |
 | GET | `/v1/reports/insights/search` | bearerAuth | searchAnnualReportInsights |

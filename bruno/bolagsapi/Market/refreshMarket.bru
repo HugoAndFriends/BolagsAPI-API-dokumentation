@@ -1,0 +1,26 @@
+meta {
+  name: refreshMarket
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/v1/market/markets/{{market_id}}/refresh
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  @description('Scoped to account/team and operation. Same normalized request returns the same job without another charge. Conflicts return 409; expired/deleted replay returns 410 without a new job.')
+  Idempotency-Key: {{idempotencyKey}}
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

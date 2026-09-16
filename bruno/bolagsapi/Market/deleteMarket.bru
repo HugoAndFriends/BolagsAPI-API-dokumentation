@@ -1,0 +1,24 @@
+meta {
+  name: deleteMarket
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/v1/market/markets/{{market_id}}
+  body: none
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

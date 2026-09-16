@@ -11,6 +11,12 @@ get {
 }
 
 params:query {
+  @description('Business. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership.')
+  ~market_query_id: {{query_id}}
+  @description('A valid two-digit industry group or unknown within the market version. Requires market_query_id. Valid absent groups return zero.')
+  ~market_industry_code: 38
+  @description('Market search cursor only. Cannot be mixed with point cursors or after_orgnr; use the same query/group.')
+  ~cursor: REPLACE_WITH_MARKET_SEARCH_CURSOR
   @description('Include the SCB profile in every search result. Company lookup always includes it.')
   ~include_scb: false
   @description('Exact stored SCB value. SCB tax activity code. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.')

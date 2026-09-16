@@ -1,0 +1,35 @@
+meta {
+  name: getAnnouncementFeed
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/announcements
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Inclusive YYYY-MM-DD, default 29 days before to. Maximum interval: 366 days.')
+  ~from: 
+  @description('Inclusive YYYY-MM-DD, default current UTC date.')
+  ~to: 
+  ~category: 
+  ~limit: 20
+  @description('Use nextCursor unchanged, with the same date range and filters. Null means no next page.')
+  ~cursor: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -512,6 +512,76 @@
       "description": "Company lookup and information",
       "item": [
         {
+          "name": "getAnnouncementFeed",
+          "request": {
+            "name": "Company-linked official announcements",
+            "description": "Company-linked official announcements\n\nStarter+. One basic unit per successful request. Stored publications linked by organization number to a known company, in categories 1 (creditor calls), 2 (registrations), and 3 (bankruptcies). Not the complete POIT archive. No person-only publications, full text or personal contact fields. Descending publicationDate then id. For details, use /v1/company/{orgnr}/announcements/{apiPathId}. Reuse returned from/to and nextCursor when paging; this is not a frozen snapshot and newly ingested records can appear on a later refresh.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/announcements",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "announcements"
+              ],
+              "query": [
+                {
+                  "key": "from",
+                  "value": "",
+                  "description": "Inclusive YYYY-MM-DD, default 29 days before to. Maximum interval: 366 days.",
+                  "disabled": true
+                },
+                {
+                  "key": "to",
+                  "value": "",
+                  "description": "Inclusive YYYY-MM-DD, default current UTC date.",
+                  "disabled": true
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "20",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "cursor",
+                  "value": "",
+                  "description": "Use nextCursor unchanged, with the same date range and filters. Null means no next page.",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "getCompanyLei",
           "request": {
             "name": "LEI and international accounting-consolidating parents",

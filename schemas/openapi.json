@@ -802,6 +802,95 @@
         }
       }
     },
+    "/v1/announcements": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "operationId": "getAnnouncementFeed",
+        "summary": "Company-linked official announcements",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Starter+. One basic unit per successful request. Stored publications linked by organization number to a known company, in categories 1 (creditor calls), 2 (registrations), and 3 (bankruptcies). Not the complete POIT archive. No person-only publications, full text or personal contact fields. Descending publicationDate then id. For details, use /v1/company/{orgnr}/announcements/{apiPathId}. Reuse returned from/to and nextCursor when paging; this is not a frozen snapshot and newly ingested records can appear on a later refresh.",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive YYYY-MM-DD, default 29 days before to. Maximum interval: 366 days."
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Inclusive YYYY-MM-DD, default current UTC date."
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Use nextCursor unchanged, with the same date range and filters. Null means no next page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of company-linked publications (possibly empty)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AnnouncementFeed"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filters or cursor"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Starter or higher required, or key restricted"
+          },
+          "429": {
+            "description": "Rate or quota limit"
+          }
+        }
+      }
+    },
     "/v1/vat/validate": {
       "post": {
         "tags": [
@@ -8125,6 +8214,127 @@
           "identity_resolution",
           "identifier_precision"
         ]
+      },
+      "AnnouncementFeed": {
+        "type": "object",
+        "required": [
+          "from",
+          "to",
+          "limit",
+          "hasMore",
+          "nextCursor",
+          "coverage",
+          "announcements",
+          "meta"
+        ],
+        "properties": {
+          "from": {
+            "type": "string",
+            "format": "date"
+          },
+          "to": {
+            "type": "string",
+            "format": "date"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "hasMore": {
+            "type": "boolean"
+          },
+          "nextCursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "coverage": {
+            "type": "string"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/SourceMeta"
+          },
+          "announcements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "apiPathId",
+                "orgnr",
+                "companyName",
+                "publicationDate",
+                "detailAvailable",
+                "sourceUrl"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "apiPathId": {
+                  "type": "string"
+                },
+                "orgnr": {
+                  "type": "string",
+                  "pattern": "^[0-9]{10}$"
+                },
+                "companyName": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "categoryId": {
+                  "type": "integer",
+                  "enum": [
+                    1,
+                    2,
+                    3
+                  ]
+                },
+                "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "typeId": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "subtype": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "publicationDate": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "registrationDate": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "detailAvailable": {
+                  "type": "boolean"
+                },
+                "sourceUrl": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              }
+            }
+          }
+        }
       },
       "VatValidationRequest": {
         "type": "object",

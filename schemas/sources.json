@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-09-16T14:06:36.152Z",
+  "syncedAt": "2026-09-16T20:15:02.115Z",
   "sources": {
     "openapi.json": {
       "url": "https://api.bolagsapi.se/openapi.json",
@@ -9,6 +9,5 @@
       "url": "https://api.bolagsapi.se/identity/enrichment.schema.json",
       "sha256": "fdc0cb532db82eb3069bd9340eefb8425930dc383e05d89c3bbc374545d6944c"
     }
-  },
-  "pendingPublication": "HugoAndFriends/bolagsapi issue 271 candidate; run sync after API deployment before merging"
+  }
 }

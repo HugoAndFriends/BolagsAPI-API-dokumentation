@@ -1,0 +1,44 @@
+meta {
+  name: createMarket
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/v1/market/markets
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  @description('Scoped to account/team and operation. Same normalized request returns the same job without another charge. Conflicts return 409; expired/deleted replay returns 410 without a new job.')
+  Idempotency-Key: {{idempotencyKey}}
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "filters": {
+      "counties": [
+        "13"
+      ],
+      "employees_min": 11,
+      "employees_max": 250
+    },
+    "industry": {
+      "version": "2025",
+      "match": "any",
+      "group_by": "division"
+    }
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

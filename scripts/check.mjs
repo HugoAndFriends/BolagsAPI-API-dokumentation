@@ -41,6 +41,10 @@ for (const { path, method, operation: op } of operations) {
   const template = pm.request.url.path.join('/').replace(/\{\{[^}]+\}\}/g, '{}');
   assert.equal(template, path.slice(1).replace(/\{[^}]+\}/g, '{}'));
   for (const [, key] of JSON.stringify(pm.request).matchAll(/\{\{([^}]+)\}\}/g)) assert.ok(variables.has(key), `Undefined variable ${key}`);
+  for (const p of (op.parameters ?? []).filter(p => p.in === 'header' && p.required)) {
+    assert.ok(pm.request.header.some(h => h.key === p.name && !h.disabled && h.value), `Missing required header ${p.name} in ${op.operationId}`);
+    assert.ok(bru.headers.some(h => h.name === p.name && h.enabled && h.value), `Missing Bruno header ${p.name} in ${op.operationId}`);
+  }
   if (pm.request.body) assert.deepEqual(JSON.parse(bru.body.json), JSON.parse(pm.request.body.raw));
 }
 for (const v of env.values.filter(v => /Token|Key$|Secret$/.test(v.key))) assert.equal(v.value, '', `Committed secret ${v.key}`);

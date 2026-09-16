@@ -13,6 +13,8 @@ post {
 headers {
   Accept: application/json, text/csv
   Content-Type: application/json
+  @description('Use a unique key per full export and reuse it with an identical request on retries. Results remain replayable for 24 hours without additional rows, API units or charges. Conflicting or expired keys return 409. Scoped to the paying account and personal/team context.')
+  ~Idempotency-Key: {{idempotencyKey}}
 }
 
 auth:bearer {

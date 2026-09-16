@@ -3,11 +3,12 @@
   "sources": {
     "openapi.json": {
       "url": "https://api.bolagsapi.se/openapi.json",
-      "sha256": "d4cbf66483b92e3dfbd63c4c46dca9bf758e9e924e396a4eec1e7b8cd4730e94"
+      "sha256": "c4dba2af248d219f3f35a90662e052f5b0f8fc41918d1e9d8d03b2a099132833"
     },
     "identity-enrichment.schema.json": {
       "url": "https://api.bolagsapi.se/identity/enrichment.schema.json",
       "sha256": "fdc0cb532db82eb3069bd9340eefb8425930dc383e05d89c3bbc374545d6944c"
     }
-  }
+  },
+  "pendingPublication": "HugoAndFriends/bolagsapi issue 271 candidate; run sync after API deployment before merging"
 }

@@ -1609,6 +1609,24 @@
               ],
               "query": [
                 {
+                  "key": "market_query_id",
+                  "value": "{{query_id}}",
+                  "description": "Business. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership.",
+                  "disabled": true
+                },
+                {
+                  "key": "market_industry_code",
+                  "value": "38",
+                  "description": "A valid two-digit industry group or unknown within the market version. Requires market_query_id. Valid absent groups return zero.",
+                  "disabled": true
+                },
+                {
+                  "key": "cursor",
+                  "value": "REPLACE_WITH_MARKET_SEARCH_CURSOR",
+                  "description": "Market search cursor only. Cannot be mixed with point cursors or after_orgnr; use the same query/group.",
+                  "disabled": true
+                },
+                {
                   "key": "include_scb",
                   "value": "false",
                   "description": "Include the SCB profile in every search result. Company lookup always includes it.",
@@ -3466,6 +3484,297 @@
       ]
     },
     {
+      "name": "Market",
+      "description": "Saved market selections, summaries and map points",
+      "item": [
+        {
+          "name": "createMarket",
+          "request": {
+            "name": "Save a market selection",
+            "description": "Save a market selection\n\nBusiness. Creates a durable definition and immutable query, always 202. Maximum 100 markets, two pending calculations per account/team and 100000 companies per query. Oversized selection fails without truncation. All selected breakdowns and named visiting-address points share one version. Five API units per successful GET, including status and point pages; create/refresh, deletion and errors are uncharged. Existing subscription overage and stop limits apply.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/markets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "markets"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}",
+                "description": "Scoped to account/team and operation. Same normalized request returns the same job without another charge. Conflicts return 409; expired/deleted replay returns 410 without a new job.",
+                "disabled": false
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"filters\": {\n    \"counties\": [\n      \"13\"\n    ],\n    \"employees_min\": 11,\n    \"employees_max\": 250\n  },\n  \"industry\": {\n    \"version\": \"2025\",\n    \"match\": \"any\",\n    \"group_by\": \"division\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "getMarket",
+          "request": {
+            "name": "Read a saved market definition",
+            "description": "Read a saved market definition\n\n\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/markets/{{market_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "markets",
+                "{{market_id}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "deleteMarket",
+          "request": {
+            "name": "Delete a market and revoke access to its queries",
+            "description": "Delete a market and revoke access to its queries\n\nIdempotent within the owning account/team. Pending work is cancelled.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/markets/{{market_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "markets",
+                "{{market_id}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "refreshMarket",
+          "request": {
+            "name": "Calculate a new version of a saved market",
+            "description": "Calculate a new version of a saved market\n\nFilters are immutable. Prior ready versions remain valid until their own expiry/invalidation. Maximum ten unexpired versions; no valid version is silently replaced.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/markets/{{market_id}}/refresh",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "markets",
+                "{{market_id}}",
+                "refresh"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}",
+                "description": "Scoped to account/team and operation. Same normalized request returns the same job without another charge. Conflicts return 409; expired/deleted replay returns 410 without a new job.",
+                "disabled": false
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "getMarketQuery",
+          "request": {
+            "name": "Read calculation status and exact market summary",
+            "description": "Read calculation status and exact market summary\n\nsummary is null until ready. Ready queries last seven days from completion. Client-side monthly caching does not extend server availability. Source times vary; coverage describes the entire population. Industry groups overlap; employee bands partition the total.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/queries/{{query_id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "queries",
+                "{{query_id}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "getMarketPoints",
+          "request": {
+            "name": "Read named visiting-address map points",
+            "description": "Read named visiting-address map points\n\nAt most one point per company. No registered-address fallback, postcode midpoint or claim of branch coverage. Companies sharing coordinates remain separate. Cursor is bound to account/team, query and orgnr order; it cannot be used for search. Current access restrictions can invalidate the whole version (410).\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/market/queries/{{query_id}}/points",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "market",
+                "queries",
+                "{{query_id}}",
+                "points"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "1000",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "cursor",
+                  "value": "",
+                  "description": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ]
+    },
+    {
       "name": "Export",
       "description": "Bulk data export",
       "item": [
@@ -3611,6 +3920,12 @@
               {
                 "key": "Accept",
                 "value": "application/json, text/csv"
+              },
+              {
+                "key": "Idempotency-Key",
+                "value": "{{idempotencyKey}}",
+                "description": "Use a unique key per full export and reuse it with an identical request on retries. Results remain replayable for 24 hours without additional rows, API units or charges. Conflicting or expired keys return 409. Scoped to the paying account and personal/team context.",
+                "disabled": true
               },
               {
                 "key": "Content-Type",

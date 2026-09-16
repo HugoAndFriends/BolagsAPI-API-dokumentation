@@ -12,8 +12,9 @@ for (const { path, method } of operations) input.paths[path][method].tags = inpu
 const converted = await new Promise((resolve, reject) => converter.convertV2({ type: 'json', data: input }, { folderStrategy: 'Tags', parametersResolution: 'Example' }, (error, result) => error ? reject(error) : resolve(result)));
 if (!converted.result) throw new Error(converted.reason);
 const collection = converted.output[0].data;
-const variables = { baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
+const variables = { query_id: 'REPLACE_WITH_QUERY_ID', market_id: 'REPLACE_WITH_MARKET_ID', baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
 const bodies = {
+  createMarket: { filters: { counties: ['13'], employees_min: 11, employees_max: 250 }, industry: { version: '2025', match: 'any', group_by: 'division' } },
   validateVatNumber: { country_code: 'SE', vat_number: '556016068001' },
   startIdentity: { scopes: ['profile', 'enrichment:bolag'] },
   postPersonCompanies: { person_id: '{{person_id}}' },
@@ -46,6 +47,9 @@ for (const item of requests(collection.item)) {
   const query = params.map(p => {
     let value = p.example ?? p.schema?.example ?? p.schema?.default ?? p.schema?.const ?? '';
     if (operation.operationId === 'getIndustryBenchmarks') value = ({ year: '2024', size_class: '1-4', metrics: 'operating_margin' })[p.name] ?? value;
+    if (p.name === 'market_query_id') value = '{{query_id}}';
+    if (p.name === 'market_industry_code') value = '38';
+    if (p.name === 'cursor' && operation.operationId === 'searchCompanies') value = 'REPLACE_WITH_MARKET_SEARCH_CURSOR';
     if (p.name === 'sessionId') value = '{{sessionId}}';
     if (p.required && value === '') { variables[p.name] ??= `REPLACE_WITH_${p.name.toUpperCase()}`; value = `{{${p.name}}}`; }
     return { key: p.name, value: String(value), description: p.description ?? '', disabled: !p.required };
@@ -54,6 +58,12 @@ for (const item of requests(collection.item)) {
   const enabled = query.filter(q => !q.disabled);
   item.request.url = { raw: url + (enabled.length ? '?' + enabled.map(q => `${q.key}=${q.value}`).join('&') : ''), host: [`{{${host}}}`], path: resolvedPath.slice(1).split('/'), query };
   item.request.header = [{ key: 'Accept', value: Object.keys(operation.responses?.['200']?.content ?? { 'application/json': {} }).join(', ') }];
+  for (const p of [...(op.item.parameters ?? []), ...(operation.parameters ?? [])].filter(p => p.in === 'header')) {
+    const key = p.name === 'Idempotency-Key' ? 'idempotencyKey' : p.name;
+    if (!p.required && p.name !== 'Idempotency-Key') continue;
+    variables[key] ??= '';
+    item.request.header.push({ key: p.name, value: `{{${key}}}`, description: p.description ?? '', disabled: !p.required });
+  }
   delete item.request.body;
   if (operation.requestBody) {
     if (!bodies[operation.operationId]) throw new Error(`Add reviewed body for ${operation.operationId}`);

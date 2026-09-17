@@ -916,7 +916,7 @@
         ],
         "operationId": "createMarket",
         "summary": "Save a market selection",
-        "description": "Business. Creates a durable definition and immutable query, always 202. Maximum 100 markets, two pending calculations per account/team and 100000 companies per query. Oversized selection fails without truncation. All selected breakdowns and named visiting-address points share one version. Five API units per successful GET, including status and point pages; create/refresh, deletion and errors are uncharged. Existing subscription overage and stop limits apply.",
+        "description": "Pro. Creates a durable definition and immutable query, always 202. Maximum 100 markets, two pending calculations per account/team and 100000 companies per query. Oversized selection fails without truncation. All selected breakdowns and named visiting-address points share one version. Five API units per successful GET, including status and point pages; create/refresh, deletion and errors are uncharged. Existing subscription overage and stop limits apply.",
         "parameters": [
           {
             "name": "Idempotency-Key",
@@ -972,7 +972,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1099,7 +1099,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1218,7 +1218,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1357,7 +1357,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1485,7 +1485,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -1630,7 +1630,7 @@
             }
           },
           "403": {
-            "description": "Business required or account restricted",
+            "description": "Pro required or account restricted",
             "content": {
               "application/json": {
                 "schema": {
@@ -3307,7 +3307,7 @@
               "type": "string",
               "format": "uuid"
             },
-            "description": "Business. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership."
+            "description": "Pro. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership."
           },
           {
             "name": "market_industry_code",
@@ -3324,6 +3324,45 @@
               "type": "string"
             },
             "description": "Market search cursor only. Cannot be mixed with point cursors or after_orgnr; use the same query/group."
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "description": "Pro. WGS84 centre latitude. Supply with longitude and radius_km; combines with ordinary search filters, not market_query_id. Only matched, unrestricted visiting addresses can match."
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            },
+            "description": "WGS84 centre longitude; requires latitude and radius_km."
+          },
+          {
+            "name": "radius_km",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 500
+            },
+            "description": "Inclusive great-circle radius in kilometres, greater than zero and at most 500. Requires latitude and longitude. Automatically includes coordinates; existing search ordering applies."
+          },
+          {
+            "name": "include_coordinates",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Pro. Include visiting-address coordinates, address_role and geocoding status. No registered-address fallback. Missing/restricted coordinates are null and do not remove results without a radius filter. With market_query_id, returns frozen snapshot coordinates; otherwise current coordinates."
           },
           {
             "name": "include_scb",
@@ -14523,6 +14562,77 @@
       "SearchResult": {
         "type": "object",
         "properties": {
+          "coordinates": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "WGS84 (EPSG:4326) address point. Null unless geocoding_status is matched; not a building boundary or an interpolated location.",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              },
+              "precision": {
+                "type": "string",
+                "enum": [
+                  "address"
+                ]
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "lantmateriet"
+                ]
+              },
+              "source_updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "Update time of the source address delivery, when known."
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude",
+              "precision",
+              "source",
+              "source_updated_at"
+            ]
+          },
+          "geocoding_status": {
+            "type": "string",
+            "enum": [
+              "matched",
+              "ambiguous",
+              "not_found",
+              "missing_address",
+              "unsupported_address",
+              "restricted",
+              "unavailable"
+            ],
+            "description": "matched: one address point; ambiguous: multiple candidates; not_found: no match; missing_address: street or postal code missing; unsupported_address: foreign, postal-box or invalid address; restricted: withheld for privacy (including sole traders and unknown legal form); unavailable: coordinate service or source unavailable. Other company data remains usable."
+          },
+          "geocoding_updated_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "When this address was last evaluated against the source. Null for restricted or unavailable results; separate from the company/workplace update time."
+          },
+          "address_role": {
+            "const": "visiting_address",
+            "description": "Present with coordinate output. The visit location can differ from the company's seat, city or registered postal address."
+          },
           "scb": {
             "$ref": "#/components/schemas/ScbProfile"
           },

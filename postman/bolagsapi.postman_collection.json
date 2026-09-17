@@ -1611,7 +1611,7 @@
                 {
                   "key": "market_query_id",
                   "value": "{{query_id}}",
-                  "description": "Business. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership.",
+                  "description": "Pro. Use immutable market membership instead of q or independent filters. Exact total and orgnr ascending order. Detail fields may be current; selection_as_of identifies frozen membership.",
                   "disabled": true
                 },
                 {
@@ -1624,6 +1624,30 @@
                   "key": "cursor",
                   "value": "REPLACE_WITH_MARKET_SEARCH_CURSOR",
                   "description": "Market search cursor only. Cannot be mixed with point cursors or after_orgnr; use the same query/group.",
+                  "disabled": true
+                },
+                {
+                  "key": "latitude",
+                  "value": "",
+                  "description": "Pro. WGS84 centre latitude. Supply with longitude and radius_km; combines with ordinary search filters, not market_query_id. Only matched, unrestricted visiting addresses can match.",
+                  "disabled": true
+                },
+                {
+                  "key": "longitude",
+                  "value": "",
+                  "description": "WGS84 centre longitude; requires latitude and radius_km.",
+                  "disabled": true
+                },
+                {
+                  "key": "radius_km",
+                  "value": "",
+                  "description": "Inclusive great-circle radius in kilometres, greater than zero and at most 500. Requires latitude and longitude. Automatically includes coordinates; existing search ordering applies.",
+                  "disabled": true
+                },
+                {
+                  "key": "include_coordinates",
+                  "value": "false",
+                  "description": "Pro. Include visiting-address coordinates, address_role and geocoding status. No registered-address fallback. Missing/restricted coordinates are null and do not remove results without a radius filter. With market_query_id, returns frozen snapshot coordinates; otherwise current coordinates.",
                   "disabled": true
                 },
                 {
@@ -3491,7 +3515,7 @@
           "name": "createMarket",
           "request": {
             "name": "Save a market selection",
-            "description": "Save a market selection\n\nBusiness. Creates a durable definition and immutable query, always 202. Maximum 100 markets, two pending calculations per account/team and 100000 companies per query. Oversized selection fails without truncation. All selected breakdowns and named visiting-address points share one version. Five API units per successful GET, including status and point pages; create/refresh, deletion and errors are uncharged. Existing subscription overage and stop limits apply.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Save a market selection\n\nPro. Creates a durable definition and immutable query, always 202. Maximum 100 markets, two pending calculations per account/team and 100000 companies per query. Oversized selection fails without truncation. All selected breakdowns and named visiting-address points share one version. Five API units per successful GET, including status and point pages; create/refresh, deletion and errors are uncharged. Existing subscription overage and stop limits apply.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/market/markets",
               "host": [

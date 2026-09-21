@@ -5,7 +5,7 @@ meta {
 }
 
 post {
-  url: {{authBaseUrl}}/api/v1/identify
+  url: {{authBaseUrl}}/api/v1/identify/init
   body: json
   auth: bearer
 }
@@ -13,6 +13,8 @@ post {
 headers {
   Accept: application/json
   Content-Type: application/json
+  @description('Visitor IP supplied by your trusted backend/proxy. The first address is used when endUserIp is omitted from the JSON body.')
+  ~X-Forwarded-For: 203.0.113.42
 }
 
 auth:bearer {
@@ -24,7 +26,8 @@ body:json {
     "scopes": [
       "profile",
       "enrichment:bolag"
-    ]
+    ],
+    "endUserIp": "203.0.113.42"
   }
 }
 

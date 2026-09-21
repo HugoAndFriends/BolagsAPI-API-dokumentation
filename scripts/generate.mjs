@@ -16,7 +16,7 @@ const variables = { query_id: 'REPLACE_WITH_QUERY_ID', market_id: 'REPLACE_WITH_
 const bodies = {
   createMarket: { filters: { counties: ['13'], employees_min: 11, employees_max: 250 }, industry: { version: '2025', match: 'any', group_by: 'division' } },
   validateVatNumber: { country_code: 'SE', vat_number: '556016068001' },
-  startIdentity: { scopes: ['profile', 'enrichment:bolag'] },
+  startIdentity: { scopes: ['profile', 'enrichment:bolag'], endUserIp: '203.0.113.42' },
   postPersonCompanies: { person_id: '{{person_id}}' },
   getPersonBeneficialOf: { personnummer: '{{personnummer}}' },
   batchValidate: { orgnrs: ['{{orgnr}}'] },
@@ -59,6 +59,10 @@ for (const item of requests(collection.item)) {
   item.request.url = { raw: url + (enabled.length ? '?' + enabled.map(q => `${q.key}=${q.value}`).join('&') : ''), host: [`{{${host}}}`], path: resolvedPath.slice(1).split('/'), query };
   item.request.header = [{ key: 'Accept', value: Object.keys(operation.responses?.['200']?.content ?? { 'application/json': {} }).join(', ') }];
   for (const p of [...(op.item.parameters ?? []), ...(operation.parameters ?? [])].filter(p => p.in === 'header')) {
+    if (p.name === 'X-Forwarded-For') {
+      item.request.header.push({ key: p.name, value: p.example, description: p.description, disabled: true });
+      continue;
+    }
     const key = p.name === 'Idempotency-Key' ? 'idempotencyKey' : p.name;
     if (!p.required && p.name !== 'Idempotency-Key') continue;
     variables[key] ??= '';

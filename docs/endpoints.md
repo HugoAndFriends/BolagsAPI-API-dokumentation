@@ -82,7 +82,7 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 | POST | `/v1/screening/batch` | bearerAuth | batchScreen |
 | GET | `/v1/screening/stats` | bearerAuth | getScreeningStats |
 | GET | `/v1/company/{orgnr}/brf` | bearerAuth | getCompanyBrf |
-| POST | `/api/v1/identify` | identityApiKey | startIdentity |
+| POST | `/api/v1/identify/init` | identityApiKey | startIdentity |
 | GET | `/api/v1/identify/collect` | identityApiKey | collectIdentity |
 | GET | `/api/v1/identify/enrichment` | identityApiKey | getIdentityEnrichment |
 | GET | `/userinfo` | identityAccessToken | getIdentityUserInfo |

@@ -31,7 +31,15 @@ object, and distinguishes absent optional fields from present null values.
 
 ## Try the REST flow
 
-Set `identityApiKey`, send `startIdentity`, and use the returned BankID launch/QR
+Set `identityApiKey`. `startIdentity` calls `POST /api/v1/identify/init` on Auth.
+BankID requires the end user's IP address. Your backend must supply the visitor's IPv4 or IPv6 address in JSON `endUserIp` (recommended), or
+in the `X-Forwarded-For` header. Replace the example `203.0.113.42` with the
+address seen by your backend or trusted proxy; do not trust a visitor-supplied
+value. JSON takes precedence over the first header address. Invalid JSON IP
+values return HTTP 400; use a single address without a port. If the visitor's
+address is not forwarded, the caller's IP is normally used instead.
+
+Send the request and use the returned BankID launch/QR
 information as described in the Identity guide. Copy `orderRef` into the
 environment before calling `collectIdentity`. Collect returns server-sent events,
 not a single JSON response: each event's `data` is JSON. The OpenAPI

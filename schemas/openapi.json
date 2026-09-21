@@ -7819,7 +7819,7 @@
         }
       }
     },
-    "/api/v1/identify": {
+    "/api/v1/identify/init": {
       "servers": [
         {
           "url": "https://auth.byhugo.se",
@@ -7837,6 +7837,19 @@
             "identityApiKey": []
           }
         ],
+        "parameters": [
+          {
+            "name": "X-Forwarded-For",
+            "in": "header",
+            "required": false,
+            "description": "Visitor IP supplied by your trusted backend/proxy. The first address is used when endUserIp is omitted from the JSON body.",
+            "schema": {
+              "type": "string"
+            },
+            "example": "203.0.113.42"
+          }
+        ],
+        "description": "BankID requires the end user's IP. For backend integrations, supply the visitor's IP in endUserIp (recommended) or X-Forwarded-For. JSON takes precedence; invalid JSON IP values return 400. Without a forwarded visitor address, the caller's IP is normally used, not the visitor's.",
         "requestBody": {
           "content": {
             "application/json": {
@@ -7857,6 +7870,19 @@
                         "enrichment:bolag"
                       ]
                     }
+                  },
+                  "endUserIp": {
+                    "type": "string",
+                    "oneOf": [
+                      {
+                        "format": "ipv4"
+                      },
+                      {
+                        "format": "ipv6"
+                      }
+                    ],
+                    "example": "203.0.113.42",
+                    "description": "Optional visitor IPv4 or IPv6 address as seen by your backend or trusted proxy. Takes precedence over X-Forwarded-For. Hostnames, ports and address lists are not accepted."
                   },
                   "expectedPersonalNumber": {
                     "type": "string",
@@ -7949,7 +7975,7 @@
             }
           }
         ],
-        "description": "SSE framing: event: <name> followed by data: <JSON>. Parse data as JSON, then validate against the schema named in x-sse-events. Complete means authentication succeeded; enrichment may still require follow-up. Create orderRef through POST /api/v1/identify as described in the Identity guide.",
+        "description": "SSE framing: event: <name> followed by data: <JSON>. Parse data as JSON, then validate against the schema named in x-sse-events. Complete means authentication succeeded; enrichment may still require follow-up. Create orderRef through POST /api/v1/identify/init as described in the Identity guide.",
         "responses": {
           "200": {
             "description": "SSE stream; schemas describe each event's JSON data, not the text stream itself.",

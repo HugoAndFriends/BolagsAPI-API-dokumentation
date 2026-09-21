@@ -4289,11 +4289,24 @@
             "name": "sni",
             "in": "query",
             "required": false,
-            "description": "Filter by SNI code(s), comma-separated. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
+            "description": "Filter by stored SNI code(s), comma-separated, without automatic cross-version conversion. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
             "schema": {
               "type": "string",
               "example": "62,63"
             }
+          },
+          {
+            "name": "sni_version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "2007",
+                "2025"
+              ]
+            },
+            "description": "Restrict SNI matches to codes with this known source version; unknown versions are excluded. No automatic cross-version conversion. Without this parameter, SNI prefixes match stored codes literally regardless of version."
           },
           {
             "name": "org_form",
@@ -14632,6 +14645,58 @@
           "address_role": {
             "const": "visiting_address",
             "description": "Present with coordinate output. The visit location can differ from the company's seat, city or registered postal address."
+          },
+          "sni_codes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string",
+                  "enum": [
+                    "2007",
+                    "2025"
+                  ],
+                  "nullable": true,
+                  "description": "Observed source classification; null when it cannot be established."
+                }
+              }
+            },
+            "description": "Stored primary and secondary SNI codes with their observed classification."
+          },
+          "matched_sni_codes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string",
+                  "enum": [
+                    "2007",
+                    "2025"
+                  ],
+                  "nullable": true,
+                  "description": "Observed source classification; null when it cannot be established."
+                }
+              }
+            },
+            "description": "Codes matching the requested SNI prefix and optional version; empty when no SNI prefix was requested."
+          },
+          "fiscal_year_end": {
+            "type": "string",
+            "nullable": true,
+            "description": "Latest financial period, YYYY-MM or YYYY-MM-DD as reported. Returned with financial fields."
+          },
+          "net_income": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Latest net income in SEK; returned with financial fields."
           },
           "scb": {
             "$ref": "#/components/schemas/ScbProfile"

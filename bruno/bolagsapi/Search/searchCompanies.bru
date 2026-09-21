@@ -209,8 +209,10 @@ params:query {
   ~q: tech
   @description('Filter by city name(s), comma-separated for multiple')
   ~city: Stockholm,Göteborg
-  @description("Filter by SNI code(s), comma-separated. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).")
+  @description("Filter by stored SNI code(s), comma-separated, without automatic cross-version conversion. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).")
   ~sni: 62,63
+  @description('Restrict SNI matches to codes with this known source version; unknown versions are excluded. No automatic cross-version conversion. Without this parameter, SNI prefixes match stored codes literally regardless of version.')
+  ~sni_version: 
   @description('Filter by organization form(s), comma-separated')
   ~org_form: AB,HB
   @description('Filter by county code(s), comma-separated (01=Stockholm, 20=Dalarna, etc.)')

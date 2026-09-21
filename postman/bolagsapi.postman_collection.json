@@ -2205,7 +2205,13 @@
                 {
                   "key": "sni",
                   "value": "62,63",
-                  "description": "Filter by SNI code(s), comma-separated. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
+                  "description": "Filter by stored SNI code(s), comma-separated, without automatic cross-version conversion. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
+                  "disabled": true
+                },
+                {
+                  "key": "sni_version",
+                  "value": "",
+                  "description": "Restrict SNI matches to codes with this known source version; unknown versions are excluded. No automatic cross-version conversion. Without this parameter, SNI prefixes match stored codes literally regardless of version.",
                   "disabled": true
                 },
                 {

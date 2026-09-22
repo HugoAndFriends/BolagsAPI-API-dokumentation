@@ -39,6 +39,19 @@ value. JSON takes precedence over the first header address. Invalid JSON IP
 values return HTTP 400; use a single address without a port. If the visitor's
 address is not forwarded, the caller's IP is normally used instead.
 
+If your proxy sends `Forwarded` ([RFC
+7239](https://www.rfc-editor.org/rfc/rfc7239.html)), `for=` and `by=` can help you check
+the proxy setup. `for=` identifies the node that connected to the proxy — the visitor in
+a single-proxy setup — and `by=` identifies the proxy’s receiving interface. `by=` alone
+does not prove who sent the header. Only trust information from trusted proxy hops, and
+check how your provider handles client-supplied headers and protects the connection to
+your backend.
+
+Auth does not parse `Forwarded` directly. Extract the visitor’s IP in your backend using
+your framework’s trusted-proxy support or an RFC 7239 parser, then send just the IP
+address as `endUserIp` or `X-Forwarded-For`. Do not send the entire `for=` value: it may
+contain quotes, a port or a value that is not an IP address.
+
 Send the request and use the returned BankID launch/QR
 information as described in the Identity guide. Copy `orderRef` into the
 environment before calling `collectIdentity`. Collect returns server-sent events,

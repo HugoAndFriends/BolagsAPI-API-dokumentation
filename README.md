@@ -42,6 +42,10 @@ Create a market with geographic filters and an explicit SNI version, poll its qu
 
 Use `include_coordinates=true` with search to return visiting-address coordinates. Within a market query these are the frozen snapshot's points. Export requires Business.
 
+Search, markets and export share registration, geography, SNI and employee filter semantics. Registration defaults to active; search's `active_only` separately requires SCB tax activity and defaults to false. Search/export default to SNI 2025; specify `sni_version=2007` for that classification. Municipality filters use four-digit codes, and postcodes match prefixes.
+
+Employee filters use the latest available employee observation from a company statement, including an older period when a newer statement has no count. Search with `include_financials=true` and selected export fields expose `employees_period_end` and `employees_source` separately from the monetary statement. Ordinary searches read current data; saved markets and asynchronous exports use snapshots. Use `market_query_id` when subsequent search/export must preserve the exact market membership.
+
 ## Coordinate search (Pro)
 
 The existing `/v1/search` accepts `latitude`, `longitude` and `radius_km` together to find companies within a WGS84 radius of a visiting address. Radius searches include coordinates automatically; existing search filters and sorting still apply. Radius must be greater than zero and at most 500 km. Missing or restricted coordinates are null and cannot match a radius. See the [search guide](https://bolagsapi.se/en/docs#search).

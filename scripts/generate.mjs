@@ -20,7 +20,7 @@ const bodies = {
   postPersonCompanies: { person_id: '{{person_id}}' },
   getPersonBeneficialOf: { personnummer: '{{personnummer}}' },
   batchValidate: { orgnrs: ['{{orgnr}}'] },
-  exportCompanies: { filters: { sni_codes: ['62010'], cities: ['Stockholm'], status: 'active' }, preview: true },
+  exportCompanies: { filters: { sni_codes: ['62010'], sni_version: '2007', cities: ['Stockholm'], status: 'active' }, preview: true },
   createWebhook: { url: 'https://example.com/webhook', secret: '{{webhookSecret}}', events: ['company.name_changed'] },
   updateWebhook: { active: false },
   batchScreen: { names: ['Anna Andersson'], min_score: 80 },

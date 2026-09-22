@@ -4289,7 +4289,7 @@
             "name": "sni",
             "in": "query",
             "required": false,
-            "description": "Filter by stored SNI code(s), comma-separated, without automatic cross-version conversion. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
+            "description": "SNI prefixes in sni_version (default 2025), matching all proven company codes and unambiguous mappings. OR within the list, up to 100 prefixes; each organization is returned once.",
             "schema": {
               "type": "string",
               "example": "62,63"
@@ -4306,7 +4306,7 @@
                 "2025"
               ]
             },
-            "description": "Restrict SNI matches to codes with this known source version; unknown versions are excluded. No automatic cross-version conversion. Without this parameter, SNI prefixes match stored codes literally regardless of version."
+            "description": "Classification for SNI prefix matching, default 2025. Uses all proven source codes and unambiguous cross-version mappings, as markets/export do. Unknown versions and ambiguous mappings do not match."
           },
           {
             "name": "org_form",
@@ -4332,17 +4332,17 @@
             "name": "municipality",
             "in": "query",
             "required": false,
-            "description": "Filter by municipality code or name, comma-separated for multiple",
+            "description": "Filter by official four-digit municipality codes, comma-separated",
             "schema": {
               "type": "string",
-              "example": "0880,Stockholm"
+              "example": "0880,0180"
             }
           },
           {
             "name": "postal_code",
             "in": "query",
             "required": false,
-            "description": "Filter by postal code(s), comma-separated. Supports both formats (11122 or 111 22)",
+            "description": "Postal-address prefixes of 1–5 digits, comma-separated. Spaces are ignored and leading zeros preserved; the same prefix rules as markets/export.",
             "schema": {
               "type": "string",
               "example": "11122,11447"
@@ -4359,20 +4359,35 @@
             }
           },
           {
+            "name": "registration_status",
+            "in": "query",
+            "description": "Registration status; separate from SCB tax activity.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "active",
+                "deregistered",
+                "unknown",
+                "all"
+              ],
+              "default": "active"
+            }
+          },
+          {
             "name": "active_only",
             "in": "query",
             "required": false,
-            "description": "Only return active companies",
+            "description": "Additionally require SCB tax activity; separate from registration_status.",
             "schema": {
               "type": "boolean",
-              "default": true
+              "default": false
             }
           },
           {
             "name": "employees_min",
             "in": "query",
             "required": false,
-            "description": "Minimum number of employees in the latest parsed financial period",
+            "description": "Minimum latest available company employee count; inclusive. See employees_period_end for the observation period.",
             "schema": {
               "type": "integer",
               "minimum": 0
@@ -4382,7 +4397,7 @@
             "name": "employees_max",
             "in": "query",
             "required": false,
-            "description": "Maximum number of employees in the latest parsed financial period",
+            "description": "Maximum latest available company employee count; inclusive. See employees_period_end for the observation period.",
             "schema": {
               "type": "integer",
               "minimum": 0
@@ -9394,7 +9409,7 @@
           },
           "employees_basis": {
             "const": "latest_company_financials",
-            "description": "Latest publishable company financials under shared period/source ordering. No group/unknown scope, SCB class or older-period fallback for missing employees. Inclusive intervals 0–10, 11–50, 51–250, 251+, unknown."
+            "description": "Latest available non-negative employee count from a publishable company statement. May come from an earlier period than other financial fields; provenance reports its period. No group/unknown scope or SCB size-class substitution. Inclusive intervals 0–10, 11–50, 51–250, 251+, unknown."
           },
           "location": {
             "type": "object",
@@ -14714,6 +14729,16 @@
             },
             "description": "Codes matching the requested SNI prefix and optional version; empty when no SNI prefix was requested."
           },
+          "employees_period_end": {
+            "type": "string",
+            "nullable": true,
+            "description": "Period of the latest available company employee count, YYYY-MM or YYYY-MM-DD. May precede fiscal_year_end."
+          },
+          "employees_source": {
+            "type": "string",
+            "nullable": true,
+            "description": "Public source identifier for the employee observation."
+          },
           "fiscal_year_end": {
             "type": "string",
             "nullable": true,
@@ -18239,6 +18264,8 @@
                 "contact_updated_at",
                 "updated_at",
                 "employees",
+                "employees_period_end",
+                "employees_source",
                 "period_end",
                 "currency",
                 "accounting_scope",
@@ -18467,6 +18494,15 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "sni_version": {
+            "type": "string",
+            "enum": [
+              "2007",
+              "2025"
+            ],
+            "default": "2025",
+            "description": "SNI prefix classification. Proven source versions and unambiguous mappings only, as in search/markets."
+          },
           "counties": {
             "type": "array",
             "maxItems": 100,
@@ -18482,7 +18518,7 @@
               "type": "string",
               "maxLength": 100
             },
-            "description": "Official municipality codes or names"
+            "description": "Official four-digit municipality codes"
           },
           "has_vat": {
             "type": "boolean"
@@ -18565,7 +18601,7 @@
               "type": "string",
               "pattern": "^\\d{2,5}$"
             },
-            "description": "Filter by SNI codes or prefixes (2–5 digits), across all five registered industries. Exact mapped codes also match the other SNI version.",
+            "description": "SNI prefixes (2–5 digits) in sni_version, across all usable company codes. Includes only proven source classifications and unambiguous mappings; the same rules as search/markets.",
             "example": [
               "62010",
               "62020"
@@ -18625,10 +18661,12 @@
             "enum": [
               "active",
               "inactive",
+              "deregistered",
+              "unknown",
               "all"
             ],
-            "description": "Filter by company status",
-            "default": "all"
+            "default": "active",
+            "description": "Registration status, separate from tax activity. inactive is an alias for deregistered. Default active"
           },
           "has_f_skatt": {
             "type": "boolean",
@@ -19682,7 +19720,15 @@
           "employees": {
             "type": "integer",
             "nullable": true,
-            "description": "Reported employee count, never an SCB size-class code"
+            "description": "Latest available company employee count. May precede period_end; request employees_period_end and employees_source for its provenance. Never group/unknown scope or an SCB size-class code"
+          },
+          "employees_period_end": {
+            "type": "string",
+            "nullable": true
+          },
+          "employees_source": {
+            "type": "string",
+            "nullable": true
           },
           "period_end": {
             "type": "string",

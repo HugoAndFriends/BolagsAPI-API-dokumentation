@@ -2212,13 +2212,13 @@
                 {
                   "key": "sni",
                   "value": "62,63",
-                  "description": "Filter by stored SNI code(s), comma-separated, without automatic cross-version conversion. Prefix-matches against **all** of a company's registered SNI codes (up to 5 per company, both primary and secondary) — e.g. `sni=46340` returns companies where 46340 appears in any SNI slot. Shorter prefixes broaden the match: `sni=62` matches 62010, 62020, …. Multiple codes are OR'd together (max 10).",
+                  "description": "SNI prefixes in sni_version (default 2025), matching all proven company codes and unambiguous mappings. OR within the list, up to 100 prefixes; each organization is returned once.",
                   "disabled": true
                 },
                 {
                   "key": "sni_version",
                   "value": "",
-                  "description": "Restrict SNI matches to codes with this known source version; unknown versions are excluded. No automatic cross-version conversion. Without this parameter, SNI prefixes match stored codes literally regardless of version.",
+                  "description": "Classification for SNI prefix matching, default 2025. Uses all proven source codes and unambiguous cross-version mappings, as markets/export do. Unknown versions and ambiguous mappings do not match.",
                   "disabled": true
                 },
                 {
@@ -2235,14 +2235,14 @@
                 },
                 {
                   "key": "municipality",
-                  "value": "0880,Stockholm",
-                  "description": "Filter by municipality code or name, comma-separated for multiple",
+                  "value": "0880,0180",
+                  "description": "Filter by official four-digit municipality codes, comma-separated",
                   "disabled": true
                 },
                 {
                   "key": "postal_code",
                   "value": "11122,11447",
-                  "description": "Filter by postal code(s), comma-separated. Supports both formats (11122 or 111 22)",
+                  "description": "Postal-address prefixes of 1–5 digits, comma-separated. Spaces are ignored and leading zeros preserved; the same prefix rules as markets/export.",
                   "disabled": true
                 },
                 {
@@ -2252,21 +2252,27 @@
                   "disabled": true
                 },
                 {
+                  "key": "registration_status",
+                  "value": "active",
+                  "description": "Registration status; separate from SCB tax activity.",
+                  "disabled": true
+                },
+                {
                   "key": "active_only",
-                  "value": "true",
-                  "description": "Only return active companies",
+                  "value": "false",
+                  "description": "Additionally require SCB tax activity; separate from registration_status.",
                   "disabled": true
                 },
                 {
                   "key": "employees_min",
                   "value": "",
-                  "description": "Minimum number of employees in the latest parsed financial period",
+                  "description": "Minimum latest available company employee count; inclusive. See employees_period_end for the observation period.",
                   "disabled": true
                 },
                 {
                   "key": "employees_max",
                   "value": "",
-                  "description": "Maximum number of employees in the latest parsed financial period",
+                  "description": "Maximum latest available company employee count; inclusive. See employees_period_end for the observation period.",
                   "disabled": true
                 },
                 {
@@ -3982,7 +3988,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"filters\": {\n    \"sni_codes\": [\n      \"62010\"\n    ],\n    \"cities\": [\n      \"Stockholm\"\n    ],\n    \"status\": \"active\"\n  },\n  \"preview\": true\n}",
+              "raw": "{\n  \"filters\": {\n    \"sni_codes\": [\n      \"62010\"\n    ],\n    \"sni_version\": \"2007\",\n    \"cities\": [\n      \"Stockholm\"\n    ],\n    \"status\": \"active\"\n  },\n  \"preview\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"

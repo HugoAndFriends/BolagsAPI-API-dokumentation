@@ -13565,10 +13565,26 @@
             "nullable": true,
             "description": "Date listed on sanctions list"
           },
+          "birthYear": {
+            "type": "integer",
+            "nullable": true,
+            "description": "PEP birth year from source; null when unavailable. Not a full birth date."
+          },
+          "isDeceased": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "PEP source reports deceased when true; null when unknown. Absence of a death notice does not establish that the person is alive."
+          },
+          "deathDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "PEP death date (YYYY-MM-DD) when explicitly provided by source; otherwise null, including deceased persons without a full date."
+          },
           "isActive": {
             "type": "integer",
             "nullable": true,
-            "description": "1 if currently active PEP"
+            "description": "1 if currently in political office according to source status; not life status"
           },
           "currentPosition": {
             "type": "string",

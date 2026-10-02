@@ -2198,6 +2198,12 @@
                   "disabled": true
                 },
                 {
+                  "key": "scb.main_workplace_fetched_at",
+                  "value": "",
+                  "description": "Exact stored SCB value. Huvudarbetsställets observationstid. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.",
+                  "disabled": true
+                },
+                {
                   "key": "q",
                   "value": "tech",
                   "description": "Search query (min 3 characters if provided). Optional - filter-only searches are supported.",

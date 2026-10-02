@@ -4264,6 +4264,16 @@
             "description": "Exact stored SCB value. Bransch 5 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access."
           },
           {
+            "name": "scb.main_workplace_fetched_at",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": "Exact stored SCB value. Huvudarbetsställets observationstid. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access."
+          },
+          {
             "name": "q",
             "in": "query",
             "required": false,
@@ -11526,7 +11536,7 @@
         "type": "object",
         "nullable": true,
         "additionalProperties": false,
-        "description": "Stored SCB company observations. Codes and source dates are strings; null means missing or restricted. Intervals are not exact financial amounts. Mailing status is not marketing consent. Public/private does not establish exchange listing.",
+        "description": "Stored SCB company observations. Codes and source dates are strings; null means missing, unavailable from the current source, or restricted. Intervals are not exact financial amounts. Mailing status is not marketing consent. Public/private does not establish exchange listing.",
         "required": [
           "tax_activity_code",
           "registration_status_code",
@@ -11617,6 +11627,7 @@
           "sni_description_5",
           "sni_section_5",
           "sni_section_code_5",
+          "main_workplace_fetched_at",
           "source",
           "fetched_at",
           "details_available",
@@ -12068,6 +12079,11 @@
             "nullable": true,
             "description": "Bransch 5 avdelningskod"
           },
+          "main_workplace_fetched_at": {
+            "type": "string",
+            "nullable": true,
+            "description": "Huvudarbetsställets observationstid"
+          },
           "source": {
             "type": "string",
             "enum": [
@@ -12078,7 +12094,7 @@
             "type": "string",
             "format": "date-time",
             "nullable": true,
-            "description": "SCB realtime observation timestamp; not cache time."
+            "description": "SCB company observation timestamp; not cache time. main_workplace_fetched_at dates the independently observed representative workplace."
           },
           "details_available": {
             "type": "boolean",
@@ -12177,7 +12193,8 @@
                 "sni_code_5",
                 "sni_description_5",
                 "sni_section_5",
-                "sni_section_code_5"
+                "sni_section_code_5",
+                "main_workplace_fetched_at"
               ]
             },
             "description": "Fields replaced by null because of endpoint tier or customer restrictions."

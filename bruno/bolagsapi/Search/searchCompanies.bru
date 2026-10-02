@@ -205,6 +205,8 @@ params:query {
   ~scb.sni_section_5: 
   @description('Exact stored SCB value. Bransch 5 avdelningskod. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.')
   ~scb.sni_section_code_5: 
+  @description('Exact stored SCB value. Huvudarbetsställets observationstid. Filters combine with AND; null never matches. Codes retain leading zeros. Protected contact/workplace filters require the corresponding access.')
+  ~scb.main_workplace_fetched_at: 
   @description('Search query (min 3 characters if provided). Optional - filter-only searches are supported.')
   ~q: tech
   @description('Filter by city name(s), comma-separated for multiple')

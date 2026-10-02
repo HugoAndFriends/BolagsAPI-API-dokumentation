@@ -3675,7 +3675,7 @@
           "name": "refreshMarket",
           "request": {
             "name": "Calculate a new version of a saved market",
-            "description": "Calculate a new version of a saved market\n\nFilters are immutable. Prior ready versions remain valid until their own expiry/invalidation. Maximum ten unexpired versions; no valid version is silently replaced.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Calculate a new version of a saved market\n\nFilters are immutable. Prior ready versions remain valid until their own expiry/invalidation. Maximum ten unexpired, non-invalidated ready versions; failed calculations do not consume version capacity. No valid version is silently replaced. On version_capacity, Retry-After indicates when the earliest retained result expires.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/market/markets/{{market_id}}/refresh",
               "host": [

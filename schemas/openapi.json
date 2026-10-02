@@ -1302,7 +1302,7 @@
         ],
         "operationId": "refreshMarket",
         "summary": "Calculate a new version of a saved market",
-        "description": "Filters are immutable. Prior ready versions remain valid until their own expiry/invalidation. Maximum ten unexpired versions; no valid version is silently replaced.",
+        "description": "Filters are immutable. Prior ready versions remain valid until their own expiry/invalidation. Maximum ten unexpired, non-invalidated ready versions; failed calculations do not consume version capacity. No valid version is silently replaced. On version_capacity, Retry-After indicates when the earliest retained result expires.",
         "parameters": [
           {
             "name": "market_id",

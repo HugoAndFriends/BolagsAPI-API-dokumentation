@@ -2911,7 +2911,7 @@
                 {
                   "key": "scope",
                   "value": "",
-                  "description": "Select company-only or consolidated group figures. When omitted, one consistent series is selected, preferring exact company figures, then safely unclassified official figures, coarse company fallbacks, and finally group figures. all returns separate rows when multiple scopes exist.",
+                  "description": "Select company-only or consolidated group figures. When omitted, one consistent series is selected using the latest available period; within that period exact company figures are preferred, followed by unclassified official figures, coarse company fallbacks, and group figures. Older exact rows do not hide newer reports. all returns separate rows when multiple scopes exist.",
                   "disabled": true
                 }
               ]

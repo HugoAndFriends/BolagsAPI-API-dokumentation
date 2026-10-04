@@ -13064,6 +13064,20 @@
           "has_patents": {
             "type": "boolean",
             "description": "True if company has any patents"
+          },
+          "trademarks_updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Time of the latest PRV trademark publication reflected in the trademark data. Applies to the whole trademark dataset, not only this company; null if unknown.",
+            "example": "2026-10-03T00:30:05.000Z"
+          },
+          "patents_updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Time patent data was last refreshed from PRV. Applies to the whole patent dataset; null if unknown.",
+            "example": "2026-10-04T04:51:00.000Z"
           }
         }
       },
@@ -13128,6 +13142,13 @@
             "type": "string",
             "nullable": true,
             "description": "URL to trademark image"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Time of the PRV publication in which this record last changed; null if not yet known.",
+            "example": "2026-10-02T00:30:06.000Z"
           }
         }
       },

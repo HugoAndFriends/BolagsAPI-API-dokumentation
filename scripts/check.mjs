@@ -30,14 +30,20 @@ for (const { path, method, operation: op } of operations) {
   assert.ok(pm && bru, `Missing operation ${op.operationId}`);
   assert.equal(pm.request.method.toLowerCase(), method);
   assert.equal(bru.http.method, method);
-  const security = Object.keys((op.security ?? spec.security)[0]);
+  const isPublic = op.security?.length === 0;
+  const security = Object.keys((op.security ?? spec.security)[0] ?? {});
   const token = security.includes('identityApiKey') ? 'identityApiKey' : security.includes('identityAccessToken') ? 'authAccessToken' : 'bearerToken';
   const host = token === 'bearerToken' ? 'baseUrl' : 'authBaseUrl';
   assert.equal(env.values.find(v => v.key === host).value, (op.servers ?? spec.paths[path].servers ?? spec.servers)[0].url);
   assert.ok(pm.request.url.raw.startsWith(`{{${host}}}/`));
   assert.equal(bru.http.url, pm.request.url.raw);
-  assert.equal(bru.auth.bearer.token, `{{${token}}}`);
-  assert.equal(pm.request.auth.bearer[0].value, `{{${token}}}`);
+  if (isPublic) {
+    assert.equal(pm.request.auth.type, 'noauth', `Public operation sends credentials: ${op.operationId}`);
+    assert.equal(bru.http.auth, 'none', `Public Bruno operation sends credentials: ${op.operationId}`);
+  } else {
+    assert.equal(bru.auth.bearer.token, `{{${token}}}`);
+    assert.equal(pm.request.auth.bearer[0].value, `{{${token}}}`);
+  }
   const template = pm.request.url.path.join('/').replace(/\{\{[^}]+\}\}/g, '{}');
   assert.equal(template, path.slice(1).replace(/\{[^}]+\}/g, '{}'));
   for (const [, key] of JSON.stringify(pm.request).matchAll(/\{\{([^}]+)\}\}/g)) assert.ok(variables.has(key), `Undefined variable ${key}`);

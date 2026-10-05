@@ -1,0 +1,43 @@
+meta {
+  name: getSupplierCheck
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/supplier-check
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Comma-separated rules to evaluate. Default: registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current. Optional: auditor_opinion, beneficial_owners. Financial threshold rules are selected with their own parameters.')
+  ~rules: registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current
+  @description('Minimum exact net revenue in SEK. Selects the min_revenue rule.')
+  ~min_revenue: 
+  @description('Minimum net income in SEK. Selects the min_net_income rule.')
+  ~min_net_income: 
+  @description('Minimum equity in SEK. Selects the min_equity rule.')
+  ~min_equity: 
+  @description('Minimum equity ratio in percent. Selects the min_equity_ratio rule.')
+  ~min_equity_ratio: 
+  @description('Accounting scope the thresholds are compared with. Other scopes are never substituted.')
+  ~accounting_scope: company
+  @description('Threshold currency. Only SEK figures are compared.')
+  ~currency: SEK
+  @description("Days after the next annual report's due date during which a missing report is report_may_be_pending. After that it fails only if a check of Bolagsverket's register, recorded after the grace period, found no newer filed report; otherwise it stays unknown (newer_report_not_collected).")
+  ~report_grace_days: 60
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

@@ -1,0 +1,37 @@
+meta {
+  name: getTrademarkDecisions
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/v1/trademarks/decisions
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description('Comma-separated Nice classes 1–45, e.g. 33 or 32,33. A mark matches when it has at least one of them. Omit for all classes.')
+  ~nice_class: 
+  @description('Comma-separated subset of registered, refused, withdrawn. Default: all three.')
+  ~decision: 
+  @description('Decisions on or after this date (YYYY-MM-DD)')
+  ~since: 
+  @description('Decisions on or before this date (YYYY-MM-DD)')
+  ~until: 
+  ~limit: 50
+  ~offset: 0
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

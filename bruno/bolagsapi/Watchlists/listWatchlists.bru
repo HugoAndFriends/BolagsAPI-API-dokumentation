@@ -1,11 +1,11 @@
 meta {
-  name: getBankruptcyStatus
+  name: listWatchlists
   type: http
-  seq: 13
+  seq: 1
 }
 
 get {
-  url: {{baseUrl}}/v1/company/{{orgnr}}/bankruptcy
+  url: {{baseUrl}}/v1/watchlists
   body: none
   auth: bearer
 }

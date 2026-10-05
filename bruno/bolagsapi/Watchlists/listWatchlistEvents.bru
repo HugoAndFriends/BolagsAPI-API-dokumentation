@@ -1,0 +1,34 @@
+meta {
+  name: listWatchlistEvents
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{baseUrl}}/v1/watchlists/{{watchlistId}}/events
+  body: none
+  auth: bearer
+}
+
+params:query {
+  @description("Return events after this cursor (from next_cursor or an event's cursor). Omit to start from the oldest event.")
+  ~cursor: 
+  ~limit: 100
+  ~status: all
+  @description('Comma-separated webhook event types')
+  ~event_type: company.name_changed,company.address_changed
+  ~orgnr: 
+}
+
+headers {
+  Accept: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

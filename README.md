@@ -1,6 +1,6 @@
 # BolagsAPI documentation and collections
 
-OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published BolagsAPI API, including Identity enrichment response contracts. The current collection contains **82 operations**. [Endpoint inventory](docs/endpoints.md).
+OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published BolagsAPI API, including Identity enrichment response contracts. The current collection contains **98 operations**. [Endpoint inventory](docs/endpoints.md).
 
 ## Documentation and schemas
 
@@ -27,7 +27,7 @@ The snapshots include response field types, required fields, nullable values and
 | `authAccessToken` | OIDC access token for `/userinfo` |
 | `orgnr` | Company to query; replace with the company relevant to your integration |
 | `orderRef` | Order reference returned by Identity start |
-| `reportId`, `webhookId`, `announcementId`, `person_id` | IDs obtained from the corresponding list/lookup responses |
+| `reportId`, `webhookId`, `announcementId`, `person_id`, `watchlistId`, `watchlistEventId` | IDs obtained from the corresponding list/lookup responses |
 | `market_id`, `query_id` | Saved market and calculation IDs returned by create/refresh |
 | `idempotencyKey` | Unique request intent for create/refresh; reuse only for retries of that intent |
 | `webhookSecret` | Your own secret for webhook signature verification |

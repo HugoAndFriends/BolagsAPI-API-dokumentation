@@ -1,0 +1,36 @@
+meta {
+  name: importWatchlistMembers
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{baseUrl}}/v1/watchlists/{{watchlistId}}/members
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "members": [
+      {
+        "orgnr": "{{orgnr}}",
+        "reference": "supplier-17"
+      }
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

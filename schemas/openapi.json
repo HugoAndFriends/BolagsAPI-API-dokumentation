@@ -5783,6 +5783,9 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "$ref": "#/components/responses/TemporarilyBusy"
           }
         }
       }
@@ -6133,7 +6136,7 @@
           "Financials"
         ],
         "summary": "Get full financial data",
-        "description": "Get multi-year financial data parsed from annual reports. Includes income statement, balance sheet, and key ratios. Requires Starter plan or higher. Some fields may be null when K2, condensed annual reports, or PDF-only filings do not expose machine-readable source lines. PDF filing periods without parseable figures are listed in available_periods_without_figures.",
+        "description": "Get multi-year financial data parsed from annual reports. Includes income statement, balance sheet, and key ratios. Requires Starter plan or higher. Some fields may be null when K2, condensed annual reports, or PDF-only filings do not expose machine-readable source lines. PDF filing periods without parseable figures are listed in available_periods_without_figures. If no figures are stored yet, collection starts and the endpoint returns HTTP 202 until it completes; 404 means no publishable figures after collection.",
         "operationId": "getFinancials",
         "security": [
           {
@@ -6187,6 +6190,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -6198,6 +6219,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -6252,6 +6284,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -6263,6 +6313,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -6317,6 +6378,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -6328,6 +6407,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -6882,6 +6972,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -6893,6 +7001,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -7108,6 +7227,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -7119,6 +7256,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -7183,6 +7331,24 @@
               }
             }
           },
+          "202": {
+            "description": "No figures are stored yet and collection is queued or running. Poll the same URL after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 30
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsCollectingResponse"
+                }
+              }
+            }
+          },
           "401": {
             "$ref": "#/components/responses/Unauthorized"
           },
@@ -7194,6 +7360,17 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "Temporary collection error (data_status: failed). Retry after Retry-After; this is not a statement that no figures exist.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 60
+                }
+              }
+            }
           }
         }
       }
@@ -11946,6 +12123,35 @@
           },
           "retry_after": {
             "type": "integer"
+          }
+        }
+      },
+      "FinancialsCollectingResponse": {
+        "type": "object",
+        "required": [
+          "orgnr",
+          "data_status",
+          "retry_after_seconds",
+          "message"
+        ],
+        "properties": {
+          "orgnr": {
+            "type": "string"
+          },
+          "data_status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "refreshing"
+            ],
+            "description": "Collection is queued or running. The response carries no figures."
+          },
+          "retry_after_seconds": {
+            "type": "integer",
+            "example": 30
+          },
+          "message": {
+            "type": "string"
           }
         }
       },
@@ -23002,6 +23208,31 @@
               "docs_url": "https://bolagsapi.se/docs/errors#429-rate-limit-exceeded",
               "request_id": "req_abc123",
               "retry_after": 60
+            }
+          }
+        }
+      },
+      "TemporarilyBusy": {
+        "description": "The service is temporarily busy. Retry the same request after Retry-After seconds; for cursor pages, retry the same after_orgnr.",
+        "headers": {
+          "Retry-After": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Seconds to wait before retrying"
+          }
+        },
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "error": "internal_error",
+              "message": "The service is temporarily busy. Retry shortly.",
+              "docs_url": "https://bolagsapi.se/docs/errors#500-and-502-server-errors",
+              "request_id": "req_abc123",
+              "retry_after": 5
             }
           }
         }

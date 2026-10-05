@@ -1,0 +1,33 @@
+meta {
+  name: unacknowledgeWatchlistEvents
+  type: http
+  seq: 12
+}
+
+post {
+  url: {{baseUrl}}/v1/watchlists/{{watchlistId}}/events/unacknowledge
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "event_ids": [
+      "{{watchlistEventId}}"
+    ]
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

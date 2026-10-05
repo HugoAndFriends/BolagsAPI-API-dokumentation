@@ -1,7 +1,7 @@
 meta {
   name: getCompany
   type: http
-  seq: 3
+  seq: 4
 }
 
 get {
@@ -11,8 +11,8 @@ get {
 }
 
 params:query {
-  @description("Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans)")
-  ~include: financials,fi,prv
+  @description("Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans), 'coverage' for availability, freshness and absence reason per data section (all plans; restricted sections are reported as unauthorized without their content)")
+  ~include: financials,fi,prv,coverage
   @description('Select a specific registered business when a sole trader has multiple businesses under the same personal identity number. Use the value returned by /v1/search.')
   ~name_protection_number: 2
 }

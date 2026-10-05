@@ -1,0 +1,31 @@
+meta {
+  name: updateWatchlist
+  type: http
+  seq: 4
+}
+
+patch {
+  url: {{baseUrl}}/v1/watchlists/{{watchlistId}}
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "description": "Active suppliers"
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

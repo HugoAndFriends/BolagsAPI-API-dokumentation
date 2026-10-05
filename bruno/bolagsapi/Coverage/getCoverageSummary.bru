@@ -1,21 +1,17 @@
 meta {
-  name: getBankruptcyStatus
+  name: getCoverageSummary
   type: http
-  seq: 13
+  seq: 1
 }
 
 get {
-  url: {{baseUrl}}/v1/company/{{orgnr}}/bankruptcy
+  url: {{baseUrl}}/v1/public/coverage
   body: none
-  auth: bearer
+  auth: none
 }
 
 headers {
   Accept: application/json
-}
-
-auth:bearer {
-  token: {{bearerToken}}
 }
 
 settings {

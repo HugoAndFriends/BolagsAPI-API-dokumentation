@@ -12,7 +12,7 @@ for (const { path, method } of operations) input.paths[path][method].tags = inpu
 const converted = await new Promise((resolve, reject) => converter.convertV2({ type: 'json', data: input }, { folderStrategy: 'Tags', parametersResolution: 'Example' }, (error, result) => error ? reject(error) : resolve(result)));
 if (!converted.result) throw new Error(converted.reason);
 const collection = converted.output[0].data;
-const variables = { query_id: 'REPLACE_WITH_QUERY_ID', market_id: 'REPLACE_WITH_MARKET_ID', baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER' };
+const variables = { query_id: 'REPLACE_WITH_QUERY_ID', market_id: 'REPLACE_WITH_MARKET_ID', baseUrl: 'https://api.bolagsapi.se', authBaseUrl: 'https://auth.byhugo.se', bearerToken: '', identityApiKey: '', authAccessToken: '', webhookSecret: '', orgnr: '5560553561', sniCode: '62010', kommunCode: '0180', year: '2026', date: '2026-09-01', seriesId: 'SECBREPOEFF', reportId: 'REPLACE_WITH_REPORT_ID', webhookId: 'REPLACE_WITH_WEBHOOK_ID', announcementId: 'REPLACE_WITH_ANNOUNCEMENT_ID', name: 'Anna Andersson', sessionId: 'REPLACE_WITH_SESSION_ID', person_id: 'REPLACE_WITH_PERSON_ID', personnummer: 'REPLACE_WITH_AUTHORIZED_PERSONNUMMER', watchlistId: 'REPLACE_WITH_WATCHLIST_ID', watchlistEventId: 'REPLACE_WITH_WATCHLIST_EVENT_ID' };
 const bodies = {
   createMarket: { filters: { counties: ['13'], employees_min: 11, employees_max: 250 }, industry: { version: '2025', match: 'any', group_by: 'division' } },
   validateVatNumber: { country_code: 'SE', vat_number: '556016068001' },
@@ -24,6 +24,11 @@ const bodies = {
   createWebhook: { url: 'https://example.com/webhook', secret: '{{webhookSecret}}', events: ['company.name_changed'] },
   updateWebhook: { active: false },
   batchScreen: { names: ['Anna Andersson'], min_score: 80 },
+  createWatchlist: { name: 'Suppliers', description: 'Companies we buy from' },
+  updateWatchlist: { description: 'Active suppliers' },
+  importWatchlistMembers: { members: [{ orgnr: '{{orgnr}}', reference: 'supplier-17' }] },
+  acknowledgeWatchlistEvents: { event_ids: ['{{watchlistEventId}}'] },
+  unacknowledgeWatchlistEvents: { event_ids: ['{{watchlistEventId}}'] },
 };
 const requests = items => items.flatMap(item => item.item ? requests(item.item) : [item]);
 for (const item of requests(collection.item)) {
@@ -37,9 +42,10 @@ for (const item of requests(collection.item)) {
   const security = operation.security ?? spec.security ?? [];
   const token = security.some(s => 'identityAccessToken' in s) ? 'authAccessToken' : security.some(s => 'identityApiKey' in s) ? 'identityApiKey' : 'bearerToken';
   const host = token === 'bearerToken' ? 'baseUrl' : 'authBaseUrl';
-  item.request.auth = { type: 'bearer', bearer: [{ key: 'token', value: `{{${token}}}`, type: 'string' }] };
+  // An explicit empty security list marks a public operation: send no credentials.
+  item.request.auth = operation.security?.length === 0 ? { type: 'noauth' } : { type: 'bearer', bearer: [{ key: 'token', value: `{{${token}}}`, type: 'string' }] };
   const resolvedPath = path.replace(/\{([^}]+)\}/g, (_, name) => {
-    const key = name === 'id' ? path.includes('webhooks') ? 'webhookId' : 'announcementId' : name;
+    const key = name === 'id' ? path.includes('webhooks') ? 'webhookId' : path.includes('watchlists') ? 'watchlistId' : 'announcementId' : name;
     variables[key] ??= `REPLACE_WITH_${key.toUpperCase()}`;
     return `{{${key}}}`;
   });
@@ -96,11 +102,11 @@ async function save(items, directory) {
       item.seq = index + 1;
       item.request.url = item.request.url.replace(/^https?:\/\/(?=\{\{)/, '');
       delete item.examples;
-      await writeFile(`${directory}/${name}.bru`, jsonToBruV2({ meta: { name: item.name, type: 'http', seq: item.seq }, http: { method: item.request.method.toLowerCase(), url: item.request.url, auth: 'bearer', body: item.request.body?.mode === 'json' ? 'json' : 'none' }, headers: item.request.headers, params: item.request.params, auth: item.request.auth, body: item.request.body, settings: item.settings }));
+      await writeFile(`${directory}/${name}.bru`, jsonToBruV2({ meta: { name: item.name, type: 'http', seq: item.seq }, http: { method: item.request.method.toLowerCase(), url: item.request.url, auth: item.request.auth?.mode ?? 'bearer', body: item.request.body?.mode === 'json' ? 'json' : 'none' }, headers: item.request.headers, params: item.request.params, auth: item.request.auth, body: item.request.body, settings: item.settings }));
     }
   }
 }
 await save(bruno.collection.items, 'bruno/bolagsapi');
 await mkdir('docs', { recursive: true });
-await writeFile('docs/endpoints.md', '# Published endpoint inventory\n\nGenerated from `schemas/openapi.json`. This covers the published OpenAPI surface; internal/dashboard and other Auth endpoints are outside this collection. See the specification for parameters, responses and security alternatives.\n\n| Method | Path | Authentication | Operation |\n| --- | --- | --- | --- |\n' + operations.map(o => `| ${o.method.toUpperCase()} | \`${o.path}\` | ${Object.keys((o.operation.security ?? spec.security)[0]).join(', ')} | ${o.operation.operationId} |`).join('\n') + '\n');
+await writeFile('docs/endpoints.md', '# Published endpoint inventory\n\nGenerated from `schemas/openapi.json`. This covers the published OpenAPI surface; internal/dashboard and other Auth endpoints are outside this collection. See the specification for parameters, responses and security alternatives.\n\n| Method | Path | Authentication | Operation |\n| --- | --- | --- | --- |\n' + operations.map(o => `| ${o.method.toUpperCase()} | \`${o.path}\` | ${Object.keys((o.operation.security ?? spec.security)[0] ?? {}).join(', ') || 'none'} | ${o.operation.operationId} |`).join('\n') + '\n');
 console.log(`Generated ${operations.length} operations for Postman and Bruno.`);

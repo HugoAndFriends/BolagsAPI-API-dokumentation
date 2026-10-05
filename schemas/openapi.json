@@ -81,6 +81,10 @@
       "description": "Real-time company change notifications (Pro+ plans)"
     },
     {
+      "name": "Watchlists",
+      "description": "Company watchlists with an event inbox and acknowledgement (Pro+ plans)"
+    },
+    {
       "name": "Regulatory",
       "description": "Finansinspektionen (FI) regulatory data (Starter+ plans)"
     },
@@ -103,6 +107,10 @@
     {
       "name": "BRF",
       "description": "Optional BRF module: structured housing association data"
+    },
+    {
+      "name": "Coverage",
+      "description": "Public data coverage per legal form"
     }
   ],
   "paths": {
@@ -275,6 +283,799 @@
           },
           "503": {
             "description": "Export temporarily unavailable"
+          }
+        }
+      }
+    },
+    "/v1/watchlists": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "List watchlists",
+        "operationId": "listWatchlists",
+        "description": "List your watchlists with member and unacknowledged event counts.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchlists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistListResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Create watchlist",
+        "operationId": "createWatchlist",
+        "description": "Create an empty watchlist. Requires Pro plan or higher.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Watchlist"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Get watchlist",
+        "operationId": "getWatchlist",
+        "description": "Get one watchlist.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Watchlist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Watchlist"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Update watchlist",
+        "operationId": "updateWatchlist",
+        "description": "Rename a watchlist or change its description.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Watchlist",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Watchlist"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Delete watchlist",
+        "operationId": "deleteWatchlist",
+        "description": "Delete the watchlist with its membership history and event inbox. Webhooks that filter on it stop matching.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/members": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "List members",
+        "operationId": "listWatchlistMembers",
+        "description": "Members in the order they were added. Set include_removed=true to include removed memberships.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 1000,
+              "default": 100
+            }
+          },
+          {
+            "name": "include_removed",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Members",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistMemberPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Import members",
+        "operationId": "importWatchlistMembers",
+        "description": "Add up to 10 000 companies per request as JSON or CSV. Every row gets an outcome. A company already in the list is already_member and keeps its original added_at and reference; a repeat within the same request is duplicate. Personal identity numbers (sole traders) are rejected and not echoed. A company removed earlier and imported again starts a new membership.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistImportRequest"
+              }
+            },
+            "text/csv": {
+              "schema": {
+                "type": "string"
+              },
+              "example": "orgnr;reference\n5567037485;supplier-17\n556677-8899;supplier-18"
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Per-row outcomes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistImportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/members/{orgnr}": {
+      "delete": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Remove member",
+        "operationId": "removeWatchlistMember",
+        "description": "End the company's membership. Its earlier events stay in the inbox; no new events are added.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          },
+          {
+            "name": "orgnr",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Removed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/events": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "List inbox events",
+        "operationId": "listWatchlistEvents",
+        "description": "Events for member companies in the order they were added to the inbox. Paging with next_cursor never skips an event, also while new events arrive; reading again from an earlier cursor replays the same events with the same ids. An event is added when the company was a member at the change's detected_at. Events are not backfilled from before a company was added or before the list was created.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Return events after this cursor (from next_cursor or an event's cursor). Omit to start from the oldest event."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 500,
+              "default": 100
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "acknowledged",
+                "unacknowledged"
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated webhook event types",
+            "example": "company.name_changed,company.address_changed"
+          },
+          {
+            "name": "orgnr",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistEventPage"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/events/export": {
+      "get": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Export inbox events",
+        "operationId": "exportWatchlistEvents",
+        "description": "CSV export with the same filters as the inbox, at most 10 000 rows per request. When more rows remain, the X-Next-Cursor header holds the cursor for the next export.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Return events after this cursor (from next_cursor or an event's cursor). Omit to start from the oldest event."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10000,
+              "default": 10000
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "acknowledged",
+                "unacknowledged"
+              ],
+              "default": "all"
+            }
+          },
+          {
+            "name": "event_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated webhook event types",
+            "example": "company.name_changed,company.address_changed"
+          },
+          {
+            "name": "orgnr",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "CSV",
+            "headers": {
+              "X-Next-Cursor": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "text/csv": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/events/acknowledge": {
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Acknowledge events",
+        "operationId": "acknowledgeWatchlistEvents",
+        "description": "Mark events as handled, by event id or every event up to a cursor. Repeating the call changes nothing.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistAcknowledgeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistAcknowledgeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
+          }
+        }
+      }
+    },
+    "/v1/watchlists/{id}/events/unacknowledge": {
+      "post": {
+        "tags": [
+          "Watchlists"
+        ],
+        "summary": "Undo acknowledgement",
+        "operationId": "unacknowledgeWatchlistEvents",
+        "description": "Mark acknowledged events as unhandled again.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Watchlist id",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WatchlistAcknowledgeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Result",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WatchlistAcknowledgeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Watchlists require a Pro plan or higher"
+          },
+          "404": {
+            "description": "Watchlist not found. Another account's list is also reported as not found."
           }
         }
       }
@@ -891,6 +1692,101 @@
           },
           "400": {
             "description": "Invalid filters or cursor"
+          },
+          "401": {
+            "description": "Authentication required"
+          },
+          "403": {
+            "description": "Starter or higher required, or key restricted"
+          },
+          "429": {
+            "description": "Rate or quota limit"
+          }
+        }
+      }
+    },
+    "/v1/trademarks/decisions": {
+      "get": {
+        "tags": [
+          "IP"
+        ],
+        "operationId": "getTrademarkDecisions",
+        "summary": "Trademark decisions by Nice class",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "Starter+. PRV trademark registrations, refusals and withdrawals across all applicants, newest decision_date first (then id). Records without a known decision date are omitted. Status reflects the current PRV record: a mark registered and later expired is no longer listed as registered.",
+        "parameters": [
+          {
+            "name": "nice_class",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated Nice classes 1–45, e.g. 33 or 32,33. A mark matches when it has at least one of them. Omit for all classes."
+          },
+          {
+            "name": "decision",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated subset of registered, refused, withdrawn. Default: all three."
+          },
+          {
+            "name": "since",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Decisions on or after this date (YYYY-MM-DD)"
+          },
+          {
+            "name": "until",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "description": "Decisions on or before this date (YYYY-MM-DD)"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 10000,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "A page of trademark decisions (possibly empty)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrademarkDecisions"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filter"
           },
           "401": {
             "description": "Authentication required"
@@ -1830,6 +2726,259 @@
         }
       }
     },
+    "/v1/company/{orgnr}/supplier-check": {
+      "get": {
+        "tags": [
+          "Analytics"
+        ],
+        "summary": "Explainable supplier check (Pro+)",
+        "description": "Evaluate the versioned se_supplier rule set on stored data: registration, ongoing insolvency or liquidation, F-tax, VAT, annual report freshness, optional auditor opinion and optional financial thresholds you choose. Each rule returns applicability, pass/fail/unknown, a reason code and evidence. Unknown is never counted as pass; beneficial owners are reported as disabled, not passed. No AI and no upstream calls: the same data, policy, date and rule_set_version give the same outcome. Each stored source is read with a short timeout; if one cannot be read, the response is 200 with summary.partial=true and the affected rules unknown. One enrichment request, billed also when partial; the check never triggers paid lookups. rule_set_version changes whenever rule semantics, defaults or reason codes change; keep reproducibility with your decision. Requires Pro plan or higher.",
+        "operationId": "getSupplierCheck",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orgnr",
+            "in": "path",
+            "required": true,
+            "description": "Organization number",
+            "schema": {
+              "type": "string",
+              "example": "5567037485"
+            }
+          },
+          {
+            "name": "rules",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated rules to evaluate. Default: registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current. Optional: auditor_opinion, beneficial_owners. Financial threshold rules are selected with their own parameters.",
+            "schema": {
+              "type": "string",
+              "example": "registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current"
+            }
+          },
+          {
+            "name": "min_revenue",
+            "in": "query",
+            "required": false,
+            "description": "Minimum exact net revenue in SEK. Selects the min_revenue rule.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min_net_income",
+            "in": "query",
+            "required": false,
+            "description": "Minimum net income in SEK. Selects the min_net_income rule.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min_equity",
+            "in": "query",
+            "required": false,
+            "description": "Minimum equity in SEK. Selects the min_equity rule.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "min_equity_ratio",
+            "in": "query",
+            "required": false,
+            "description": "Minimum equity ratio in percent. Selects the min_equity_ratio rule.",
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "name": "accounting_scope",
+            "in": "query",
+            "required": false,
+            "description": "Accounting scope the thresholds are compared with. Other scopes are never substituted.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "company",
+                "group"
+              ],
+              "default": "company"
+            }
+          },
+          {
+            "name": "currency",
+            "in": "query",
+            "required": false,
+            "description": "Threshold currency. Only SEK figures are compared.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "SEK"
+              ],
+              "default": "SEK"
+            }
+          },
+          {
+            "name": "report_grace_days",
+            "in": "query",
+            "required": false,
+            "description": "Days after the next annual report's due date during which a missing report is report_may_be_pending. After that it fails only if a check of Bolagsverket's register, recorded after the grace period, found no newer filed report; otherwise it stays unknown (newer_report_not_collected).",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 365,
+              "default": 60
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rule results, summary and coverage",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SupplierCheckResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/TierAccessDenied"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          }
+        }
+      }
+    },
+    "/v1/public/coverage": {
+      "get": {
+        "tags": [
+          "Coverage"
+        ],
+        "summary": "Data coverage per legal form",
+        "description": "Active companies and stored annual report and financial coverage for AB, BRF, EK and other forms, from the latest daily snapshot. Each organization is counted once. A stored document or figure shows coverage in BolagsAPI, not whether a company filed. No authentication required.",
+        "operationId": "getCoverageSummary",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Latest coverage summary",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoverageSummary"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "No snapshot is available yet"
+          }
+        }
+      }
+    },
+    "/v1/company/{orgnr}/contacts": {
+      "get": {
+        "tags": [
+          "Company"
+        ],
+        "summary": "Get professional contacts with provenance",
+        "description": "Company and role contacts that the company publishes on its own verified website, each with its source page, extraction method, observed/verified/expiry timestamps and a confidence band. Only current, published observations are returned; expired, removed or suppressed values are never served. Contacts tied to a job ad or procurement notice stay in role_contacts with their context and are not general company contacts. Named people are not available yet: people is empty and people_access explains why. An empty collection means no qualifying contact was found, not that the company has none. The legacy /contact endpoint is unchanged. Contacts are published by the company on its own website. This data does not by itself establish consent or another legal basis for direct marketing; check the rules that apply to your use (for example GDPR and the Swedish Marketing Act) before contacting anyone. Requires Starter plan or higher.",
+        "operationId": "getProfessionalContacts",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "orgnr",
+            "in": "path",
+            "required": true,
+            "description": "Swedish organization number (10 digits, with or without hyphen)",
+            "schema": {
+              "type": "string",
+              "pattern": "^\\d{6}-?\\d{4}$",
+              "example": "5567037485"
+            }
+          },
+          {
+            "name": "include",
+            "in": "query",
+            "required": false,
+            "description": "Comma-separated. `people` requests named contacts; they are returned only when enabled for your account.",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "people"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Professional contacts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfessionalContactsResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Contacts are queued or being collected. Poll after Retry-After; this response is not billed.",
+            "headers": {
+              "Retry-After": {
+                "schema": {
+                  "type": "integer",
+                  "example": 10
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfessionalContactsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "description": "Contact data is disabled for this account or plan"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "The background data source failed temporarily"
+          }
+        }
+      }
+    },
     "/v1/reports/insights/search": {
       "get": {
         "tags": [
@@ -2195,10 +3344,10 @@
             "name": "include",
             "in": "query",
             "required": false,
-            "description": "Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans)",
+            "description": "Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans), 'coverage' for availability, freshness and absence reason per data section (all plans; restricted sections are reported as unauthorized without their content)",
             "schema": {
               "type": "string",
-              "example": "financials,fi,prv"
+              "example": "financials,fi,prv,coverage"
             }
           },
           {
@@ -5303,7 +6452,7 @@
           "Analytics"
         ],
         "summary": "Get company timeline",
-        "description": "Get a chronological list of company events including registration, report filings, and changes. Pro customers can request Bolagsverket case events with include_cases=true.",
+        "description": "Get a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request Bolagsverket case events with include_cases=true.",
         "operationId": "getTimeline",
         "security": [
           {
@@ -6830,7 +7979,7 @@
           "Webhooks"
         ],
         "summary": "Create webhook",
-        "description": "Create a new webhook subscription. Requires Pro plan or higher. Each generated delivery counts as one usage unit; automatic retries are included. Use `filters.sni_codes` to subscribe to one or more SNI industries; `company.sni_changed` matches both previous and current SNI sets.",
+        "description": "Create a new webhook subscription. Requires Pro plan or higher. Each generated delivery counts as one usage unit; automatic retries are included. Use `filters.sni_codes` to subscribe to one or more SNI industries; `company.sni_changed` matches both previous and current SNI sets. One change can produce several events, for example `company.name_changed` and `company.address_changed`; each is a separate delivery. For backward compatibility, subscribing to `company.liquidation_started` also delivers `company.liquidation_ended`.",
         "operationId": "createWebhook",
         "security": [
           {
@@ -9275,6 +10424,191 @@
           }
         }
       },
+      "TrademarkDecisions": {
+        "type": "object",
+        "required": [
+          "decisions",
+          "meta"
+        ],
+        "properties": {
+          "decisions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "word_mark",
+                "trademark_type",
+                "decision",
+                "decision_date",
+                "status",
+                "application_date",
+                "registration_date",
+                "nice_classes",
+                "applicant",
+                "image_url"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "PRV application number",
+                  "example": "2025-01234"
+                },
+                "word_mark": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Word mark text; null for marks without text",
+                  "example": "FJÄLLDROPPE"
+                },
+                "trademark_type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Mark type as stored from PRV, e.g. word, figurative, combined"
+                },
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "registered",
+                    "refused",
+                    "withdrawn"
+                  ]
+                },
+                "decision_date": {
+                  "type": "string",
+                  "format": "date",
+                  "description": "registered: PRV registration date. refused/withdrawn: date (Swedish time) of the PRV publication in which the record last changed, normally the status change; PRV publishes no separate decision date for these."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "PRV status as stored, e.g. registered, application refused, application withdrawn"
+                },
+                "application_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date"
+                },
+                "registration_date": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date",
+                  "description": "Set for registered marks; null for refused and withdrawn applications"
+                },
+                "nice_classes": {
+                  "type": "array",
+                  "items": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 45
+                  },
+                  "description": "Nice classes in the application",
+                  "example": [
+                    33
+                  ]
+                },
+                "applicant": {
+                  "type": "object",
+                  "required": [
+                    "type",
+                    "name",
+                    "orgnr",
+                    "country"
+                  ],
+                  "description": "Private individuals are not named. name, orgnr and country are returned only for legal entities; for individuals and applicants we cannot classify they are null.",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "organization",
+                        "individual",
+                        "unknown"
+                      ],
+                      "description": "organization: Swedish organization number linked by PRV, or a recognized legal form in the name. individual: personal identity number or sole trader. unknown: not classifiable (masked)."
+                    },
+                    "name": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Applicant or holder name as published by PRV; null unless type is organization"
+                    },
+                    "orgnr": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "pattern": "^[0-9]{10}$",
+                      "description": "Swedish organization number when PRV links one to an organization applicant; null otherwise (including foreign organizations). Not inferred from the name."
+                    },
+                    "country": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Applicant country code from PRV; null unless type is organization",
+                      "example": "SE"
+                    }
+                  }
+                },
+                "image_url": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Mark image URL for figurative marks, when available"
+                }
+              }
+            }
+          },
+          "meta": {
+            "type": "object",
+            "required": [
+              "source",
+              "source_label",
+              "total",
+              "limit",
+              "offset",
+              "trademarks_updated_at"
+            ],
+            "properties": {
+              "source": {
+                "type": "string",
+                "enum": [
+                  "prv"
+                ]
+              },
+              "source_label": {
+                "type": "string"
+              },
+              "total": {
+                "type": "integer",
+                "description": "Matching decisions across all pages"
+              },
+              "limit": {
+                "type": "integer"
+              },
+              "offset": {
+                "type": "integer"
+              },
+              "trademarks_updated_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "description": "Latest PRV trademark publication reflected in the data; same value as prv.trademarks_updated_at on company lookups. Null if unknown."
+              }
+            }
+          }
+        }
+      },
       "MarketDefinition": {
         "type": "object",
         "additionalProperties": false,
@@ -9949,6 +11283,375 @@
           }
         }
       },
+      "WatchlistInput": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 120,
+            "example": "Leverantörer"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 1000
+          }
+        }
+      },
+      "Watchlist": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "member_count",
+          "unacknowledged_events",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "wl_3f9a1c2b4d5e6f70"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "member_count": {
+            "type": "integer",
+            "description": "Active members"
+          },
+          "unacknowledged_events": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The inbox starts here; earlier changes are not added"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WatchlistListResponse": {
+        "type": "object",
+        "properties": {
+          "watchlists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Watchlist"
+            }
+          },
+          "access": {
+            "type": "object",
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "enum": [
+                  "plan_required",
+                  null
+                ]
+              }
+            }
+          }
+        }
+      },
+      "WatchlistMemberPage": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "orgnr": {
+                  "type": "string"
+                },
+                "reference": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Your own reference from the import"
+                },
+                "added_at": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "removed_at": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                }
+              }
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "WatchlistImportRequest": {
+        "type": "object",
+        "description": "Either orgnrs or members",
+        "properties": {
+          "orgnrs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "5567037485",
+              "556677-8899"
+            ]
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "orgnr"
+              ],
+              "properties": {
+                "orgnr": {
+                  "type": "string"
+                },
+                "reference": {
+                  "type": "string",
+                  "maxLength": 200
+                }
+              }
+            }
+          }
+        }
+      },
+      "WatchlistImportResponse": {
+        "type": "object",
+        "properties": {
+          "summary": {
+            "type": "object",
+            "properties": {
+              "received": {
+                "type": "integer"
+              },
+              "added": {
+                "type": "integer"
+              },
+              "already_member": {
+                "type": "integer"
+              },
+              "duplicate": {
+                "type": "integer"
+              },
+              "rejected": {
+                "type": "integer"
+              }
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "row",
+                "status"
+              ],
+              "properties": {
+                "row": {
+                  "type": "integer",
+                  "description": "1-based row in the request, excluding a CSV header"
+                },
+                "input": {
+                  "type": "string",
+                  "description": "Submitted value; omitted for personal identity numbers"
+                },
+                "orgnr": {
+                  "type": "string",
+                  "description": "Normalized organization number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "added",
+                    "already_member",
+                    "duplicate",
+                    "rejected"
+                  ]
+                },
+                "reason": {
+                  "type": "string",
+                  "enum": [
+                    "invalid_format",
+                    "invalid_checksum",
+                    "personal_identity_number",
+                    "not_found",
+                    "limit_exceeded"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "WatchlistEvent": {
+        "type": "object",
+        "required": [
+          "id",
+          "cursor",
+          "type",
+          "orgnr",
+          "reference",
+          "detected_at",
+          "queued_at",
+          "acknowledged_at",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Event id; equals the webhook payload id and timeline event_id for the same change and event type",
+            "example": "evt_0f3c2b1a9d8e7f6a5b4c3d2e1f0a9b8c"
+          },
+          "cursor": {
+            "type": "string",
+            "description": "Position in this inbox"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "company.created",
+              "company.deregistered",
+              "company.name_changed",
+              "company.address_changed",
+              "company.status_changed",
+              "company.tax_status_changed",
+              "company.sni_changed",
+              "company.ceo_changed",
+              "company.board_changed",
+              "company.auditor_changed",
+              "company.ownership_changed",
+              "company.signatory_changed",
+              "company.representative_changed",
+              "company.registration_changed",
+              "company.liquidation_started",
+              "company.liquidation_ended",
+              "company.report_filed",
+              "company.financials_available",
+              "company.bankruptcy_filed",
+              "company.bankruptcy_closed",
+              "company.bankruptcy_distribution",
+              "company.creditor_call",
+              "company.poit_announcement",
+              "company.fi_warning_added"
+            ]
+          },
+          "orgnr": {
+            "type": "string"
+          },
+          "reference": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "detected_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When BolagsAPI detected the change. Not the authority's registration time, which is not known for every source."
+          },
+          "queued_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the event was added to the inbox"
+          },
+          "acknowledged_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "data": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Same object as data in the webhook payload"
+          }
+        }
+      },
+      "WatchlistEventPage": {
+        "type": "object",
+        "properties": {
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WatchlistEvent"
+            }
+          },
+          "next_cursor": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "null when there are no further events right now; poll again with the last event's cursor"
+          }
+        }
+      },
+      "WatchlistAcknowledgeRequest": {
+        "type": "object",
+        "description": "Either event_ids (1-1000) or up_to_cursor",
+        "properties": {
+          "event_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 1000
+          },
+          "up_to_cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "WatchlistAcknowledgeResponse": {
+        "type": "object",
+        "properties": {
+          "updated": {
+            "type": "integer"
+          },
+          "unchanged": {
+            "type": "integer",
+            "description": "Already in the requested state"
+          },
+          "not_found": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Event ids not in this inbox"
+          }
+        }
+      },
       "VatValidationRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -10553,6 +12256,1114 @@
                 }
               }
             }
+          }
+        }
+      },
+      "SectionCoverage": {
+        "type": "object",
+        "description": "Availability, freshness and absence reason for one data section. Fields without a known value are omitted; dates are never estimated.",
+        "required": [
+          "status",
+          "reason",
+          "source_category"
+        ],
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "available",
+              "stale",
+              "not_found",
+              "not_collected",
+              "not_applicable",
+              "unavailable",
+              "unauthorized",
+              "disabled"
+            ],
+            "description": "available/stale: data is returned (stale = older observation or period). not_found: the source was searched and has no record. not_collected: the source has not been obtained for this company; do not read as absence. not_applicable: does not apply to this company (yet). unavailable: could not be returned in this response. unauthorized: requires another plan or module. disabled: the integration is switched off."
+          },
+          "reason": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "plan_required",
+              "module_required",
+              "account_restricted",
+              "integration_disabled",
+              "timeout",
+              "source_error",
+              "no_matching_record",
+              "not_yet_collected",
+              "source_record_missing",
+              "org_form_not_applicable",
+              "first_report_not_due",
+              "processing",
+              "withheld_by_quality_check",
+              "observation_outdated",
+              "newer_period_expected",
+              "filed_report_not_stored",
+              "registration_date_unknown",
+              "figures_not_extracted",
+              null
+            ],
+            "description": "Why a section is absent or outdated. first_report_not_due: the first annual report is not yet due. filed_report_not_stored: a filed report is expected but BolagsAPI has no stored document; this is not evidence that it was not filed. registration_date_unknown: the first due date cannot be derived. figures_not_extracted: a filed report is stored but its figures are not yet available. processing: collection is in progress."
+          },
+          "source_category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "official_register",
+              "annual_report",
+              "public_dataset",
+              "secondary_publication",
+              "derived",
+              null
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "lantmateriet",
+                "lansstyrelsen_stiftelser",
+                "vies",
+                "gleif",
+                "bolagsverket",
+                "scb",
+                "skatteverket",
+                "prv",
+                "poit",
+                "finansinspektionen",
+                "riksbanken",
+                "konsumentverket",
+                "eu",
+                "un",
+                "ofac",
+                "riksdagen",
+                "annual_report_pdf",
+                "public_company_information",
+                "bolagsapi"
+              ]
+            }
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the source was last observed for this section. Omitted when unknown."
+          },
+          "ingested_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When BolagsAPI stored the observation, when tracked separately."
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When a derived value was calculated, when applicable."
+          },
+          "period_end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
+            "description": "Latest reporting period represented by the section."
+          },
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ]
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "quarantined",
+              "checked",
+              "partial"
+            ],
+            "description": "Never verified: stored legacy flags are not review evidence."
+          },
+          "completeness": {
+            "type": "string",
+            "enum": [
+              "complete",
+              "partial"
+            ]
+          },
+          "required_tier": {
+            "type": "string",
+            "enum": [
+              "starter",
+              "pro",
+              "business"
+            ]
+          },
+          "due_date": {
+            "type": "string",
+            "format": "date",
+            "description": "When the first annual report is expected under the ordinary filing window. Present for annual_reports without a stored report."
+          }
+        }
+      },
+      "CompanyCoverage": {
+        "type": "object",
+        "description": "Returned with ?include=coverage. Lists the sections whose status can be stated for this response; sections not requested with include are omitted.",
+        "required": [
+          "version",
+          "sections"
+        ],
+        "properties": {
+          "version": {
+            "type": "integer",
+            "enum": [
+              1
+            ]
+          },
+          "sections": {
+            "type": "object",
+            "properties": {
+              "tax_status": {
+                "$ref": "#/components/schemas/SectionCoverage"
+              },
+              "annual_reports": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Stored annual report documents: filing duty, first report not yet due and a missing stored document are separate outcomes."
+              },
+              "financials": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Present with include=financials."
+              },
+              "fi": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Present with include=fi. not_found means no FI record matched the organization number or name; it is not an identity clearance."
+              },
+              "ko": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Present with include=ko. not_found means no Konsumentverket record matched the organization number or name."
+              },
+              "prv": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Present with include=prv."
+              },
+              "signatories": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Stored signatory rules (firmateckning). Same plan and account restrictions as /signatories; the content is not included."
+              },
+              "persons": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Stored board, executive and auditor roles. Same plan and account restrictions as /persons; the content is not included."
+              },
+              "beneficial_owners": {
+                "$ref": "#/components/schemas/SectionCoverage",
+                "description": "Present while the official beneficial owner integration is disabled."
+              },
+              "brf": {
+                "$ref": "#/components/schemas/SectionCoverage"
+              }
+            }
+          }
+        }
+      },
+      "CoverageCounts": {
+        "type": "object",
+        "required": [
+          "active_companies",
+          "first_report_not_due",
+          "annual_report_expected",
+          "with_annual_report",
+          "annual_report_share",
+          "with_financials",
+          "financials_share"
+        ],
+        "properties": {
+          "active_companies": {
+            "type": "integer",
+            "description": "Active organizations, each counted once. Alternative company names are not extra companies."
+          },
+          "annual_report_requirement": {
+            "type": "string",
+            "enum": [
+              "required",
+              "not_assessed"
+            ],
+            "description": "required for AB, BRF and EK. not_assessed: the group is not classified as annual report filers here."
+          },
+          "first_report_not_due": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Active companies whose first annual report is not yet due."
+          },
+          "annual_report_expected": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "description": "Active companies expected to have filed at least one annual report (the denominator for annual_report_share)."
+          },
+          "with_annual_report": {
+            "type": "integer",
+            "description": "Active companies with at least one stored annual report document."
+          },
+          "annual_report_share": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Percent of annual_report_expected with a stored report, one decimal."
+          },
+          "with_financials": {
+            "type": "integer",
+            "description": "Active companies with at least one stored financial period from any supported source."
+          },
+          "financials_share": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "description": "Percent of active_companies with stored financials, one decimal."
+          }
+        }
+      },
+      "CoverageSummary": {
+        "type": "object",
+        "required": [
+          "snapshot_date",
+          "observed_at",
+          "counting",
+          "forms",
+          "totals"
+        ],
+        "properties": {
+          "snapshot_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the counts were captured."
+          },
+          "counting": {
+            "type": "string",
+            "enum": [
+              "active_organizations_once"
+            ]
+          },
+          "forms": {
+            "type": "array",
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/CoverageCounts"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "form_group",
+                    "org_forms",
+                    "annual_report_requirement"
+                  ],
+                  "properties": {
+                    "form_group": {
+                      "type": "string",
+                      "enum": [
+                        "AB",
+                        "BRF",
+                        "EK",
+                        "other"
+                      ]
+                    },
+                    "org_forms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "totals": {
+            "$ref": "#/components/schemas/CoverageCounts",
+            "description": "All groups. Annual report fields cover AB, BRF and EK only."
+          }
+        }
+      },
+      "SupplierRuleEvidence": {
+        "type": "object",
+        "required": [
+          "field",
+          "value",
+          "source_category"
+        ],
+        "description": "A stored observation the rule used. Fields without a known value are omitted.",
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Response field the value refers to, e.g. tax_status.vat or income_statement.revenue."
+          },
+          "value": {
+            "type": [
+              "string",
+              "number",
+              "boolean",
+              "null"
+            ]
+          },
+          "source_category": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "official_register",
+              "annual_report",
+              "public_dataset",
+              "secondary_publication",
+              "derived",
+              null
+            ]
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "lantmateriet",
+                "lansstyrelsen_stiftelser",
+                "vies",
+                "gleif",
+                "bolagsverket",
+                "scb",
+                "skatteverket",
+                "prv",
+                "poit",
+                "finansinspektionen",
+                "riksbanken",
+                "konsumentverket",
+                "eu",
+                "un",
+                "ofac",
+                "riksdagen",
+                "annual_report_pdf",
+                "public_company_information",
+                "bolagsapi"
+              ]
+            }
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "ingested_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "period_end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$"
+          },
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ]
+          },
+          "accounting_scope": {
+            "type": "string"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "unverified",
+              "quarantined",
+              "checked",
+              "partial"
+            ],
+            "description": "Stored annual report figures are unverified; a pass is not certification."
+          }
+        }
+      },
+      "SupplierRuleResult": {
+        "type": "object",
+        "required": [
+          "id",
+          "applicability",
+          "outcome",
+          "reason",
+          "observed_at",
+          "evidence"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "registration_active",
+              "no_insolvency_or_liquidation",
+              "f_tax_registered",
+              "vat_registered",
+              "annual_report_current",
+              "auditor_opinion",
+              "beneficial_owners",
+              "min_revenue",
+              "min_net_income",
+              "min_equity",
+              "min_equity_ratio"
+            ]
+          },
+          "applicability": {
+            "type": "string",
+            "enum": [
+              "applicable",
+              "not_applicable"
+            ]
+          },
+          "outcome": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "pass",
+              "fail",
+              "unknown",
+              null
+            ],
+            "description": "null only when not_applicable. unknown: the data needed is missing, restricted, outdated or could not be read."
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "registered_active",
+              "no_ongoing_procedure",
+              "f_tax_registered",
+              "vat_registered",
+              "report_current",
+              "auditor_opinion_unmodified",
+              "threshold_met",
+              "deregistered",
+              "ongoing_procedure_reported",
+              "f_tax_not_registered",
+              "vat_not_registered",
+              "report_overdue",
+              "auditor_opinion_modified",
+              "threshold_not_met",
+              "registration_status_unknown",
+              "procedures_not_collected",
+              "tax_registration_unknown",
+              "source_unavailable",
+              "access_restricted",
+              "no_report_stored",
+              "report_may_be_pending",
+              "registration_date_unknown",
+              "auditor_opinion_not_observed",
+              "no_financials_stored",
+              "org_form_without_public_accounts",
+              "scope_not_reported",
+              "financials_quarantined",
+              "currency_mismatch",
+              "newer_period_not_extracted",
+              "financial_period_outdated",
+              "field_not_reported",
+              "integration_disabled",
+              "not_evaluated_in_rule_set",
+              "stale_observation",
+              "newer_report_not_collected",
+              "report_period_unknown",
+              "org_form_not_applicable",
+              "first_report_not_due",
+              "entity_not_active"
+            ]
+          },
+          "observed_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Oldest source observation among the evidence; null when not tracked."
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierRuleEvidence"
+            }
+          }
+        }
+      },
+      "SupplierCheckResponse": {
+        "type": "object",
+        "required": [
+          "orgnr",
+          "name",
+          "template",
+          "rule_set_version",
+          "evaluation_date",
+          "evaluated_at",
+          "policy",
+          "summary",
+          "rules",
+          "disabled_checks",
+          "coverage",
+          "reproducibility"
+        ],
+        "properties": {
+          "orgnr": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "template": {
+            "type": "string",
+            "enum": [
+              "se_supplier"
+            ]
+          },
+          "rule_set_version": {
+            "type": "string",
+            "enum": [
+              "1.0.0"
+            ]
+          },
+          "evaluation_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date used for every freshness comparison."
+          },
+          "evaluated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "policy": {
+            "type": "object",
+            "description": "Your selection, echoed back. Facts are in rules[].evidence.",
+            "required": [
+              "rules",
+              "thresholds",
+              "currency",
+              "accounting_scope",
+              "report_grace_days"
+            ],
+            "properties": {
+              "rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "registration_active",
+                    "no_insolvency_or_liquidation",
+                    "f_tax_registered",
+                    "vat_registered",
+                    "annual_report_current",
+                    "auditor_opinion",
+                    "beneficial_owners",
+                    "min_revenue",
+                    "min_net_income",
+                    "min_equity",
+                    "min_equity_ratio"
+                  ]
+                }
+              },
+              "thresholds": {
+                "type": "object",
+                "properties": {
+                  "min_revenue": {
+                    "type": "number"
+                  },
+                  "min_net_income": {
+                    "type": "number"
+                  },
+                  "min_equity": {
+                    "type": "number"
+                  },
+                  "min_equity_ratio": {
+                    "type": "number"
+                  }
+                }
+              },
+              "currency": {
+                "type": "string",
+                "enum": [
+                  "SEK"
+                ]
+              },
+              "accounting_scope": {
+                "type": "string",
+                "enum": [
+                  "company",
+                  "group"
+                ]
+              },
+              "report_grace_days": {
+                "type": "integer"
+              }
+            }
+          },
+          "summary": {
+            "type": "object",
+            "required": [
+              "outcome",
+              "complete",
+              "partial",
+              "counts",
+              "failed_rules",
+              "unknown_rules",
+              "coverage"
+            ],
+            "properties": {
+              "outcome": {
+                "type": "string",
+                "enum": [
+                  "pass",
+                  "fail",
+                  "incomplete"
+                ],
+                "description": "fail if any rule fails; incomplete if none fails but any is unknown; pass only when every applicable rule passes."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Every applicable rule has pass or fail and no used data section is a gap."
+              },
+              "partial": {
+                "type": "boolean",
+                "description": "A data section could not be read in this response; retry later."
+              },
+              "counts": {
+                "type": "object",
+                "properties": {
+                  "pass": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "fail": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "unknown": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "not_applicable": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              },
+              "failed_rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "registration_active",
+                    "no_insolvency_or_liquidation",
+                    "f_tax_registered",
+                    "vat_registered",
+                    "annual_report_current",
+                    "auditor_opinion",
+                    "beneficial_owners",
+                    "min_revenue",
+                    "min_net_income",
+                    "min_equity",
+                    "min_equity_ratio"
+                  ]
+                }
+              },
+              "unknown_rules": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "registration_active",
+                    "no_insolvency_or_liquidation",
+                    "f_tax_registered",
+                    "vat_registered",
+                    "annual_report_current",
+                    "auditor_opinion",
+                    "beneficial_owners",
+                    "min_revenue",
+                    "min_net_income",
+                    "min_equity",
+                    "min_equity_ratio"
+                  ]
+                }
+              },
+              "coverage": {
+                "type": "object",
+                "description": "Coverage summary of the sections below (checked, stale, gaps, not_applicable)."
+              }
+            }
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SupplierRuleResult"
+            }
+          },
+          "disabled_checks": {
+            "type": "array",
+            "description": "Checks that are switched off and not part of any result, e.g. beneficial owners.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "enum": [
+                    "beneficial_owners"
+                  ]
+                },
+                "status": {
+                  "type": "string"
+                },
+                "reason": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "coverage": {
+            "type": "object",
+            "required": [
+              "version",
+              "sections"
+            ],
+            "properties": {
+              "version": {
+                "type": "integer",
+                "enum": [
+                  1
+                ]
+              },
+              "sections": {
+                "type": "object",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/SectionCoverage"
+                },
+                "description": "registration, tax_status, annual_reports, financials and beneficial_owners, for the selected rules."
+              }
+            }
+          },
+          "reproducibility": {
+            "type": "object",
+            "required": [
+              "facts_digest",
+              "rule_set_version",
+              "evaluation_date"
+            ],
+            "properties": {
+              "facts_digest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "description": "Digest of policy, evidence and coverage. Equal digests mean equal inputs."
+              },
+              "rule_set_version": {
+                "type": "string"
+              },
+              "evaluation_date": {
+                "type": "string",
+                "format": "date"
+              }
+            }
+          }
+        }
+      },
+      "ProfessionalContact": {
+        "type": "object",
+        "required": [
+          "kind",
+          "channel",
+          "value",
+          "role",
+          "status",
+          "confidence",
+          "source_url",
+          "extraction_method",
+          "first_observed_at",
+          "observed_at",
+          "verified_at",
+          "expires_at",
+          "context"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "company",
+              "role",
+              "person",
+              "recruiting",
+              "procurement"
+            ],
+            "description": "company: general company channel. role: function inbox. person: named contact. recruiting/procurement: tied to one job ad or notice."
+          },
+          "channel": {
+            "type": "string",
+            "enum": [
+              "email",
+              "phone",
+              "linkedin"
+            ]
+          },
+          "value": {
+            "type": "string",
+            "description": "Email address, E.164 phone number or LinkedIn URL exactly as published (normalized). LinkedIn URLs are never visited by BolagsAPI."
+          },
+          "role": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "general",
+              "sales",
+              "support",
+              "press",
+              "recruiting",
+              "invoicing",
+              "procurement",
+              "booking",
+              "privacy",
+              null
+            ],
+            "description": "Function of the inbox or number. null when not stated."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "published"
+            ]
+          },
+          "confidence": {
+            "type": "string",
+            "enum": [
+              "high",
+              "medium"
+            ],
+            "description": "Band for how directly the page states the value."
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Company-controlled page where the value was observed."
+          },
+          "extraction_method": {
+            "type": "string",
+            "enum": [
+              "mailto",
+              "tel_link",
+              "visible_text",
+              "json_ld",
+              "microdata",
+              "page_link",
+              "customer_supplied"
+            ],
+            "description": "How the page publishes the value, for example a mailto link, visible text or structured data."
+          },
+          "first_observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "First time the value was observed on this page."
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Most recent observation on this page."
+          },
+          "verified_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Most recent time the source page still listed the value."
+          },
+          "expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The value is not served after this time unless observed again."
+          },
+          "context": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "description": "Set for contacts that belong to one job ad or procurement notice.",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "job_ad",
+                  "procurement_notice"
+                ]
+              },
+              "reference": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "ProfessionalContactPerson": {
+        "type": "object",
+        "description": "Named, web-published person. Not available yet; reserved for a later release.",
+        "required": [
+          "name",
+          "web_title",
+          "registered_role",
+          "identity_link",
+          "contacts"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "web_title": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "properties": {
+              "value": {
+                "type": "string"
+              },
+              "source_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "observed_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "registered_role": {
+            "type": "null",
+            "description": "Registered roles are separate assertions and are not inferred from the web title."
+          },
+          "identity_link": {
+            "type": "string",
+            "enum": [
+              "not_linked",
+              "linked",
+              "ambiguous"
+            ],
+            "description": "not_linked: the web-published name is not matched to a registered person."
+          },
+          "contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfessionalContact"
+            }
+          }
+        }
+      },
+      "ProfessionalContactsResponse": {
+        "type": "object",
+        "required": [
+          "orgnr",
+          "company_contacts",
+          "role_contacts",
+          "people",
+          "people_access",
+          "data_status",
+          "retry_after_seconds",
+          "last_crawled_at",
+          "usage_notice"
+        ],
+        "properties": {
+          "orgnr": {
+            "type": "string"
+          },
+          "company_contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfessionalContact"
+            }
+          },
+          "role_contacts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfessionalContact"
+            }
+          },
+          "people": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProfessionalContactPerson"
+            }
+          },
+          "people_access": {
+            "type": "string",
+            "enum": [
+              "disabled",
+              "not_entitled",
+              "not_requested",
+              "rate_limited",
+              "enabled"
+            ],
+            "description": "Why people is empty or filled. disabled: named contacts are not offered."
+          },
+          "data_status": {
+            "type": "string",
+            "enum": [
+              "fresh",
+              "refreshing",
+              "queued",
+              "not_found",
+              "failed",
+              "stale"
+            ]
+          },
+          "retry_after_seconds": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "last_crawled_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "description": "Last time the company website was checked for contacts."
+          },
+          "usage_notice": {
+            "type": "object",
+            "required": [
+              "en",
+              "sv"
+            ],
+            "properties": {
+              "en": {
+                "type": "string"
+              },
+              "sv": {
+                "type": "string"
+              }
+            },
+            "description": "Contact data does not establish permission for direct marketing."
+          },
+          "meta": {
+            "$ref": "#/components/schemas/SourceMeta"
           }
         }
       },
@@ -12651,6 +15462,10 @@
             "$ref": "#/components/schemas/CompanyFinancialsResponse",
             "description": "Latest financial data (only included with ?include=financials, Starter+ plans)"
           },
+          "coverage": {
+            "$ref": "#/components/schemas/CompanyCoverage",
+            "description": "Availability, freshness and absence reason per data section (only included with ?include=coverage)"
+          },
           "board": {
             "type": "object",
             "description": "Board composition statistics (included when enrichment data exists)",
@@ -13980,6 +16795,10 @@
         "type": "object",
         "description": "Signatory rules (firmateckning) for a company",
         "properties": {
+          "coverage": {
+            "$ref": "#/components/schemas/SectionCoverage",
+            "description": "Availability, freshness and absence reason for this snapshot, in the shared section coverage format."
+          },
           "foundation": {
             "$ref": "#/components/schemas/Foundation"
           },
@@ -14026,6 +16845,10 @@
         "type": "object",
         "description": "Signatories (firmatecknare) with signing rights for a company",
         "properties": {
+          "coverage": {
+            "$ref": "#/components/schemas/SectionCoverage",
+            "description": "Availability, freshness and absence reason for this snapshot, in the shared section coverage format."
+          },
           "foundation": {
             "$ref": "#/components/schemas/Foundation"
           },
@@ -14103,6 +16926,10 @@
         "type": "object",
         "description": "Board members, executives, and auditors for a company",
         "properties": {
+          "coverage": {
+            "$ref": "#/components/schemas/SectionCoverage",
+            "description": "Availability, freshness and absence reason for this snapshot, in the shared section coverage format."
+          },
           "foundation": {
             "$ref": "#/components/schemas/Foundation"
           },
@@ -15966,6 +18793,7 @@
                 "company.representative_changed",
                 "company.registration_changed",
                 "company.liquidation_started",
+                "company.liquidation_ended",
                 "company.report_filed",
                 "company.financials_available",
                 "company.bankruptcy_filed",
@@ -15986,7 +18814,7 @@
                 "items": {
                   "type": "string"
                 },
-                "description": "Only trigger for these organization numbers"
+                "description": "Only trigger for these organization numbers. A ten-digit personal identity number also matches events for its single registered twelve-digit identity; the event orgnr then has twelve digits."
               },
               "sni_codes": {
                 "type": "array",
@@ -16001,6 +18829,14 @@
                   "type": "string"
                 },
                 "description": "Only trigger for companies in these cities"
+              },
+              "watchlist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 50,
+                "description": "Only trigger for members of these watchlists (your own)"
               }
             }
           },
@@ -16069,6 +18905,7 @@
                 "company.representative_changed",
                 "company.registration_changed",
                 "company.liquidation_started",
+                "company.liquidation_ended",
                 "company.report_filed",
                 "company.financials_available",
                 "company.bankruptcy_filed",
@@ -16089,7 +18926,7 @@
                 "items": {
                   "type": "string"
                 },
-                "description": "Only trigger for these organization numbers",
+                "description": "Only trigger for these organization numbers. A ten-digit personal identity number also matches events for its single registered twelve-digit identity; the event orgnr then has twelve digits.",
                 "example": [
                   "5567037485",
                   "5591234567"
@@ -16115,6 +18952,17 @@
                 "example": [
                   "Stockholm",
                   "Göteborg"
+                ]
+              },
+              "watchlist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 50,
+                "description": "Only trigger for companies that were members of these watchlists (your own) when the change was detected",
+                "example": [
+                  "wl_3f9a1c2b4d5e6f70"
                 ]
               }
             }
@@ -16148,6 +18996,7 @@
                 "company.representative_changed",
                 "company.registration_changed",
                 "company.liquidation_started",
+                "company.liquidation_ended",
                 "company.report_filed",
                 "company.financials_available",
                 "company.bankruptcy_filed",
@@ -16167,7 +19016,7 @@
                 "items": {
                   "type": "string"
                 },
-                "description": "Only trigger for these organization numbers"
+                "description": "Only trigger for these organization numbers. A ten-digit personal identity number also matches events for its single registered twelve-digit identity; the event orgnr then has twelve digits."
               },
               "sni_codes": {
                 "type": "array",
@@ -16182,6 +19031,14 @@
                   "type": "string"
                 },
                 "description": "Only trigger for companies in these cities"
+              },
+              "watchlist_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 50,
+                "description": "Only trigger for members of these watchlists (your own)"
               }
             }
           },
@@ -16264,6 +19121,7 @@
               "company.representative_changed",
               "company.registration_changed",
               "company.liquidation_started",
+              "company.liquidation_ended",
               "company.report_filed",
               "company.financials_available",
               "company.bankruptcy_filed",
@@ -16304,6 +19162,7 @@
         "properties": {
           "id": {
             "type": "string",
+            "description": "Event ID. Stable for the same change and event type; use it to deduplicate.",
             "example": "evt_abc123def456"
           },
           "type": {
@@ -16324,6 +19183,7 @@
               "company.representative_changed",
               "company.registration_changed",
               "company.liquidation_started",
+              "company.liquidation_ended",
               "company.report_filed",
               "company.financials_available",
               "company.bankruptcy_filed",
@@ -16344,6 +19204,11 @@
               "orgnr": {
                 "type": "string",
                 "example": "5567037485"
+              },
+              "detected_at": {
+                "type": "string",
+                "format": "date-time",
+                "description": "When BolagsAPI detected the change. The payload timestamp is when the event was queued; the authority's own registration time is not included."
               },
               "previous_sni_codes": {
                 "type": "array",
@@ -16395,6 +19260,24 @@
                 "nullable": true,
                 "example": "46390"
               },
+              "procedures": {
+                "type": "object",
+                "description": "For company.liquidation_started and company.liquidation_ended: procedures that started or ended in this change",
+                "properties": {
+                  "started": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ProcedureTransition"
+                    }
+                  },
+                  "ended": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/ProcedureTransition"
+                    }
+                  }
+                }
+              },
               "change": {
                 "type": "object",
                 "properties": {
@@ -16412,7 +19295,8 @@
                   "old_values": {
                     "type": "object",
                     "nullable": true,
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "description": "Previous values when known; null when the source reports only the new state, for example a POIT announcement."
                   },
                   "new_values": {
                     "type": "object",
@@ -16959,11 +19843,66 @@
               "bankruptcy_distribution",
               "creditor_call",
               "poit_announcement",
-              "case_received"
+              "case_received",
+              "name_changed",
+              "tax_status_changed",
+              "sni_changed",
+              "ceo_changed",
+              "board_changed",
+              "auditor_changed",
+              "ownership_changed",
+              "signatory_changed",
+              "representative_changed",
+              "registration_changed",
+              "liquidation_started",
+              "liquidation_ended",
+              "fi_warning_added"
             ]
           },
           "description": {
             "type": "string"
+          },
+          "event_type": {
+            "type": "string",
+            "enum": [
+              "company.created",
+              "company.deregistered",
+              "company.name_changed",
+              "company.address_changed",
+              "company.status_changed",
+              "company.tax_status_changed",
+              "company.sni_changed",
+              "company.ceo_changed",
+              "company.board_changed",
+              "company.auditor_changed",
+              "company.ownership_changed",
+              "company.signatory_changed",
+              "company.representative_changed",
+              "company.registration_changed",
+              "company.liquidation_started",
+              "company.liquidation_ended",
+              "company.report_filed",
+              "company.financials_available",
+              "company.bankruptcy_filed",
+              "company.bankruptcy_closed",
+              "company.bankruptcy_distribution",
+              "company.creditor_call",
+              "company.poit_announcement",
+              "company.fi_warning_added"
+            ],
+            "description": "Webhook event type of an entry derived from a detected change"
+          },
+          "event_id": {
+            "type": "string",
+            "description": "Stable event id; equals the webhook payload id for the same change and event type",
+            "example": "evt_0f3c2b1a9d8e7f6a5b4c3d2e1f0a9b8c"
+          },
+          "procedures": {
+            "type": "array",
+            "description": "Procedures that started or ended, on liquidation_started and liquidation_ended",
+            "items": {
+              "$ref": "#/components/schemas/ProcedureTransition"
+            }
           },
           "case_number": {
             "type": "string",
@@ -16989,6 +19928,37 @@
             "items": {
               "type": "string"
             }
+          }
+        }
+      },
+      "ProcedureTransition": {
+        "type": "object",
+        "required": [
+          "code",
+          "date",
+          "outcome_code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Bolagsverket procedure code, for example LI (liquidation), KK (bankruptcy) or FUOL (transferor in merger)",
+            "example": "LI"
+          },
+          "date": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Date reported with the procedure by the source; null when absent",
+            "example": "2026-04-28"
+          },
+          "outcome_code": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Source outcome code when the procedure ended with one, for example LIUHOR; null otherwise",
+            "example": null
           }
         }
       },

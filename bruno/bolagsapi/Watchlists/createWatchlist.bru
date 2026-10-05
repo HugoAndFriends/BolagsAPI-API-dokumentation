@@ -1,0 +1,32 @@
+meta {
+  name: createWatchlist
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/v1/watchlists
+  body: json
+  auth: bearer
+}
+
+headers {
+  Accept: application/json
+  Content-Type: application/json
+}
+
+auth:bearer {
+  token: {{bearerToken}}
+}
+
+body:json {
+  {
+    "name": "Suppliers",
+    "description": "Companies we buy from"
+  }
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

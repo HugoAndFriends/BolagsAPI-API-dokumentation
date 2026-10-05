@@ -630,6 +630,54 @@
           }
         },
         {
+          "name": "getProfessionalContacts",
+          "request": {
+            "name": "Get professional contacts with provenance",
+            "description": "Get professional contacts with provenance\n\nCompany and role contacts that the company publishes on its own verified website, each with its source page, extraction method, observed/verified/expiry timestamps and a confidence band. Only current, published observations are returned; expired, removed or suppressed values are never served. Contacts tied to a job ad or procurement notice stay in role_contacts with their context and are not general company contacts. Named people are not available yet: people is empty and people_access explains why. An empty collection means no qualifying contact was found, not that the company has none. The legacy /contact endpoint is unchanged. Contacts are published by the company on its own website. This data does not by itself establish consent or another legal basis for direct marketing; check the rules that apply to your use (for example GDPR and the Swedish Marketing Act) before contacting anyone. Requires Starter plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/contacts",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "contacts"
+              ],
+              "query": [
+                {
+                  "key": "include",
+                  "value": "",
+                  "description": "Comma-separated. `people` requests named contacts; they are returned only when enabled for your account.",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "getCompany",
           "request": {
             "name": "Get company information",
@@ -647,8 +695,8 @@
               "query": [
                 {
                   "key": "include",
-                  "value": "financials,fi,prv",
-                  "description": "Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans)",
+                  "value": "financials,fi,prv,coverage",
+                  "description": "Include additional data. Comma-separated values: 'financials' for financial data, 'fi' for FI regulatory data, 'prv' for trademarks/patents (Starter+ plans), 'coverage' for availability, freshness and absence reason per data section (all plans; restricted sections are reported as unauthorized without their content)",
                   "disabled": true
                 },
                 {
@@ -3044,6 +3092,96 @@
       "description": "Company analytics and insights",
       "item": [
         {
+          "name": "getSupplierCheck",
+          "request": {
+            "name": "Explainable supplier check (Pro+)",
+            "description": "Explainable supplier check (Pro+)\n\nEvaluate the versioned se_supplier rule set on stored data: registration, ongoing insolvency or liquidation, F-tax, VAT, annual report freshness, optional auditor opinion and optional financial thresholds you choose. Each rule returns applicability, pass/fail/unknown, a reason code and evidence. Unknown is never counted as pass; beneficial owners are reported as disabled, not passed. No AI and no upstream calls: the same data, policy, date and rule_set_version give the same outcome. Each stored source is read with a short timeout; if one cannot be read, the response is 200 with summary.partial=true and the affected rules unknown. One enrichment request, billed also when partial; the check never triggers paid lookups. rule_set_version changes whenever rule semantics, defaults or reason codes change; keep reproducibility with your decision. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/supplier-check",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "supplier-check"
+              ],
+              "query": [
+                {
+                  "key": "rules",
+                  "value": "registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current",
+                  "description": "Comma-separated rules to evaluate. Default: registration_active,no_insolvency_or_liquidation,f_tax_registered,vat_registered,annual_report_current. Optional: auditor_opinion, beneficial_owners. Financial threshold rules are selected with their own parameters.",
+                  "disabled": true
+                },
+                {
+                  "key": "min_revenue",
+                  "value": "",
+                  "description": "Minimum exact net revenue in SEK. Selects the min_revenue rule.",
+                  "disabled": true
+                },
+                {
+                  "key": "min_net_income",
+                  "value": "",
+                  "description": "Minimum net income in SEK. Selects the min_net_income rule.",
+                  "disabled": true
+                },
+                {
+                  "key": "min_equity",
+                  "value": "",
+                  "description": "Minimum equity in SEK. Selects the min_equity rule.",
+                  "disabled": true
+                },
+                {
+                  "key": "min_equity_ratio",
+                  "value": "",
+                  "description": "Minimum equity ratio in percent. Selects the min_equity_ratio rule.",
+                  "disabled": true
+                },
+                {
+                  "key": "accounting_scope",
+                  "value": "company",
+                  "description": "Accounting scope the thresholds are compared with. Other scopes are never substituted.",
+                  "disabled": true
+                },
+                {
+                  "key": "currency",
+                  "value": "SEK",
+                  "description": "Threshold currency. Only SEK figures are compared.",
+                  "disabled": true
+                },
+                {
+                  "key": "report_grace_days",
+                  "value": "60",
+                  "description": "Days after the next annual report's due date during which a missing report is report_may_be_pending. After that it fails only if a check of Bolagsverket's register, recorded after the grace period, found no newer filed report; otherwise it stays unknown (newer_report_not_collected).",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "getHealthScore",
           "request": {
             "name": "Get company health score (Pro+)",
@@ -3088,7 +3226,7 @@
           "name": "getTimeline",
           "request": {
             "name": "Get company timeline",
-            "description": "Get company timeline\n\nGet a chronological list of company events including registration, report filings, and changes. Pro customers can request Bolagsverket case events with include_cases=true.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get company timeline\n\nGet a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request Bolagsverket case events with include_cases=true.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/timeline",
               "host": [
@@ -4056,7 +4194,7 @@
           "name": "createWebhook",
           "request": {
             "name": "Create webhook",
-            "description": "Create webhook\n\nCreate a new webhook subscription. Requires Pro plan or higher. Each generated delivery counts as one usage unit; automatic retries are included. Use `filters.sni_codes` to subscribe to one or more SNI industries; `company.sni_changed` matches both previous and current SNI sets.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Create webhook\n\nCreate a new webhook subscription. Requires Pro plan or higher. Each generated delivery counts as one usage unit; automatic retries are included. Use `filters.sni_codes` to subscribe to one or more SNI industries; `company.sni_changed` matches both previous and current SNI sets. One change can produce several events, for example `company.name_changed` and `company.address_changed`; each is a separate delivery. For backward compatibility, subscribing to `company.liquidation_started` also delivers `company.liquidation_ended`.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/webhooks",
               "host": [
@@ -4289,6 +4427,647 @@
       ]
     },
     {
+      "name": "Watchlists",
+      "description": "Company watchlists with an event inbox and acknowledgement (Pro+ plans)",
+      "item": [
+        {
+          "name": "listWatchlists",
+          "request": {
+            "name": "List watchlists",
+            "description": "List watchlists\n\nList your watchlists with member and unacknowledged event counts.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "createWatchlist",
+          "request": {
+            "name": "Create watchlist",
+            "description": "Create watchlist\n\nCreate an empty watchlist. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Suppliers\",\n  \"description\": \"Companies we buy from\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "getWatchlist",
+          "request": {
+            "name": "Get watchlist",
+            "description": "Get watchlist\n\nGet one watchlist.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "updateWatchlist",
+          "request": {
+            "name": "Update watchlist",
+            "description": "Update watchlist\n\nRename a watchlist or change its description.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "PATCH",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Active suppliers\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "deleteWatchlist",
+          "request": {
+            "name": "Delete watchlist",
+            "description": "Delete watchlist\n\nDelete the watchlist with its membership history and event inbox. Webhooks that filter on it stop matching.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "listWatchlistMembers",
+          "request": {
+            "name": "List members",
+            "description": "List members\n\nMembers in the order they were added. Set include_removed=true to include removed memberships.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "members"
+              ],
+              "query": [
+                {
+                  "key": "cursor",
+                  "value": "",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "include_removed",
+                  "value": "false",
+                  "description": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "importWatchlistMembers",
+          "request": {
+            "name": "Import members",
+            "description": "Import members\n\nAdd up to 10 000 companies per request as JSON or CSV. Every row gets an outcome. A company already in the list is already_member and keeps its original added_at and reference; a repeat within the same request is duplicate. Personal identity numbers (sole traders) are rejected and not echoed. A company removed earlier and imported again starts a new membership.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/members",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "members"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"members\": [\n    {\n      \"orgnr\": \"{{orgnr}}\",\n      \"reference\": \"supplier-17\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "removeWatchlistMember",
+          "request": {
+            "name": "Remove member",
+            "description": "Remove member\n\nEnd the company's membership. Its earlier events stay in the inbox; no new events are added.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/members/{{orgnr}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "members",
+                "{{orgnr}}"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "DELETE",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "listWatchlistEvents",
+          "request": {
+            "name": "List inbox events",
+            "description": "List inbox events\n\nEvents for member companies in the order they were added to the inbox. Paging with next_cursor never skips an event, also while new events arrive; reading again from an earlier cursor replays the same events with the same ids. An event is added when the company was a member at the change's detected_at. Events are not backfilled from before a company was added or before the list was created.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/events",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "events"
+              ],
+              "query": [
+                {
+                  "key": "cursor",
+                  "value": "",
+                  "description": "Return events after this cursor (from next_cursor or an event's cursor). Omit to start from the oldest event.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "all",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "event_type",
+                  "value": "company.name_changed,company.address_changed",
+                  "description": "Comma-separated webhook event types",
+                  "disabled": true
+                },
+                {
+                  "key": "orgnr",
+                  "value": "",
+                  "description": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "exportWatchlistEvents",
+          "request": {
+            "name": "Export inbox events",
+            "description": "Export inbox events\n\nCSV export with the same filters as the inbox, at most 10 000 rows per request. When more rows remain, the X-Next-Cursor header holds the cursor for the next export.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/events/export",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "events",
+                "export"
+              ],
+              "query": [
+                {
+                  "key": "cursor",
+                  "value": "",
+                  "description": "Return events after this cursor (from next_cursor or an event's cursor). Omit to start from the oldest event.",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10000",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "all",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "event_type",
+                  "value": "company.name_changed,company.address_changed",
+                  "description": "Comma-separated webhook event types",
+                  "disabled": true
+                },
+                {
+                  "key": "orgnr",
+                  "value": "",
+                  "description": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/csv"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "acknowledgeWatchlistEvents",
+          "request": {
+            "name": "Acknowledge events",
+            "description": "Acknowledge events\n\nMark events as handled, by event id or every event up to a cursor. Repeating the call changes nothing.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/events/acknowledge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "events",
+                "acknowledge"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_ids\": [\n    \"{{watchlistEventId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "unacknowledgeWatchlistEvents",
+          "request": {
+            "name": "Undo acknowledgement",
+            "description": "Undo acknowledgement\n\nMark acknowledged events as unhandled again.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/watchlists/{{watchlistId}}/events/unacknowledge",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "watchlists",
+                "{{watchlistId}}",
+                "events",
+                "unacknowledge"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_ids\": [\n    \"{{watchlistEventId}}\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ]
+    },
+    {
       "name": "Regulatory",
       "description": "Finansinspektionen (FI) regulatory data (Starter+ plans)",
       "item": []
@@ -4296,7 +5075,85 @@
     {
       "name": "IP",
       "description": "PRV intellectual property data - trademarks and patents (Starter+ plans)",
-      "item": []
+      "item": [
+        {
+          "name": "getTrademarkDecisions",
+          "request": {
+            "name": "Trademark decisions by Nice class",
+            "description": "Trademark decisions by Nice class\n\nStarter+. PRV trademark registrations, refusals and withdrawals across all applicants, newest decision_date first (then id). Records without a known decision date are omitted. Status reflects the current PRV record: a mark registered and later expired is no longer listed as registered.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/trademarks/decisions",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "trademarks",
+                "decisions"
+              ],
+              "query": [
+                {
+                  "key": "nice_class",
+                  "value": "",
+                  "description": "Comma-separated Nice classes 1–45, e.g. 33 or 32,33. A mark matches when it has at least one of them. Omit for all classes.",
+                  "disabled": true
+                },
+                {
+                  "key": "decision",
+                  "value": "",
+                  "description": "Comma-separated subset of registered, refused, withdrawn. Default: all three.",
+                  "disabled": true
+                },
+                {
+                  "key": "since",
+                  "value": "",
+                  "description": "Decisions on or after this date (YYYY-MM-DD)",
+                  "disabled": true
+                },
+                {
+                  "key": "until",
+                  "value": "",
+                  "description": "Decisions on or before this date (YYYY-MM-DD)",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "50",
+                  "description": "",
+                  "disabled": true
+                },
+                {
+                  "key": "offset",
+                  "value": "0",
+                  "description": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{bearerToken}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ]
     },
     {
       "name": "TaxRates",
@@ -4987,6 +5844,45 @@
                   "type": "string"
                 }
               ]
+            }
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Coverage",
+      "description": "Public data coverage per legal form",
+      "item": [
+        {
+          "name": "getCoverageSummary",
+          "request": {
+            "name": "Data coverage per legal form",
+            "description": "Data coverage per legal form\n\nActive companies and stored annual report and financial coverage for AB, BRF, EK and other forms, from the latest daily snapshot. Each organization is counted once. A stored document or figure shows coverage in BolagsAPI, not whether a company filed. No authentication required.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/public/coverage",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "public",
+                "coverage"
+              ],
+              "query": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
             }
           },
           "event": [],

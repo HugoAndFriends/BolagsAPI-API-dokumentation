@@ -6215,7 +6215,23 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsNotFound"
+                },
+                "example": {
+                  "error": "not_found",
+                  "message": "Organization 19121212-1212 has no annual-report filing duty, so no financial statements are available.",
+                  "hint": "Sole traders (enskild näringsidkare) do not file annual reports with Bolagsverket. This answer is final for the legal form and is not collected again.",
+                  "docs_url": "https://bolagsapi.se/docs/errors#financial-data-availability",
+                  "request_id": "req_abc123",
+                  "data_status": "not_applicable",
+                  "reason": "no_filing_obligation"
+                }
+              }
+            }
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -6309,7 +6325,23 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsNotFound"
+                },
+                "example": {
+                  "error": "not_found",
+                  "message": "Organization 19121212-1212 has no annual-report filing duty, so no financial statements are available.",
+                  "hint": "Sole traders (enskild näringsidkare) do not file annual reports with Bolagsverket. This answer is final for the legal form and is not collected again.",
+                  "docs_url": "https://bolagsapi.se/docs/errors#financial-data-availability",
+                  "request_id": "req_abc123",
+                  "data_status": "not_applicable",
+                  "reason": "no_filing_obligation"
+                }
+              }
+            }
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -6403,7 +6435,23 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "$ref": "#/components/responses/NotFound"
+            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FinancialsNotFound"
+                },
+                "example": {
+                  "error": "not_found",
+                  "message": "Organization 19121212-1212 has no annual-report filing duty, so no financial statements are available.",
+                  "hint": "Sole traders (enskild näringsidkare) do not file annual reports with Bolagsverket. This answer is final for the legal form and is not collected again.",
+                  "docs_url": "https://bolagsapi.se/docs/errors#financial-data-availability",
+                  "request_id": "req_abc123",
+                  "data_status": "not_applicable",
+                  "reason": "no_filing_obligation"
+                }
+              }
+            }
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
@@ -12151,6 +12199,51 @@
             "example": 30
           },
           "message": {
+            "type": "string"
+          }
+        }
+      },
+      "FinancialsNotFound": {
+        "type": "object",
+        "required": [
+          "error",
+          "message",
+          "data_status",
+          "reason"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "const": "not_found"
+          },
+          "message": {
+            "type": "string"
+          },
+          "hint": {
+            "type": "string"
+          },
+          "docs_url": {
+            "type": "string"
+          },
+          "request_id": {
+            "type": "string"
+          },
+          "data_status": {
+            "type": "string",
+            "enum": [
+              "unavailable",
+              "not_applicable"
+            ],
+            "description": "unavailable: no publishable figures for this request. After a completed collection without figures, the same 404 is returned for several days without a new collection; after that, a request can start a new collection. not_applicable: the company's registered legal form (sole trader, enskild näringsidkare) has no annual-report filing duty, so no collection is started."
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "no_parseable_annual_report",
+              "no_filing_obligation"
+            ]
+          },
+          "next_action": {
             "type": "string"
           }
         }

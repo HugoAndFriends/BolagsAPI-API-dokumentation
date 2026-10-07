@@ -6136,7 +6136,7 @@
           "Financials"
         ],
         "summary": "Get full financial data",
-        "description": "Get multi-year financial data parsed from annual reports. Includes income statement, balance sheet, and key ratios. Requires Starter plan or higher. Some fields may be null when K2, condensed annual reports, or PDF-only filings do not expose machine-readable source lines. PDF filing periods without parseable figures are listed in available_periods_without_figures. If no figures are stored yet, collection starts and the endpoint returns HTTP 202 until it completes; 404 means no publishable figures after collection.",
+        "description": "Get multi-year financial data parsed from annual reports. Includes income statement, balance sheet, and key ratios. Requires Starter plan or higher. Some fields may be null when K2, condensed annual reports, or PDF-only filings do not expose machine-readable source lines. PDF filing periods without parseable figures are listed in available_periods_without_figures. All amounts are SEK: a report filed in another currency is translated with Sveriges Riksbank rates (balance sheet at the closing rate, income statement at the fiscal-year average rate) and marked with reported_currency, fx and the filed reported_values; if a needed rate is not yet available, the period is listed with reason currency_conversion_unavailable instead. If no figures are stored yet, collection starts and the endpoint returns HTTP 202 until it completes; 404 means no publishable figures after collection.",
         "operationId": "getFinancials",
         "security": [
           {
@@ -10528,6 +10528,132 @@
           "identifier_precision"
         ]
       },
+      "FinancialFxTranslation": {
+        "type": "object",
+        "description": "Sveriges Riksbank exchange rates used to present a report filed in another currency in SEK. Balance-sheet amounts use the closing rate on the balance-sheet date (the last banking day on or before fiscal_year_end); income-statement amounts use the average rate of the fiscal year (mean of the monthly average rates of its months, also for broken fiscal years). Ratios and employees are not translated: ratios are those of the filed figures. Growth between years is calculated on the SEK amounts and therefore includes exchange-rate effects.",
+        "required": [
+          "source",
+          "quote",
+          "balance_sheet",
+          "income_statement"
+        ],
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "Sveriges Riksbank"
+            ]
+          },
+          "quote": {
+            "type": "string",
+            "example": "SEK per 1 EUR"
+          },
+          "balance_sheet": {
+            "type": "object",
+            "nullable": true,
+            "description": "Null when the report has no balance-sheet amounts.",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": [
+                  "closing_rate"
+                ]
+              },
+              "rate": {
+                "type": "number",
+                "example": 10.818
+              },
+              "rate_date": {
+                "type": "string",
+                "format": "date",
+                "example": "2025-12-30"
+              }
+            }
+          },
+          "income_statement": {
+            "type": "object",
+            "nullable": true,
+            "description": "Null when the report has no income-statement amounts.",
+            "properties": {
+              "method": {
+                "type": "string",
+                "enum": [
+                  "average_rate"
+                ]
+              },
+              "rate": {
+                "type": "number",
+                "example": 11.065
+              },
+              "from_month": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}$",
+                "example": "2025-01"
+              },
+              "to_month": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}$",
+                "example": "2025-12"
+              },
+              "months": {
+                "type": "integer",
+                "example": 12
+              }
+            }
+          }
+        }
+      },
+      "AvailablePeriodWithoutFigures": {
+        "type": "object",
+        "description": "A period with a known annual report but without publishable figures. no_machine_readable_figures: a PDF filing without parseable figures. currency_conversion_unavailable: a report filed in another currency for which an official exchange rate needed for the SEK translation is not yet available; its amounts are not published untranslated.",
+        "properties": {
+          "fiscal_year_end": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
+            "example": "2023-12-31"
+          },
+          "period_precision": {
+            "type": "string",
+            "enum": [
+              "month",
+              "day"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "example": 2023
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "annual_report_pdf",
+              "bolagsverket",
+              "finansinspektionen"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "available"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "no_machine_readable_figures",
+              "currency_conversion_unavailable"
+            ]
+          },
+          "accounting_scope": {
+            "$ref": "#/components/schemas/AccountingScope"
+          },
+          "reported_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "description": "Filed currency, for currency_conversion_unavailable only."
+          }
+        }
+      },
       "AnnouncementFeed": {
         "type": "object",
         "required": [
@@ -11311,7 +11437,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Set when status is failed. calculation_timeout: the selection exceeded the calculation time limit; refresh later or narrow the filters. selection_too_large: more than 100000 companies. queue_timeout: the calculation did not start in time; refresh. calculation_failed: other calculation error."
           },
           "provenance": {
             "type": [
@@ -18482,7 +18609,11 @@
           },
           "currency": {
             "type": "string",
-            "example": "SEK"
+            "enum": [
+              "SEK"
+            ],
+            "example": "SEK",
+            "description": "All amounts are SEK. Reports filed in another currency are translated; see years[].fx."
           },
           "years": {
             "type": "array",
@@ -18492,45 +18623,13 @@
           },
           "available_periods_without_figures": {
             "type": "array",
-            "description": "Annual report periods known to exist as PDF filings, but without machine-readable figures in the current data sources. These periods are not included in years[].",
+            "description": "Annual report periods known to exist but without publishable figures: PDF filings without machine-readable figures, and reports filed in another currency whose SEK translation is not yet possible. These periods are not included in years[].",
             "items": {
               "$ref": "#/components/schemas/AvailablePeriodWithoutFigures"
             }
           },
           "meta": {
             "$ref": "#/components/schemas/SourceMeta"
-          }
-        }
-      },
-      "AvailablePeriodWithoutFigures": {
-        "type": "object",
-        "properties": {
-          "fiscal_year_end": {
-            "type": "string",
-            "pattern": "^\\d{4}-\\d{2}(-\\d{2})?$",
-            "example": "2023-12-31"
-          },
-          "year": {
-            "type": "integer",
-            "example": 2023
-          },
-          "source": {
-            "type": "string",
-            "enum": [
-              "annual_report_pdf"
-            ]
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "available"
-            ]
-          },
-          "reason": {
-            "type": "string",
-            "enum": [
-              "no_machine_readable_figures"
-            ]
           }
         }
       },
@@ -18605,12 +18704,45 @@
           "report_id": {
             "type": "string",
             "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "SEK"
+            ],
+            "description": "Currency of every amount in this year. Present only on translated rows; all other rows are SEK as well."
+          },
+          "reported_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "example": "EUR",
+            "description": "Present only when the annual report was filed in another currency and the amounts were translated to SEK."
+          },
+          "fx": {
+            "$ref": "#/components/schemas/FinancialFxTranslation"
+          },
+          "reported_values": {
+            "type": "object",
+            "nullable": true,
+            "description": "The filed amounts in reported_currency, for translated rows only.",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "example": "EUR"
+              },
+              "income_statement": {
+                "$ref": "#/components/schemas/IncomeStatement"
+              },
+              "balance_sheet": {
+                "$ref": "#/components/schemas/BalanceSheet"
+              }
+            }
           }
         }
       },
       "IncomeStatement": {
         "type": "object",
-        "description": "All values in SEK. Cost lines (cost_of_goods_sold, other_external_costs, operating_costs, personnel_costs, depreciation) are stored as positive numbers; subtract them from revenue to derive profit lines. Nullable fields may be null when K2 or condensed annual reports do not expose the source lines.",
+        "description": "All values in SEK (inside reported_values: the filed currency). Cost lines (cost_of_goods_sold, other_external_costs, operating_costs, personnel_costs, depreciation) are stored as positive numbers; subtract them from revenue to derive profit lines. Nullable fields may be null when K2 or condensed annual reports do not expose the source lines.",
         "properties": {
           "revenue": {
             "type": "integer",
@@ -18691,7 +18823,7 @@
       },
       "BalanceSheet": {
         "type": "object",
-        "description": "All values in SEK",
+        "description": "All values in SEK (inside reported_values: the filed currency)",
         "properties": {
           "total_assets": {
             "type": "integer",
@@ -18879,6 +19011,49 @@
             "nullable": true,
             "example": 25
           },
+          "currency": {
+            "type": "string",
+            "enum": [
+              "SEK"
+            ],
+            "description": "Currency of every amount in this year. Present only on translated rows; all other rows are SEK as well."
+          },
+          "reported_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "example": "EUR",
+            "description": "Present only when the annual report was filed in another currency and the amounts were translated to SEK."
+          },
+          "fx": {
+            "$ref": "#/components/schemas/FinancialFxTranslation"
+          },
+          "reported_values": {
+            "type": "object",
+            "nullable": true,
+            "description": "The filed amounts in reported_currency, for a translated row only.",
+            "properties": {
+              "currency": {
+                "type": "string",
+                "example": "EUR"
+              },
+              "revenue": {
+                "type": "integer",
+                "nullable": true
+              },
+              "net_income": {
+                "type": "integer",
+                "nullable": true
+              },
+              "total_assets": {
+                "type": "integer",
+                "nullable": true
+              },
+              "equity": {
+                "type": "integer",
+                "nullable": true
+              }
+            }
+          },
           "meta": {
             "$ref": "#/components/schemas/SourceMeta"
           }
@@ -18937,6 +19112,12 @@
             "type": "integer",
             "nullable": true,
             "example": 25
+          },
+          "reported_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "example": "EUR",
+            "description": "Present only when the annual report was filed in another currency and the amounts were translated to SEK."
           }
         }
       },
@@ -19037,6 +19218,12 @@
           },
           "quality_status": {
             "$ref": "#/components/schemas/FinancialQualityStatus"
+          },
+          "reported_currency": {
+            "type": "string",
+            "pattern": "^[A-Z]{3}$",
+            "example": "EUR",
+            "description": "Present only for a point translated to SEK from this filed currency."
           }
         }
       },
@@ -19632,6 +19819,23 @@
           },
           "retry_after": {
             "type": "integer"
+          },
+          "subscription_status": {
+            "type": "string",
+            "enum": [
+              "ended"
+            ],
+            "description": "Present on 429 responses when the Free plan's limits apply because the paid subscription has ended."
+          },
+          "subscription_ended_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When the paid subscription ended. Present together with subscription_status."
+          },
+          "billing_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Where the account owner can renew the subscription. Present together with subscription_status."
           }
         },
         "required": [
@@ -23265,7 +23469,7 @@
         }
       },
       "RateLimited": {
-        "description": "Rate limit exceeded",
+        "description": "Per-minute rate limit (`rate_limit_exceeded`) or the Free plan's monthly request limit (`monthly_limit_exceeded`) exceeded. If the limit applies because a paid subscription has ended, the body also contains `subscription_status: ended`, `subscription_ended_at` and `billing_url`.",
         "headers": {
           "Retry-After": {
             "schema": {

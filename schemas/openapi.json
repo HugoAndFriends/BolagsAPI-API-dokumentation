@@ -5634,7 +5634,17 @@
             "name": "fi_licensed",
             "in": "query",
             "required": false,
-            "description": "Has Finansinspektionen license",
+            "deprecated": true,
+            "description": "Unavailable while verified license status is unknown; returns 400 invalid_request. Use fi_registered for stored register entries.",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "fi_registered",
+            "in": "query",
+            "required": false,
+            "description": "Has a stored FI register entry. False means no stored entry, not confirmed absence from FI's register. Neither value establishes a license.",
             "schema": {
               "type": "boolean"
             }
@@ -16170,7 +16180,7 @@
             "items": {
               "$ref": "#/components/schemas/FILicense"
             },
-            "description": "FI licenses held by this company"
+            "description": "Stored FI register entries; registration does not establish a license. The list may be incomplete."
           },
           "warnings": {
             "type": "array",
@@ -16192,36 +16202,37 @@
           },
           "is_licensed": {
             "type": "boolean",
-            "description": "True if company holds any FI licenses"
+            "nullable": true,
+            "description": "Verified license status, or null when unknown. Currently null: register membership alone cannot establish this status."
           }
         }
       },
       "FILicense": {
         "type": "object",
-        "description": "Financial license from Finansinspektionen",
+        "description": "FI register entry; this compatibility shape does not establish a current permission",
         "properties": {
           "category": {
             "type": "string",
-            "description": "License category (e.g., 'Bank', 'Försäkring')",
+            "description": "Recorded register category",
             "example": "Värdepappersbolag"
           },
           "license_type": {
             "type": "string",
             "nullable": true,
-            "description": "Specific license type",
+            "description": "Recorded activity or permission text; may be incomplete",
             "example": "Tillstånd"
           },
           "status": {
             "type": "string",
             "nullable": true,
-            "description": "License status",
+            "description": "Source register status, not verified permission status",
             "example": "Aktivt"
           },
           "granted_date": {
             "type": "string",
             "format": "date",
             "nullable": true,
-            "description": "Date license was granted"
+            "description": "Verified grant date, or null when unknown. Currently null; a source status date is not a grant date."
           }
         }
       },

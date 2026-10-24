@@ -2374,7 +2374,13 @@
                 {
                   "key": "fi_licensed",
                   "value": "",
-                  "description": "Has Finansinspektionen license",
+                  "description": "Unavailable while verified license status is unknown; returns 400 invalid_request. Use fi_registered for stored register entries.",
+                  "disabled": true
+                },
+                {
+                  "key": "fi_registered",
+                  "value": "",
+                  "description": "Has a stored FI register entry. False means no stored entry, not confirmed absence from FI's register. Neither value establishes a license.",
                   "disabled": true
                 },
                 {

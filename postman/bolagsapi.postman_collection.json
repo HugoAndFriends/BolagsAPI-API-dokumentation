@@ -897,8 +897,8 @@
         {
           "name": "getBeneficialOwners",
           "request": {
-            "name": "Get official beneficial owners (Pro)",
-            "description": "Get official beneficial owners (Pro)\n\nReturns registered beneficial owners (verkliga huvudmän) for a company. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Coming soon: get official beneficial owners (Pro)",
+            "description": "Coming soon: get official beneficial owners (Pro)\n\nComing soon — not available yet. Awaiting access to Bolagsverket’s beneficial ownership register; no launch date is confirmed. Currently returns HTTP 503 feature_not_available, including on Pro and Business. After launch: returns registered beneficial owners (verkliga huvudmän) for a company. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/beneficial-owners",
               "host": [
@@ -1440,8 +1440,8 @@
         {
           "name": "getPersonBeneficialOf",
           "request": {
-            "name": "Get companies where a person is official beneficial owner (Pro)",
-            "description": "Get companies where a person is official beneficial owner (Pro)\n\nReturns companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman). This endpoint is separate from general company roles and engagements. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "name": "Coming soon: get companies where a person is official beneficial owner (Pro)",
+            "description": "Coming soon: get companies where a person is official beneficial owner (Pro)\n\nComing soon — not available yet. Awaiting access to Bolagsverket’s beneficial ownership register; no launch date is confirmed. Currently returns HTTP 503 feature_not_available, including on Pro and Business. After launch: returns companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman). This endpoint is separate from general company roles and engagements. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/persons/beneficial-of",
               "host": [
@@ -2374,7 +2374,13 @@
                 {
                   "key": "fi_licensed",
                   "value": "",
-                  "description": "Has Finansinspektionen license",
+                  "description": "Unavailable while verified license status is unknown; returns 400 invalid_request. Use fi_registered for stored register entries.",
+                  "disabled": true
+                },
+                {
+                  "key": "fi_registered",
+                  "value": "",
+                  "description": "Has a stored FI register entry. False means no stored entry, not confirmed absence from FI's register. Neither value establishes a license.",
                   "disabled": true
                 },
                 {

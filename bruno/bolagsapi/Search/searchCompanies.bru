@@ -247,8 +247,10 @@ params:query {
   ~has_financials: 
   @description('Filter subsidiaries of a parent company')
   ~parent_orgnr: 5567037485
-  @description('Has Finansinspektionen license')
+  @description('Unavailable while verified license status is unknown; returns 400 invalid_request. Use fi_registered for stored register entries.')
   ~fi_licensed: 
+  @description("Has a stored FI register entry. False means no stored entry, not confirmed absence from FI's register. Neither value establishes a license.")
+  ~fi_registered: 
   @description('Exclude companies with FI warnings')
   ~no_fi_warnings: 
   @description('Has auditor remarks in reports')

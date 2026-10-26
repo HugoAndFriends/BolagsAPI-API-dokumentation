@@ -3838,8 +3838,8 @@
         "tags": [
           "Company"
         ],
-        "summary": "Get official beneficial owners (Pro)",
-        "description": "Returns registered beneficial owners (verkliga huvudmän) for a company. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.",
+        "summary": "Coming soon: get official beneficial owners (Pro)",
+        "description": "Coming soon — not available yet. Awaiting access to Bolagsverket’s beneficial ownership register; no launch date is confirmed. Currently returns HTTP 503 feature_not_available, including on Pro and Business. After launch: returns registered beneficial owners (verkliga huvudmän) for a company. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.",
         "operationId": "getBeneficialOwners",
         "security": [
           {
@@ -3903,6 +3903,16 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "feature_not_available: coming soon. Awaiting Bolagsverket access; upgrading your plan does not enable this endpoint yet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -3912,8 +3922,8 @@
         "tags": [
           "Person"
         ],
-        "summary": "Get companies where a person is official beneficial owner (Pro)",
-        "description": "Returns companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman). This endpoint is separate from general company roles and engagements. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.",
+        "summary": "Coming soon: get companies where a person is official beneficial owner (Pro)",
+        "description": "Coming soon — not available yet. Awaiting access to Bolagsverket’s beneficial ownership register; no launch date is confirmed. Currently returns HTTP 503 feature_not_available, including on Pro and Business. After launch: returns companies where the supplied personnummer is registered as official beneficial owner (verklig huvudman). This endpoint is separate from general company roles and engagements. Requires Pro or Business. Pro includes 10 official beneficial ownership calls per month, Business includes 100; overage is 4 kr/call on Pro and 3 kr/call on Business.",
         "operationId": "getPersonBeneficialOf",
         "security": [
           {
@@ -3962,6 +3972,16 @@
           },
           "429": {
             "$ref": "#/components/responses/RateLimited"
+          },
+          "503": {
+            "description": "feature_not_available: coming soon. Awaiting Bolagsverket access; upgrading your plan does not enable this endpoint yet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
           }
         }
       }
@@ -16213,13 +16233,14 @@
         "properties": {
           "category": {
             "type": "string",
-            "description": "Recorded register category",
+            "nullable": true,
+            "description": "Single recorded main category; null when absent or ambiguous. See categories when provided.",
             "example": "Värdepappersbolag"
           },
           "license_type": {
             "type": "string",
             "nullable": true,
-            "description": "Recorded activity or permission text; may be incomplete",
+            "description": "Recorded activity or permission text; null when several entries exist. Use permissions when provided; legacy text may be incomplete",
             "example": "Tillstånd"
           },
           "status": {
@@ -16233,6 +16254,131 @@
             "format": "date",
             "nullable": true,
             "description": "Verified grant date, or null when unknown. Currently null; a source status date is not a grant date."
+          },
+          "register_id": {
+            "type": "string",
+            "description": "FI record identifier when available. Several records may refer to the same company."
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "All recorded main category values, when available."
+          },
+          "category_memberships": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Recorded register category memberships, including repeated occurrences; distinct from main categories."
+          },
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FIPermissionObservation"
+            },
+            "description": "Complete recorded permission texts when available; not a certification of current permission."
+          },
+          "registrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FIRegistrationObservation"
+            },
+            "description": "Recorded registrations, kept separate from permissions. Registration alone does not establish a license."
+          },
+          "other_activities": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Other activities as recorded in the source, when available."
+          },
+          "source_status_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Date associated with source register status; not a grant date."
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When this register record was observed; not the start of a permission."
+          }
+        }
+      },
+      "FIPermissionObservation": {
+        "type": "object",
+        "required": [
+          "text",
+          "source_dates",
+          "granted_date"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Full recorded permission entry text, including source notes."
+          },
+          "source_dates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "text",
+                "date"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "nullable": true
+                }
+              }
+            },
+            "description": "Dates printed on the source entry; their meaning is not verified as a grant date."
+          },
+          "granted_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true,
+            "description": "Verified grant date. Currently null."
+          }
+        }
+      },
+      "FIRegistrationObservation": {
+        "type": "object",
+        "required": [
+          "text",
+          "source_dates"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Full recorded registration entry text, including source notes."
+          },
+          "source_dates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "text",
+                "date"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "nullable": true
+                }
+              }
+            },
+            "description": "Dates printed on the registration entry; not permission grant dates."
           }
         }
       },
@@ -17717,6 +17863,10 @@
         "type": "object",
         "description": "List of POIT announcements for a company",
         "properties": {
+          "coverage": {
+            "type": "string",
+            "description": "Coverage limits when provided. Counts describe matching stored publications, not the complete POIT archive."
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
@@ -17753,6 +17903,10 @@
         "type": "object",
         "description": "Summary of POIT announcements (embedded in company response)",
         "properties": {
+          "coverage": {
+            "type": "string",
+            "description": "Coverage limits when provided. An empty summary does not establish that no announcement exists elsewhere."
+          },
           "count": {
             "type": "integer",
             "description": "Total number of announcements",
@@ -17805,13 +17959,17 @@
         "type": "object",
         "description": "Bankruptcy status for a company",
         "properties": {
+          "coverage": {
+            "type": "string",
+            "description": "Coverage limits when provided. A false flag means no matching stored announcement, not a legal-status clearance."
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
           },
           "has_bankruptcy": {
             "type": "boolean",
-            "description": "Whether the company has any bankruptcy announcements"
+            "description": "Whether a matching stored bankruptcy announcement was found; this does not establish current bankruptcy status."
           },
           "bankruptcy": {
             "oneOf": [
@@ -17830,13 +17988,17 @@
         "type": "object",
         "description": "Creditor call status for a company",
         "properties": {
+          "coverage": {
+            "type": "string",
+            "description": "Coverage limits when provided. A false flag means no matching stored announcement, not complete archive coverage."
+          },
           "orgnr": {
             "type": "string",
             "example": "5567037485"
           },
           "has_creditor_call": {
             "type": "boolean",
-            "description": "Whether the company has any creditor call announcements"
+            "description": "Whether a matching stored creditor-call announcement was found."
           },
           "creditor_call": {
             "oneOf": [

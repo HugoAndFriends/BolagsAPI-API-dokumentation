@@ -16280,6 +16280,13 @@
             },
             "description": "Complete recorded permission texts when available; not a certification of current permission."
           },
+          "registrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FIRegistrationObservation"
+            },
+            "description": "Recorded registrations, kept separate from permissions. Registration alone does not establish a license."
+          },
           "other_activities": {
             "type": "array",
             "items": {
@@ -16338,6 +16345,40 @@
             "format": "date",
             "nullable": true,
             "description": "Verified grant date. Currently null."
+          }
+        }
+      },
+      "FIRegistrationObservation": {
+        "type": "object",
+        "required": [
+          "text",
+          "source_dates"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Full recorded registration entry text, including source notes."
+          },
+          "source_dates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "text",
+                "date"
+              ],
+              "properties": {
+                "text": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date",
+                  "nullable": true
+                }
+              }
+            },
+            "description": "Dates printed on the registration entry; not permission grant dates."
           }
         }
       },

@@ -12,6 +12,8 @@ OpenAPI 3.1 schemas and generated Postman/Bruno collections for the published Bo
 
 The snapshots include response field types, required fields, nullable values and enumerations where the API defines closed sets. See [source URLs, synchronization time and checksums](schemas/sources.json). The collection covers the published OpenAPI surface, not internal dashboard endpoints or all Auth features; the linked guides cover the wider products.
 
+**Official beneficial ownership — coming soon.** `GET /v1/company/{orgnr}/beneficial-owners` and `POST /v1/persons/beneficial-of` are not live yet. We are awaiting access from Bolagsverket and have no confirmed launch date. Both currently return HTTP 503 `feature_not_available`, including on Pro and Business. Listed quotas apply after launch; upgrading does not enable these lookups now.
+
 ## Use the collections
 
 **Postman:** import both JSON files in `postman/`, then select **BolagsAPI Production**.

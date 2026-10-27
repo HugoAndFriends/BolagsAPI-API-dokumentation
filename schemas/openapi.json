@@ -6245,7 +6245,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6355,7 +6355,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6465,7 +6465,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: none were found for this request (a collection without figures is not repeated for several days). data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12391,13 +12391,14 @@
               "unavailable",
               "not_applicable"
             ],
-            "description": "unavailable: no publishable figures for this request. After a completed collection without figures, the same 404 is returned for several days without a new collection; after that, a request can start a new collection. not_applicable: the company's registered legal form (sole trader, enskild näringsidkare) has no annual-report filing duty, so no collection is started."
+            "description": "unavailable: no publishable figures for this request. source_quality_review means retained source data cannot yet be published; this response does not start another collection or promise automatic progress. After a completed collection without figures, the same 404 is returned for several days without a new collection; after that, a request can start a new collection. not_applicable: the company's registered legal form (sole trader, enskild näringsidkare) has no annual-report filing duty, so no collection is started."
           },
           "reason": {
             "type": "string",
             "enum": [
               "no_parseable_annual_report",
-              "no_filing_obligation"
+              "no_filing_obligation",
+              "source_quality_review"
             ]
           },
           "next_action": {
@@ -12802,6 +12803,7 @@
                 "ofac",
                 "riksdagen",
                 "annual_report_pdf",
+                "allabolag",
                 "public_company_information",
                 "bolagsapi"
               ]
@@ -13110,6 +13112,7 @@
                 "ofac",
                 "riksdagen",
                 "annual_report_pdf",
+                "allabolag",
                 "public_company_information",
                 "bolagsapi"
               ]
@@ -14177,6 +14180,7 @@
           "ofac",
           "riksdagen",
           "annual_report_pdf",
+          "allabolag",
           "public_company_information",
           "bolagsapi"
         ],
@@ -18825,7 +18829,8 @@
           "balance_sheet",
           "ratios",
           "employees",
-          "report_id"
+          "report_id",
+          "meta"
         ],
         "properties": {
           "period_precision": {
@@ -18882,6 +18887,17 @@
           "report_id": {
             "type": "string",
             "nullable": true
+          },
+          "meta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SourceMeta"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Source attribution for this period, when available. null means period-level attribution is unavailable; it does not mean the financial figures are missing."
           },
           "currency": {
             "type": "string",

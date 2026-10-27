@@ -2549,7 +2549,7 @@
           "name": "searchAnnualReportInsights",
           "request": {
             "name": "Search annual report insights",
-            "description": "Search annual report insights\n\nSearch indexed annual report insights across companies for lead generation and market research. Results include source metadata: PDF rows are AI-extracted summaries, iXBRL rows are deterministic XHTML/source-text snippets.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Search annual report insights\n\nSearch indexed annual report insights across companies for lead generation and market research. Results include source metadata: PDF rows contain AI summaries or source-checked excerpts and facts; iXBRL rows contain source-text snippets.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/reports/insights/search?q={{q}}",
               "host": [
@@ -2705,7 +2705,7 @@
           "name": "getCompanyAnnualReportInsights",
           "request": {
             "name": "Get company annual report insights",
-            "description": "Get company annual report insights\n\nReturn extracted annual report insights for one company across PDF AI extraction and deterministic iXBRL text sources.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get company annual report insights\n\nReturn extracted annual report insights for one company across PDF summaries, source-checked PDF facts and iXBRL text sources.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/reports/insights",
               "host": [

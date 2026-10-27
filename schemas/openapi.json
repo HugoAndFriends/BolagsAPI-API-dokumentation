@@ -2985,7 +2985,7 @@
           "Reports"
         ],
         "summary": "Search annual report insights",
-        "description": "Search indexed annual report insights across companies for lead generation and market research. Results include source metadata: PDF rows are AI-extracted summaries, iXBRL rows are deterministic XHTML/source-text snippets.",
+        "description": "Search indexed annual report insights across companies for lead generation and market research. Results include source metadata: PDF rows contain AI summaries or source-checked excerpts and facts; iXBRL rows contain source-text snippets.",
         "operationId": "searchAnnualReportInsights",
         "security": [
           {
@@ -3180,7 +3180,7 @@
           "Reports"
         ],
         "summary": "Get company annual report insights",
-        "description": "Return extracted annual report insights for one company across PDF AI extraction and deterministic iXBRL text sources.",
+        "description": "Return extracted annual report insights for one company across PDF summaries, source-checked PDF facts and iXBRL text sources.",
         "operationId": "getCompanyAnnualReportInsights",
         "security": [
           {
@@ -14261,9 +14261,10 @@
         "type": "string",
         "enum": [
           "annual_report_pdf_ai_extraction",
-          "annual_report_ixbrl_text"
+          "annual_report_ixbrl_text",
+          "annual_report_pdf_source"
         ],
-        "description": "PDF rows are structured AI-extracted summaries/snippets and are not verbatim OCR. iXBRL rows are deterministic XHTML/source-text snippets and are closer to the filed text."
+        "description": "Legacy PDF rows contain AI-extracted summaries. Source-checked PDF rows contain excerpts and normalized facts, not necessarily verbatim text. iXBRL rows contain source-text snippets."
       },
       "ReportInsightSignalType": {
         "type": "string",
@@ -14570,6 +14571,10 @@
               "annual_report_pdf_ai_extraction": {
                 "type": "string",
                 "example": "Structured AI-extracted summaries/snippets, not verbatim OCR."
+              },
+              "annual_report_pdf_source": {
+                "type": "string",
+                "example": "Source-checked excerpts and normalized facts from the filed PDF; not necessarily verbatim."
               },
               "annual_report_ixbrl_text": {
                 "type": "string",

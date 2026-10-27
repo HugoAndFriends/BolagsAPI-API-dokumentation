@@ -3791,7 +3791,7 @@
             }
           },
           "202": {
-            "description": "No company data is available yet and the lookup is queued or refreshing. Poll after Retry-After. After five minutes pending without data, returns 503 instead. Neither response is billed.",
+            "description": "No company data is available yet and the lookup is queued or refreshing. Poll after Retry-After while the lookup remains queued or refreshing. This response is not billed.",
             "headers": {
               "Retry-After": {
                 "schema": {
@@ -3821,7 +3821,7 @@
             "$ref": "#/components/responses/RateLimited"
           },
           "503": {
-            "description": "person_lookup_failed: no usable company data and lookup failed or exceeded five minutes pending. Stop polling and contact support with request_id. Not billed.",
+            "description": "person_lookup_failed: no usable company data and the lookup failed. Stop polling and contact support with request_id. Not billed.",
             "content": {
               "application/json": {
                 "schema": {

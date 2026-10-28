@@ -84,10 +84,26 @@
           "type": "string"
         },
         "retry_after_seconds": {
-          "type": "integer",
-          "const": 30
+          "type": [
+            "integer",
+            "null"
+          ],
+          "enum": [
+            30,
+            null
+          ],
+          "description": "null ends polling for this attempt; a number permits another check after that many seconds."
         },
         "error": {
+          "type": "string"
+        },
+        "lookup_outcome": {
+          "$ref": "#/$defs/PersonLookupOutcome"
+        },
+        "lookup_message": {
+          "type": "string"
+        },
+        "request_id": {
           "type": "string"
         }
       },
@@ -440,6 +456,19 @@
         }
       }
     },
+    "PersonLookupOutcome": {
+      "type": "string",
+      "enum": [
+        "companies_found",
+        "no_companies_found",
+        "person_not_verified",
+        "not_checked",
+        "pending",
+        "incomplete",
+        "failed"
+      ],
+      "description": "Lookup conclusion, separate from freshness. Only no_companies_found confirms a completed check without engagements in the checked sources. person_not_verified, not_checked, incomplete and failed do not establish absence of engagements."
+    },
     "PersonCompaniesResponse": {
       "type": "object",
       "properties": {
@@ -494,6 +523,13 @@
             "failed"
           ],
           "example": "fresh"
+        },
+        "lookup_outcome": {
+          "$ref": "#/$defs/PersonLookupOutcome"
+        },
+        "lookup_message": {
+          "type": "string",
+          "description": "Human-readable lookup conclusion. Use lookup_outcome for application logic."
         },
         "last_checked_at": {
           "type": [

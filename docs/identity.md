@@ -60,10 +60,21 @@ not a single JSON response: each event's `data` is JSON. The OpenAPI
 
 A completed identity check does not necessarily mean enrichment is ready. Use
 `getIdentityEnrichment` with the same order reference when enrichment is queued
-or refreshing. Follow the documented retry delay. The enrichment endpoint uses
+or refreshing. Poll while `retryAfterSeconds` is a number; `null` ends the current
+attempt, including a terminal failure. The delay is not a completion-time guarantee.
+The enrichment endpoint uses
 HTTP 200 for fresh/stale/not_found, 202 for queued/refreshing and 503 for failed;
 expired follow-up access is a separate HTTP 410 error. Do not treat an unavailable
 lookup as proof that the person has no companies.
+
+`enrichment.bolag.lookup_outcome` distinguishes `companies_found`,
+`no_companies_found`, `person_not_verified`, `not_checked`, `pending`,
+`incomplete` and `failed`. `lookup_message` provides a readable explanation.
+Only `no_companies_found` means that a completed check found no engagements in
+the checked sources. An empty list while pending, an unverified person or an
+incomplete/failed lookup does not establish absence. Terminal failure responses
+include `retry_after_seconds: null`; stop polling that attempt and retain
+`request_id` for support.
 
 `getIdentityUserInfo` belongs to the OIDC flow and needs `authAccessToken`, not the
 REST API key. Claims depend on requested/granted scopes. Optional claims may be

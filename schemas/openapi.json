@@ -3825,7 +3825,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "$ref": "#/components/schemas/PersonLookupError"
                 }
               }
             }
@@ -13905,10 +13905,26 @@
             "type": "string"
           },
           "retry_after_seconds": {
-            "type": "integer",
-            "const": 30
+            "type": [
+              "integer",
+              "null"
+            ],
+            "enum": [
+              30,
+              null
+            ],
+            "description": "null ends polling for this attempt; a number permits another check after that many seconds."
           },
           "error": {
+            "type": "string"
+          },
+          "lookup_outcome": {
+            "$ref": "#/components/schemas/PersonLookupOutcome"
+          },
+          "lookup_message": {
+            "type": "string"
+          },
+          "request_id": {
             "type": "string"
           }
         },
@@ -18413,6 +18429,56 @@
           }
         }
       },
+      "PersonLookupOutcome": {
+        "type": "string",
+        "enum": [
+          "companies_found",
+          "no_companies_found",
+          "person_not_verified",
+          "not_checked",
+          "pending",
+          "incomplete",
+          "failed"
+        ],
+        "description": "Lookup conclusion, separate from freshness. Only no_companies_found confirms a completed check without engagements in the checked sources. person_not_verified, not_checked, incomplete and failed do not establish absence of engagements."
+      },
+      "PersonLookupError": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Error"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string",
+                "const": "person_lookup_failed"
+              },
+              "data_status": {
+                "type": "string",
+                "const": "failed"
+              },
+              "lookup_outcome": {
+                "$ref": "#/components/schemas/PersonLookupOutcome"
+              },
+              "lookup_message": {
+                "type": "string"
+              },
+              "retry_after_seconds": {
+                "type": "null",
+                "description": "This attempt has ended. Stop polling."
+              }
+            },
+            "required": [
+              "error",
+              "data_status",
+              "lookup_outcome",
+              "lookup_message",
+              "retry_after_seconds"
+            ]
+          }
+        ]
+      },
       "PersonCompaniesResponse": {
         "type": "object",
         "properties": {
@@ -18467,6 +18533,13 @@
               "failed"
             ],
             "example": "fresh"
+          },
+          "lookup_outcome": {
+            "$ref": "#/components/schemas/PersonLookupOutcome"
+          },
+          "lookup_message": {
+            "type": "string",
+            "description": "Human-readable lookup conclusion. Use lookup_outcome for application logic."
           },
           "last_checked_at": {
             "type": [

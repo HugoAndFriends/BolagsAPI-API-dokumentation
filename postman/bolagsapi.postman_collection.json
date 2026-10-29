@@ -519,6 +519,142 @@
       "description": "Company lookup and information",
       "item": [
         {
+          "name": "redirectOwners",
+          "request": {
+            "name": "Redirect to ownership",
+            "description": "Redirect to ownership\n\nUse /v1/company/{orgnr}/ownership. This same-origin redirect preserves query parameters. Authentication, tier checks and billing apply at the destination.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/owners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "owners"
+              ],
+              "query": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "headRedirectOwners",
+          "request": {
+            "name": "Redirect to ownership",
+            "description": "Redirect to ownership\n\nUse /v1/company/{orgnr}/ownership. This same-origin redirect preserves query parameters. Authentication, tier checks and billing apply at the destination.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/owners",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "owners"
+              ],
+              "query": []
+            },
+            "method": "HEAD",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "redirectGroupStructure",
+          "request": {
+            "name": "Redirect to group",
+            "description": "Redirect to group\n\nUse /v1/company/{orgnr}/group. This same-origin redirect preserves query parameters. Authentication, tier checks and billing apply at the destination.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/group-structure",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "group-structure"
+              ],
+              "query": []
+            },
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "name": "headRedirectGroupStructure",
+          "request": {
+            "name": "Redirect to group",
+            "description": "Redirect to group\n\nUse /v1/company/{orgnr}/group. This same-origin redirect preserves query parameters. Authentication, tier checks and billing apply at the destination.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "url": {
+              "raw": "{{baseUrl}}/v1/company/{{orgnr}}/group-structure",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "v1",
+                "company",
+                "{{orgnr}}",
+                "group-structure"
+              ],
+              "query": []
+            },
+            "method": "HEAD",
+            "auth": {
+              "type": "noauth"
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
           "name": "getAnnouncementFeed",
           "request": {
             "name": "Company-linked official announcements",
@@ -857,7 +993,7 @@
           "name": "getOwnership",
           "request": {
             "name": "Get ownership information (Pro+)",
-            "description": "Get ownership information (Pro+)\n\nGet ownership information for a company. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get ownership information (Pro+)\n\nGet ownership information for a company. The legacy /owners path redirects here with HTTP 308. A cache miss returns HTTP 202 with Retry-After while public company information is queued. Poll until HTTP 200. Queued responses are not billed. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/ownership",
               "host": [
@@ -3334,7 +3470,7 @@
           "name": "getGroupStructure",
           "request": {
             "name": "Get corporate group structure (Pro+)",
-            "description": "Get corporate group structure (Pro+)\n\nGet the corporate group structure for a company, including ultimate parent, parent chain, siblings, and direct subsidiaries. Uses pre-computed hierarchy data when available. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get corporate group structure (Pro+)\n\nGet the corporate group structure for a company. The legacy /group-structure path redirects here with HTTP 308. Includes ultimate parent, parent chain, siblings, and direct subsidiaries. Uses pre-computed hierarchy data when available. Requires Pro plan or higher.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/group",
               "host": [

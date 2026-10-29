@@ -4,6 +4,10 @@ Generated from `schemas/openapi.json`. This covers the published OpenAPI surface
 
 | Method | Path | Authentication | Operation |
 | --- | --- | --- | --- |
+| GET | `/v1/company/{orgnr}/owners` | none | redirectOwners |
+| HEAD | `/v1/company/{orgnr}/owners` | none | headRedirectOwners |
+| GET | `/v1/company/{orgnr}/group-structure` | none | redirectGroupStructure |
+| HEAD | `/v1/company/{orgnr}/group-structure` | none | headRedirectGroupStructure |
 | POST | `/v1/export/{id}/retain` | bearerAuth | retainExportJob |
 | GET | `/v1/export/{id}` | bearerAuth | getExportJob |
 | GET | `/v1/export/{id}/download` | bearerAuth | downloadExportJob |

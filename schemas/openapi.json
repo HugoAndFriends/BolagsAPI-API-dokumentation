@@ -6620,7 +6620,7 @@
           "Analytics"
         ],
         "summary": "Get company timeline",
-        "description": "Get a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request Bolagsverket case events with include_cases=true.",
+        "description": "Get a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request stored Bolagsverket case events with include_cases=true; when those cases are unavailable, the request returns 503 feature_not_available with retryable=false.",
         "operationId": "getTimeline",
         "security": [
           {
@@ -6695,7 +6695,7 @@
           "Company"
         ],
         "summary": "Get Bolagsverket company cases (Pro+)",
-        "description": "Return normalized company cases and financial-report cases from Bolagsverket. Results are cached for 24 hours. A financial-report case is not the same as a downloadable document; use /reports for documents.",
+        "description": "Return previously stored company cases and financial-report cases from Bolagsverket. Fresh collection is currently unavailable; requests without cached data return 503 feature_not_available with retryable=false. A financial-report case is not the same as a downloadable document; use /reports for documents.",
         "operationId": "getCompanyCases",
         "security": [
           {
@@ -6763,7 +6763,7 @@
             "description": "Bolagsverket upstream error"
           },
           "503": {
-            "description": "Bolagsverket provider quota exhausted"
+            "description": "Case data is unavailable. feature_not_available with retryable=false means automatic retries will not help."
           }
         }
       }

@@ -1,0 +1,20 @@
+meta {
+  name: headRedirectOwners
+  type: http
+  seq: 2
+}
+
+head {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/owners
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

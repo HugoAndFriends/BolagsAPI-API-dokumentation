@@ -1,0 +1,20 @@
+meta {
+  name: headRedirectGroupStructure
+  type: http
+  seq: 4
+}
+
+head {
+  url: {{baseUrl}}/v1/company/{{orgnr}}/group-structure
+  body: none
+  auth: none
+}
+
+headers {
+  Accept: application/json
+}
+
+settings {
+  encodeUrl: true
+  forwardAuthorizationHeader: false
+}

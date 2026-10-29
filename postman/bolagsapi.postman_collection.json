@@ -1242,7 +1242,7 @@
           "name": "getCompanyCases",
           "request": {
             "name": "Get Bolagsverket company cases (Pro+)",
-            "description": "Get Bolagsverket company cases (Pro+)\n\nReturn normalized company cases and financial-report cases from Bolagsverket. Results are cached for 24 hours. A financial-report case is not the same as a downloadable document; use /reports for documents.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get Bolagsverket company cases (Pro+)\n\nReturn previously stored company cases and financial-report cases from Bolagsverket. Fresh collection is currently unavailable; requests without cached data return 503 feature_not_available with retryable=false. A financial-report case is not the same as a downloadable document; use /reports for documents.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/cases",
               "host": [
@@ -3232,7 +3232,7 @@
           "name": "getTimeline",
           "request": {
             "name": "Get company timeline",
-            "description": "Get company timeline\n\nGet a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request Bolagsverket case events with include_cases=true.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
+            "description": "Get company timeline\n\nGet a chronological list of company events including registration, report filings, and changes. Change entries use the same event types as webhooks, for example name_changed, address_changed, tax_status_changed, liquidation_started and liquidation_ended, and carry the webhook event_id. The date of a change entry is when BolagsAPI detected the change. Pro customers can request stored Bolagsverket case events with include_cases=true; when those cases are unavailable, the request returns 503 feature_not_available with retryable=false.\n\nResponse contracts: see schemas/openapi.json. Replace placeholders before sending. Requests use production and may incur charges.",
             "url": {
               "raw": "{{baseUrl}}/v1/company/{{orgnr}}/timeline",
               "host": [

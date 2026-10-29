@@ -3319,10 +3319,10 @@
             "name": "orgnr",
             "in": "path",
             "required": true,
-            "description": "Swedish organization number (10 digits, with or without hyphen)",
+            "description": "Swedish organization number or full 12-digit sole-trader identity, with or without hyphen. A short sole-trader identity must resolve uniquely; otherwise 400 with reason ambiguous_company_identity or full_identity_required.",
             "schema": {
               "type": "string",
-              "pattern": "^\\d{6}-?\\d{4}$",
+              "pattern": "^(?:\\d{6}|\\d{8})-?\\d{4}$",
               "example": "5567037485"
             }
           },
@@ -6178,7 +6178,7 @@
             "name": "orgnr",
             "in": "path",
             "required": true,
-            "description": "Organization number",
+            "description": "Organization number or full 12-digit sole-trader identity. A short sole-trader identity must resolve uniquely; otherwise 400 with reason ambiguous_company_identity or full_identity_required.",
             "schema": {
               "type": "string",
               "example": "5567037485"
@@ -6245,7 +6245,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. reason no_parseable_annual_report means collection completed without publishable figures, rather than pending work. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6298,7 +6298,7 @@
             "name": "orgnr",
             "in": "path",
             "required": true,
-            "description": "Organization number",
+            "description": "Organization number or full 12-digit sole-trader identity. A short sole-trader identity must resolve uniquely; otherwise 400 with reason ambiguous_company_identity or full_identity_required.",
             "schema": {
               "type": "string",
               "example": "5567037485"
@@ -6355,7 +6355,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. reason no_parseable_annual_report means collection completed without publishable figures, rather than pending work. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -6408,7 +6408,7 @@
             "name": "orgnr",
             "in": "path",
             "required": true,
-            "description": "Organization number",
+            "description": "Organization number or full 12-digit sole-trader identity. A short sole-trader identity must resolve uniquely; otherwise 400 with reason ambiguous_company_identity or full_identity_required.",
             "schema": {
               "type": "string",
               "example": "5567037485"
@@ -6465,7 +6465,7 @@
             "$ref": "#/components/responses/UpgradeRequired"
           },
           "404": {
-            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. Other completed collections without figures are not repeated for several days. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
+            "description": "No publishable figures. data_status unavailable: no publishable figures for this request. reason source_quality_review means source data is retained but cannot yet be published; no automatic retry is promised. reason no_parseable_annual_report means collection completed without publishable figures, rather than pending work. data_status not_applicable with reason no_filing_obligation: the registered legal form files no annual report. The legal form decides, not the format of the organization number.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12391,7 +12391,7 @@
               "unavailable",
               "not_applicable"
             ],
-            "description": "unavailable: no publishable figures for this request. source_quality_review means retained source data cannot yet be published; this response does not start another collection or promise automatic progress. After a completed collection without figures, the same 404 is returned for several days without a new collection; after that, a request can start a new collection. not_applicable: the company's registered legal form (sole trader, enskild näringsidkare) has no annual-report filing duty, so no collection is started."
+            "description": "unavailable: no publishable figures for this request. source_quality_review means retained source data cannot yet be published; this response does not start another collection or promise automatic progress. no_parseable_annual_report means collection completed without publishable figures. A retained completed result is reused until a new source acquisition replaces it; other negative results may expire and allow another collection. not_applicable: the company's registered legal form (sole trader, enskild näringsidkare) has no annual-report filing duty, so no collection is started."
           },
           "reason": {
             "type": "string",

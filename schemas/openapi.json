@@ -13034,7 +13034,7 @@
               },
               "fi": {
                 "$ref": "#/components/schemas/SectionCoverage",
-                "description": "Present with include=fi. not_found means no FI record matched the organization number or name; it is not an identity clearance."
+                "description": "Present with include=fi. Withheld issuer matches make coverage partial; if no other record matches, the section is unavailable. Neither an empty list nor missing matches establish an identity clearance."
               },
               "ko": {
                 "$ref": "#/components/schemas/SectionCoverage",
@@ -16375,7 +16375,10 @@
             "items": {
               "$ref": "#/components/schemas/FIShortPosition"
             },
-            "description": "Active short selling positions against this company"
+            "description": "Reported aggregate short positions with a qualified issuer identity. An empty list does not establish zero shorting; see short_positions_coverage."
+          },
+          "short_positions_coverage": {
+            "$ref": "#/components/schemas/FIShortPositionCoverage"
           },
           "is_warned": {
             "type": "boolean",
@@ -16566,12 +16569,12 @@
       },
       "FIShortPosition": {
         "type": "object",
-        "description": "Short selling position registered with Finansinspektionen",
+        "description": "Reported aggregate short position for the identified issuer; not an individual holder's position",
         "properties": {
           "position_holder": {
             "type": "string",
-            "description": "Name of entity holding the short position",
-            "example": "Marshall Wace LLP"
+            "nullable": true,
+            "description": "Null for an aggregate covering multiple position holders"
           },
           "company_name": {
             "type": "string",
@@ -16579,14 +16582,67 @@
           },
           "position_percent": {
             "type": "string",
-            "description": "Position size as percentage of shares",
+            "nullable": true,
+            "description": "Reported aggregate percentage of shares, preserving source precision; not a sum to add to individual positions",
             "example": "0.51"
           },
           "position_date": {
             "type": "string",
             "format": "date",
             "nullable": true,
-            "description": "Date position was reported"
+            "description": "Source date of the latest position in the aggregate; not the collection date"
+          },
+          "position_type": {
+            "type": "string",
+            "enum": [
+              "aggregate"
+            ]
+          },
+          "issuer_lei": {
+            "type": "string",
+            "description": "LEI identifying the issuer associated with this company"
+          }
+        }
+      },
+      "FIShortPositionCoverage": {
+        "type": "object",
+        "required": [
+          "status",
+          "reason",
+          "complete",
+          "observed_at"
+        ],
+        "description": "Short-position coverage is incomplete. Missing matches do not establish absence or zero shorting.",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "partial",
+              "unavailable"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "individual_positions_unlinked",
+              "issuer_identity_unresolved",
+              "source_snapshot_unavailable",
+              "no_matching_aggregate",
+              "ambiguous_aggregate"
+            ],
+            "description": "Individual positions lack a qualified issuer link, issuer identity is unresolved, a qualified source snapshot is unavailable, no aggregate matched, or multiple aggregates conflict."
+          },
+          "complete": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "observed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "When the aggregate source was observed, not when positions changed"
           }
         }
       },

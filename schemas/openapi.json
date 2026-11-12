@@ -19162,7 +19162,7 @@
                 "type": "null"
               }
             ],
-            "description": "Source attribution for this period, when available. null means period-level attribution is unavailable; it does not mean the financial figures are missing."
+            "description": "Source attribution for this period, when available, for example allabolag or annual_report_pdf. Figures from an annual report stated in whole thousand kronor are rounded to the thousand. null means period-level attribution is unavailable; it does not mean the financial figures are missing."
           },
           "currency": {
             "type": "string",
@@ -19201,7 +19201,7 @@
       },
       "IncomeStatement": {
         "type": "object",
-        "description": "All values in SEK (inside reported_values: the filed currency). Cost lines (cost_of_goods_sold, other_external_costs, operating_costs, personnel_costs, depreciation) are stored as positive numbers; subtract them from revenue to derive profit lines. Nullable fields may be null when K2 or condensed annual reports do not expose the source lines.",
+        "description": "All values in SEK (inside reported_values: the filed currency). Cost lines (cost_of_goods_sold, other_external_costs, property_operating_costs, operating_costs, personnel_costs, depreciation) are stored as positive numbers; subtract them from revenue to derive profit lines. Nullable fields may be null when K2 or condensed annual reports do not expose the source lines.",
         "properties": {
           "revenue": {
             "type": "integer",
@@ -19230,6 +19230,11 @@
             "type": "integer",
             "nullable": true,
             "description": "Övriga externa kostnader — rent, consulting, IT, etc. Stored positive."
+          },
+          "property_operating_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Driftskostnader — a housing cooperative's (bostadsrättsförening) printed property operating costs, separate from other_external_costs. Stored positive. Null for other companies and when the report does not print the line; maintenance lines are not included."
           },
           "operating_costs": {
             "type": "integer",
@@ -22272,6 +22277,7 @@
                 "inventory_change",
                 "cost_of_goods_sold",
                 "other_external_costs",
+                "property_operating_costs",
                 "operating_costs",
                 "operating_result",
                 "depreciation",
@@ -23459,6 +23465,11 @@
             "type": "integer",
             "nullable": true,
             "description": "Exact whole SEK in the selected latest financial period. Null for missing, non-SEK, quarantined or interval-source figures."
+          },
+          "property_operating_costs": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Driftskostnader: a housing cooperative's printed property operating costs in whole SEK, separate from other_external_costs. Null for other companies, when the report does not print the line, and for non-SEK, quarantined or interval-source figures."
           },
           "operating_costs": {
             "type": "integer",
